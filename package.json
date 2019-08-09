@@ -1,5 +1,5 @@
 {
-  "name": "x",
+  "name": "stated-bean",
   "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/x.esm.js",
@@ -38,5 +38,8 @@
     "tsdx": "^0.7.2",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "eventemitter3": "^4.0.0"
   }
 }

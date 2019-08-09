@@ -35,7 +35,7 @@ export class Counter {
 <summary><b>StatedBeanProvider</b></summary>
 
 ```ts
-import { StatedBeanProvider } from '../src';
+import { StatedBeanProvider } from 'stated-bean';
 
 const App = () => {
   return (
@@ -60,7 +60,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 <summary><b>useStatedBean</b></summary>
 
 ```ts
-import { useStatedBean } from '../src';
+import { useStatedBean } from 'stated-bean';
 
 function CounterDisplay() {
   const counter = useStatedBean(Counter);

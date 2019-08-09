@@ -27,7 +27,7 @@ export function useContainer(container: StatedBeanContainer) {
               container.emit(
                 Symbol.for(bean.constructor.name + '_change'),
                 bean,
-                field
+                field.name
               );
               bean[tempFieldSymbol] = [value, ++bean[tempFieldSymbol][1]];
             },

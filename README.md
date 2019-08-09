@@ -6,12 +6,11 @@ stated-bean is a scalable state management lib with react hooks.
 
 ## Features
 
-* ...
-
 ## Usage
 
 <details open>
 <summary><b>Stated Bean</b></summary>
+
 ```ts
 import { StatedBean, Stated } from 'stated-bean';
 

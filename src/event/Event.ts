@@ -13,13 +13,8 @@ export class Event {
         }
     }
     off(evtName: string | symbol, cb: EventListenFn) {
-        console.log(evtName)
         if (this.events.has(evtName)) {
-            let len = this.events.get(evtName)!.length
             this.events.set(evtName, this.events.get(evtName)!.filter(c => c !== cb))
-            let len2 = this.events.get(evtName)!.length
-            console.log(len, '=>', len2)
-
         }
     }
 }

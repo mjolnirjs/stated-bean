@@ -38,6 +38,7 @@ export function useContainer(container: StatedBeanContainer) {
         }
       }
     }
+    container.setHooked(true)
   }
   return null;
 }

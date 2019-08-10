@@ -2,9 +2,13 @@
 
 ## Introduction
 
-stated-bean is a scalable state management lib with react hooks.
+stated-bean is a light & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next)
 
-## Features
+## Install
+
+```
+npm install stated-bean
+```
 
 ## Usage
 
@@ -16,7 +20,6 @@ import { StatedBean, Stated } from 'stated-bean';
 
 @StatedBean()
 export class Counter {
-
   @Stated()
   public count: number = 0;
 
@@ -29,6 +32,7 @@ export class Counter {
   };
 }
 ```
+
 </details>
 
 <details open>
@@ -54,6 +58,7 @@ const App = () => {
 
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
+
 </details>
 
 <details open>
@@ -78,4 +83,5 @@ function CounterDisplay() {
   );
 }
 ```
+
 </details>

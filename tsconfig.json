@@ -1,14 +1,9 @@
 {
-  "include": [
-    "src"
-  ],
+  "include": ["src", "test"],
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "esnext"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
@@ -26,13 +21,11 @@
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
     "paths": {
-      "*": [
-        "src/*",
-        "node_modules/*"
-      ]
+      "*": ["src/*", "node_modules/*"]
     },
     "jsx": "react"
   }

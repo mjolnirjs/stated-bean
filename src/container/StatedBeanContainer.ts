@@ -1,8 +1,8 @@
 import { ClassType } from '../types/ClassType';
-import { EventEmitter } from 'eventemitter3';
+import { Event } from '../event'
 import { IFactory, DefaultFactory } from './StatedBeanFactory';
 
-export class StatedBeanContainer extends EventEmitter {
+export class StatedBeanContainer extends Event {
   private _parentContainer?: StatedBeanContainer;
   private _types: ClassType[];
   private _hooked: boolean = false;

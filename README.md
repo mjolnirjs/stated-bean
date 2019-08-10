@@ -14,7 +14,7 @@ npm install stated-bean
 
 - OOP: used with DI(denpendcy inject) framework togather
 - Familiar API: just provider and hooks
-- small size: ~3kb
+- Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript
 
 ## Usage

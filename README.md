@@ -10,6 +10,13 @@ stated-bean is a light & scalable state management library with react hooks. Ins
 npm install stated-bean
 ```
 
+## Features
+
+- OOP: used with DI(denpendcy inject) framework togather
+- Familiar API: just provider and hooks
+- small size: ~3kb
+- Written in TypeScript
+
 ## Usage
 
 <details open>

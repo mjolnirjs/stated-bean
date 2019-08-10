@@ -1,8 +1,7 @@
-import { StatedBean, Stated } from '../src';
+import { StatedBean, Stated } from '../../../src';
 
 @StatedBean()
-export class Counter {
-
+export class CounterController {
   @Stated()
   public count: number = 0;
 

@@ -40,4 +40,9 @@ export class StatedBeanMetaStorage {
   public getBeanMeta(name: string | symbol): StatedBeanMeta | undefined {
     return this.beans.get(name);
   }
+
+  public clear() {
+    this.beans.clear();
+    this.tempTypeFields = new WeakMap();
+  }
 }

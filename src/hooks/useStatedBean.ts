@@ -13,6 +13,10 @@ export function useStatedBean<T>(
     throw new Error('not found container');
   }
   const bean = context.container.getBean(type) as any;
+
+  if (bean === undefined) {
+    throw new Error('not found bean of ' + type);
+  }
   const change_event = Symbol.for(bean.constructor.name + '_change');
   const [, setVersion] = useState(0);
 

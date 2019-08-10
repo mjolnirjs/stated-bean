@@ -14,7 +14,7 @@ export function useStatedBean<T>(
   }
   const bean = context.container.getBean(type) as any;
   const change_event = Symbol.for(bean.constructor.name + '_change');
-  const [version, setVersion] = useState(0);
+  const [, setVersion] = useState(0);
 
   const beanChangeListener = (_bean: T, field: string) => {
     if (dependentFields === undefined) {

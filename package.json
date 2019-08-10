@@ -1,8 +1,8 @@
 {
   "name": "stated-bean",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha",
   "main": "dist/index.js",
-  "module": "dist/x.esm.js",
+  "module": "dist/stated-bean.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"

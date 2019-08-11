@@ -19,12 +19,12 @@ export function useContainer(container: StatedBeanContainer) {
 
           Object.defineProperty(bean, tempFieldSymbol, {
             writable: true,
-            value: [bean[field.name], 0],
+            value: bean[field.name],
           });
 
           Object.defineProperty(bean, field.name.toString(), {
             set(value: any) {
-              bean[tempFieldSymbol] = [value, ++bean[tempFieldSymbol][1]];
+              bean[tempFieldSymbol] = value;
               container.emit(
                 Symbol.for(bean.constructor.name + '_change'),
                 bean,
@@ -32,7 +32,7 @@ export function useContainer(container: StatedBeanContainer) {
               );
             },
             get() {
-              return bean[tempFieldSymbol][0];
+              return bean[tempFieldSymbol];
             },
           });
         }

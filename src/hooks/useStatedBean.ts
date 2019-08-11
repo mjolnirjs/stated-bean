@@ -21,7 +21,6 @@ export function useStatedBean<T>(
   const [, setVersion] = useState(0);
 
   const beanChangeListener = (_bean: T, field: string) => {
-    console.log('value lisenter change', field);
     if (dependentFields === undefined) {
       setVersion(prev => prev + 1);
     } else if (dependentFields.includes(field)) {

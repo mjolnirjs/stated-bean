@@ -1,8 +1,9 @@
-import { StatedBeanContainer } from '../container';
+import { StatedBeanContainer, IFactory } from '../container';
 import { getMetadataStorage } from '../metadata';
 import { useState, useEffect } from 'react';
+import { ClassType } from '../types/ClassType';
 
-export function useContainer(types, beanFactory) {
+export function useContainer(types: ClassType[], beanFactory?: IFactory) {
   const [container] = useState<StatedBeanContainer>(
     () => new StatedBeanContainer(types, beanFactory)
   );

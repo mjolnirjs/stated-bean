@@ -1,5 +1,5 @@
-import { StatedBean, Stated, PostProvided } from '../../../src';
 import { injectable, inject } from 'inversify';
+import { StatedBean, Stated, PostProvided } from '../../../src';
 import { TodoService } from '../services/TodoService';
 
 export interface Todo {

@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.5",
   "main": "dist/index.js",
   "module": "dist/stated-bean.esm.js",
   "typings": "dist/index.d.ts",
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "start": "tsdx watch",
-    "build": "tsdx build",
+    "build": "rimraf ./dist && tsdx build",
     "test": "tsdx test --env=jsdom --coverage"
   },
   "repository": {
@@ -45,6 +45,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-test-renderer": "^16.9.0",
+    "rimraf": "^2.6.3",
     "tsdx": "^0.7.2",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"

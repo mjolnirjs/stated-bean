@@ -1,5 +1,7 @@
 # stated-bean
 
+[![npm version](https://badge.fury.io/js/stated-bean.svg)](https://badge.fury.io/js/stated-bean)
+
 ## Introduction
 
 stated-bean is a light & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next)
@@ -81,10 +83,6 @@ import { useStatedBean } from 'stated-bean';
 
 function CounterDisplay() {
   const counter = useStatedBean(Counter);
-
-  if (counter === undefined) {
-    return null;
-  }
 
   return (
     <div>

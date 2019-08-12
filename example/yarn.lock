@@ -2637,6 +2637,11 @@ invariant@^2.2.2:
   dependencies:
     loose-envify "^1.0.0"
 
+inversify@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npm.alibaba-inc.com/inversify/download/inversify-5.0.1.tgz#500d709b1434896ce5a0d58915c4a4210e34fb6e"
+  integrity sha1-UA1wmxQ0iWzloNWJFcSkIQ40+24=
+
 ip-regex@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npm.taobao.org/ip-regex/download/ip-regex-2.1.0.tgz#fa78bf5d2e6913c911ce9f819ee5146bb6d844e9"
@@ -4304,6 +4309,11 @@ redis-url@~0.2.0:
     double-ended-queue "^2.1.0-0"
     redis-commands "^1.2.0"
     redis-parser "^2.6.0"
+
+reflect-metadata@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.npm.alibaba-inc.com/reflect-metadata/download/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha1-Z648pXyXKiqhZCsQ/jY/4y1J3Ag=
 
 regenerate-unicode-properties@^8.0.2:
   version "8.1.0"

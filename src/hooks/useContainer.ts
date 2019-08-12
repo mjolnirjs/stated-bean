@@ -1,8 +1,13 @@
 import { StatedBeanContainer } from '../container';
 import { getMetadataStorage } from '../metadata';
+import { useState, useEffect } from 'react';
 
-export function useContainer(container: StatedBeanContainer) {
-  if (!container.isHooked()) {
+export function useContainer(types, beanFactory) {
+  const [container] = useState<StatedBeanContainer>(
+    () => new StatedBeanContainer(types, beanFactory)
+  );
+
+  useEffect(() => {
     const beanTypes = container.getAllBeanTypes();
     const storage = getMetadataStorage();
 
@@ -25,6 +30,7 @@ export function useContainer(container: StatedBeanContainer) {
           Object.defineProperty(bean, field.name.toString(), {
             set(value: any) {
               bean[tempFieldSymbol] = value;
+              // console.log(bean.constructor.name + '_change');
               container.emit(
                 Symbol.for(bean.constructor.name + '_change'),
                 bean,
@@ -36,9 +42,13 @@ export function useContainer(container: StatedBeanContainer) {
             },
           });
         }
+
+        if (beanMeta.postMethod !== undefined) {
+          const f = beanMeta.postMethod.descriptor.value as Function;
+          f.apply(bean);
+        }
       }
     }
-    container.setHooked(true);
-  }
-  return null;
+  });
+  return container;
 }

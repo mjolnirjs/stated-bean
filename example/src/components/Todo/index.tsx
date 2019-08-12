@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useStatedBean } from '../../../../src';
-import { TodoController } from '../../controllers/TodoController';
+import { TodoModel } from '../../models/TodoModel';
 
 function TodoList(props) {
-  console.log(props);
   return (
     <ul>
       {props.items.map(item => (
@@ -14,7 +13,7 @@ function TodoList(props) {
 }
 
 export const TodoApp = () => {
-  const todo = useStatedBean(TodoController);
+  const todo = useStatedBean(TodoModel);
 
   return (
     <div>

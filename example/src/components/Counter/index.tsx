@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { useStatedBean } from '../../../../src';
-import { CounterController } from '../../controllers/CounterController';
+import { CounterModel } from '../../models/CounterModel';
 
 export function Counter() {
-  const counter = useStatedBean(CounterController);
+  const counter = useStatedBean(CounterModel);
 
   if (counter === undefined) {
     return null;

@@ -8,12 +8,14 @@ export class StatedBeanContainer extends Event {
   private _beans: WeakMap<ClassType<unknown>, unknown>;
   private _factory: IFactory;
 
+  static DEFAULT_BEAN_FACTORY = new DefaultFactory();
+
   public constructor(types: ClassType[], beanFactory?: IFactory) {
     super();
 
     this._types = types;
     this._beans = new WeakMap();
-    this._factory = beanFactory || new DefaultFactory();
+    this._factory = beanFactory || StatedBeanContainer.DEFAULT_BEAN_FACTORY;
 
     this._types.forEach(type => {
       const bean = this._factory.get(type);

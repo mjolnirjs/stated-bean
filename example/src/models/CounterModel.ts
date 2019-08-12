@@ -1,7 +1,9 @@
 import { StatedBean, Stated } from '../../../src';
+import { injectable } from 'inversify';
 
+@injectable()
 @StatedBean()
-export class CounterController {
+export class CounterModel {
   @Stated()
   public count: number = 0;
 

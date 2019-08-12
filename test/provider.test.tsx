@@ -85,7 +85,6 @@ describe('react provider', () => {
 
   it('useStatedBean and change the stated field', () => {
     const Sample = () => {
-      console.log('Sample useStatedBean');
       const bean = useStatedBean(TestStatedBean);
       return (
         <div>

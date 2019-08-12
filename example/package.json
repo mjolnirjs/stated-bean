@@ -8,7 +8,9 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "inversify": "^5.0.1",
     "react-app-polyfill": "^1.0.0",
+    "reflect-metadata": "^0.1.13",
     "src": "^1.1.2"
   },
   "alias": {

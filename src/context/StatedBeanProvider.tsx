@@ -16,12 +16,8 @@ export const StatedBeanProvider: React.FC<StatedBeanProviderProps> = ({
   beanFactory,
   children,
 }) => {
-  const [container] = React.useState<StatedBeanContainer>(
-    () => new StatedBeanContainer(types, beanFactory)
-  );
-
   // TODO: update container
-  useContainer(container);
+  const container = useContainer(types, beanFactory);
 
   const StatedBeanContext = getStatedBeanContext();
   return (

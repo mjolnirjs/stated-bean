@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { ClassType } from '../types/ClassType';
-import { IFactory, StatedBeanContainer } from '../container';
+import { IFactory } from '../container';
 import { useContainer } from '../hooks';
 import { getStatedBeanContext } from './StatedBeanContext';
 

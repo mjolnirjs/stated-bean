@@ -19,6 +19,22 @@ npm install stated-bean
 - Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript
 
+## API
+
+`@StatedBean() @Stated() @PostProvided`
+
+- @StatedBean - the stated class.
+- @Stated - the stated fields.
+- @PostProvided - the method with @PostProvided will be invoked in `useEffect(..., [])`
+
+`<StatedBeanProvider types={[CounterModel]}>`
+
+The `StatedBeanProvider` is responsible for creating an instance of the stated bean and throwing an event after capturing its data changes.
+
+`useStatedBean(CounterModel)`
+
+The `useStatedBean` will find an instance of the stated bean from the context and listen for its data changes to trigger the re-rendering of the current component.
+
 ## Usage
 
 ### Online Example
@@ -95,18 +111,6 @@ function CounterDisplay() {
 ```
 
 </details>
-
-## API
-
-decorators
-
-- @StatedBean - the stated class.
-- @Stated - the stated fields.
-- @PostProvided - the method with @PostProvided will be invoked in `useEffect()`
-
-`StatedBeanProvider`
-
-`useStatedBean`
 
 ## License
 

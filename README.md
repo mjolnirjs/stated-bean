@@ -14,7 +14,7 @@ npm install stated-bean
 
 ## Features
 
-- OOP: used with DI(dependency inject) framework together
+- OOP: easily integrated with DI(dependency inject) framework together
 - Familiar API: just provider and hooks
 - Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript

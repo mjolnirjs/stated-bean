@@ -15,6 +15,7 @@ function TodoList(props) {
 export const TodoApp = () => {
   const todo = useStatedBean(TodoModel);
 
+  console.log('todo.current', todo.current);
   return (
     <div>
       <h3>TODO</h3>
@@ -29,9 +30,12 @@ export const TodoApp = () => {
         <input
           id="new-todo"
           onChange={e => {
-            todo.current.text = e.target.value;
+            todo.current = {
+              ...todo.current,
+              text: e.target.value,
+            };
           }}
-          value={todo.current.text}
+          value={todo.current.text || ''}
         />
         <button>Add #{todo.todoList.length + 1}</button>
       </form>

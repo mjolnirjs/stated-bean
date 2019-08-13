@@ -1,8 +1,10 @@
 # stated-bean
 
+[![npm version](https://badge.fury.io/js/stated-bean.svg)](https://badge.fury.io/js/stated-bean)
+
 ## Introduction
 
-stated-bean is a lite & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next).
+stated-bean is a lite & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next)
 
 ## Install
 
@@ -12,7 +14,7 @@ npm install stated-bean
 
 ## Features
 
-- OOP: easily integrated with DI(denpendcy inject) framework togather
+- OOP: easily integrated with DI(dependency inject) framework together
 - Familiar API: just provider and hooks
 - Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript
@@ -22,10 +24,10 @@ npm install stated-bean
 ### Online Example
 
 - [Counter Example](https://codesandbox.io/embed/stated-bean-counter-example-116tu)
-- [Todo Example](https://codesandbox.io/embed/stated-bean-todo-example-2w104)
+- [Todo Example with InversifyJS](https://codesandbox.io/embed/stated-bean-todo-example-2w104)
 
 <details open>
-<summary><b>Stated Bean</b></summary>
+<summary><b>write a class with @StatedBean</b></summary>
 
 ```ts
 import { StatedBean, Stated } from 'stated-bean';
@@ -48,7 +50,7 @@ export class Counter {
 </details>
 
 <details open>
-<summary><b>StatedBeanProvider</b></summary>
+<summary><b>use StatedBeanProvider</b></summary>
 
 ```ts
 import { StatedBeanProvider } from 'stated-bean';
@@ -74,17 +76,13 @@ ReactDOM.render(<App />, document.getElementById('root'));
 </details>
 
 <details open>
-<summary><b>useStatedBean</b></summary>
+<summary><b>get the instance from useStatedBean</b></summary>
 
 ```ts
 import { useStatedBean } from 'stated-bean';
 
 function CounterDisplay() {
   const counter = useStatedBean(Counter);
-
-  if (counter === undefined) {
-    return null;
-  }
 
   return (
     <div>
@@ -97,3 +95,19 @@ function CounterDisplay() {
 ```
 
 </details>
+
+## API
+
+decorators
+
+- @StatedBean - the stated class.
+- @Stated - the stated fields.
+- @PostProvided - the method with @PostProvided will be invoked in `useEffect()`
+
+`StatedBeanProvider`
+
+`useStatedBean`
+
+## License
+
+MIT

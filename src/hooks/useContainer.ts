@@ -50,6 +50,6 @@ export function useContainer(types: ClassType[], beanFactory?: IFactory) {
         }
       }
     }
-  });
+  }, []);
   return container;
 }

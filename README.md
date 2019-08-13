@@ -4,7 +4,7 @@
 
 ## Introduction
 
-stated-bean is a light & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next)
+stated-bean is a lite & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next)
 
 ## Install
 
@@ -14,7 +14,7 @@ npm install stated-bean
 
 ## Features
 
-- OOP: used with DI(denpendcy inject) framework togather
+- OOP: used with DI(dependency inject) framework together
 - Familiar API: just provider and hooks
 - Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript

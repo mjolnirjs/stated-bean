@@ -17,6 +17,7 @@ before_script:
   - export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
 
 script:
+  - yarn lint
   - yarn test
   - yarn build:cjs
   - yarn build:es

@@ -1,32 +1,34 @@
-import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
 import {
   StatedInterceptor,
   InterceptMethod,
 } from '../interceptor/StatedInterceptor';
-import { EffectContext } from './EffectContext';
 import { ClassType } from '../types';
+
+import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
+import { EffectContext } from './EffectContext';
 
 export class StatedBeanApplication {
   private _beanFactory: IBeanFactory;
+
   private _interceptors: StatedInterceptor[] = [];
 
-  public constructor() {
+  constructor() {
     this._beanFactory = new DefaultBeanFactory();
   }
 
-  public setBeanFactory(beanFactory: IBeanFactory) {
+  setBeanFactory(beanFactory: IBeanFactory) {
     this._beanFactory = beanFactory;
   }
 
-  public getBeanFactory(): IBeanFactory {
+  getBeanFactory(): IBeanFactory {
     return this._beanFactory;
   }
 
-  public setInterceptors(...interceptors: StatedInterceptor[]): void {
+  setInterceptors(...interceptors: StatedInterceptor[]): void {
     this._interceptors = [...interceptors];
   }
 
-  public addInterceptors(
+  addInterceptors(
     ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
   ): void {
     if (interceptors) {
@@ -40,8 +42,16 @@ export class StatedBeanApplication {
     }
   }
 
-  public getInterceptors() {
+  getInterceptors() {
     return this._interceptors;
+  }
+
+  async interceptStateInit(effect: EffectContext): Promise<void> {
+    return this.invokeInterceptors('stateInitIntercept', effect);
+  }
+
+  async interceptStateChange(effect: EffectContext): Promise<void> {
+    return this.invokeInterceptors('stateChangeIntercept', effect);
   }
 
   private invokeInterceptors(method: string, effect: EffectContext) {
@@ -57,7 +67,7 @@ export class StatedBeanApplication {
         interceptor = this._interceptors[i];
       }
 
-      let fn =
+      const fn =
         interceptor !== undefined
           ? ((interceptor as any)[method] as InterceptMethod)
           : undefined;
@@ -68,7 +78,7 @@ export class StatedBeanApplication {
 
       try {
         return Promise.resolve(
-          fn.apply(interceptor, [effect, dispatch.bind(this, i + 1)])
+          fn.apply(interceptor, [effect, dispatch.bind(this, i + 1)]),
         );
       } catch (e) {
         return Promise.reject(e);
@@ -76,12 +86,5 @@ export class StatedBeanApplication {
     };
 
     return dispatch(0);
-  }
-
-  public async interceptStateInit(effect: EffectContext): Promise<void> {
-    return this.invokeInterceptors('stateInitIntercept', effect);
-  }
-  public async interceptStateChange(effect: EffectContext): Promise<void> {
-    return this.invokeInterceptors('stateChangeIntercept', effect);
   }
 }

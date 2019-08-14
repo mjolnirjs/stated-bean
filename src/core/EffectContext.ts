@@ -1,21 +1,26 @@
 import { StatedBeanMeta, StatedFieldMeta } from '../types';
+
 import { StatedBeanContainer } from './StatedBeanContainer';
 
 export class EffectContext {
   private readonly _bean: unknown;
+
   private readonly _beanMeta: StatedBeanMeta;
+
   private readonly _fieldMeta: StatedFieldMeta;
+
   private readonly _oldValue: unknown;
+
   private readonly _container: StatedBeanContainer;
 
   private _value: unknown;
 
-  public constructor(
+  constructor(
     oldValue: unknown,
     bean: unknown,
     beanMeta: StatedBeanMeta,
     fieldMeta: StatedFieldMeta,
-    container: StatedBeanContainer
+    container: StatedBeanContainer,
   ) {
     this._oldValue = oldValue;
     this._bean = bean;
@@ -54,7 +59,7 @@ export class EffectContext {
 
   toString() {
     return `[${this.beanMeta.name}] ${this.fieldMeta.name.toString()} ${String(
-      this.oldValue
+      this.oldValue,
     )} => ${String(this._value)}`;
   }
 }

@@ -2,7 +2,7 @@ import { getMetadataStorage } from '../src/metadata';
 import { StatedBean, Stated } from '../src';
 
 describe('metadata', () => {
-  let smapleStatedBeanName: string;
+  let sampleStatedBeanName: string;
 
   beforeAll(() => {
     getMetadataStorage().clear();
@@ -10,18 +10,18 @@ describe('metadata', () => {
     @StatedBean()
     class SampleStatedBean {
       @Stated()
-      public statedField: number;
+      statedField: number;
 
       @Stated()
-      public statedField2: string;
+      statedField2: string;
 
-      public constructor() {
+      constructor() {
         this.statedField = 0;
         this.statedField2 = 'testStatedField';
       }
     }
 
-    smapleStatedBeanName = SampleStatedBean.name;
+    sampleStatedBeanName = SampleStatedBean.name;
   });
 
   it('get metadata storage from window', () => {
@@ -31,10 +31,10 @@ describe('metadata', () => {
 
   it('stated bean decorator metadata collected', () => {
     const storage = getMetadataStorage();
-    const beanMeta = storage.getBeanMeta(smapleStatedBeanName);
+    const beanMeta = storage.getBeanMeta(sampleStatedBeanName);
 
     expect(beanMeta).not.toBeNull();
-    expect(beanMeta!.name).toEqual(smapleStatedBeanName);
+    expect(beanMeta!.name).toEqual(sampleStatedBeanName);
     expect(beanMeta!.statedFields).not.toBeNull();
 
     if (beanMeta !== undefined && beanMeta.statedFields !== undefined) {

@@ -1,0 +1,17 @@
+checks:
+  - name: build-size-watcher
+    options:
+      files:
+        - path: dist/**/*.*
+  - name: commit-deployment
+    options:
+      buildPath: ./output
+  - name: type-coverage-watcher
+    options:
+      ignoreCatch: true
+      ignoreFiles:
+        - .cache
+        - coverage
+        - dist
+        - output
+      strict: true

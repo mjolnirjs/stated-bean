@@ -1,31 +1,33 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-
-import { Container } from 'inversify';
-import 'reflect-metadata';
+import '@abraham/reflection';
+import { ReflectiveInjector } from 'injection-js';
 
 import {
   StatedBeanProvider,
-  ClassType,
   StatedBeanApplication,
   IBeanFactory,
   EffectContext,
   StatedInterceptor,
   NextCaller,
 } from '../src';
+
 import { CounterModel } from './src/models/CounterModel';
 import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
+import { TodoService } from './src/services/TodoService';
 
-const container = new Container({ autoBindInjectable: true });
+import ReactDOM from 'react-dom';
+import React from 'react';
+
 const app = new StatedBeanApplication();
 
-const inversifyBeanFactory = {
-  get: (type: ClassType) => {
-    return container.get(type);
+const rootInjector = ReflectiveInjector.resolveAndCreate([TodoService]);
+
+const inversifyBeanFactory: IBeanFactory = {
+  get(type) {
+    return ReflectiveInjector.resolveAndCreate([type], rootInjector).get(type);
   },
-} as IBeanFactory;
+};
 
 class LoggerInterceptor implements StatedInterceptor {
   async stateInitIntercept(context: EffectContext, next: NextCaller) {
@@ -33,6 +35,7 @@ class LoggerInterceptor implements StatedInterceptor {
     await next();
     console.log('1. after init', context.toString());
   }
+
   async stateChangeIntercept(context: EffectContext, next: NextCaller) {
     console.log('1. before change', context.toString());
     await next();
@@ -46,6 +49,7 @@ class LoggerInterceptor2 implements StatedInterceptor {
     await next();
     console.log('2. after init', context.toString());
   }
+
   async stateChangeIntercept(context: EffectContext, next: NextCaller) {
     console.log('2. before change', context.toString());
     await next();
@@ -65,7 +69,5 @@ const App = () => {
     </StatedBeanProvider>
   );
 };
-
-console.log('1111');
 
 ReactDOM.render(<App />, document.getElementById('root'));

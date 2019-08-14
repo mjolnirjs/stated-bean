@@ -1,24 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "jsx": "react",
-    "lib": ["dom", "esnext"],
-    "outDir": "./dist",
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": "./",
-    "noImplicitAny": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
+    "incremental": true,
+    "jsx": "react",
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "node",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  },
-  "exclude": ["dist"]
+    "paths": {
+      "stated-bean": ["src"]
+    },
+    "sourceMap": true,
+    "strict": true,
+    "stripInternal": true,
+    "target": "es5"
+  }
 }

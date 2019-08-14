@@ -1,12 +1,12 @@
-import { useContext, useState, useEffect } from 'react';
-
 import { EffectContext } from '../core';
 import { getStatedBeanContext } from '../context';
 import { ClassType } from '../types/ClassType';
 
+import { useContext, useState, useEffect } from 'react';
+
 export function useStatedBean<T>(
   type: ClassType<T>,
-  dependentFields?: Array<string | symbol>
+  dependentFields?: Array<string | symbol>,
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
@@ -22,7 +22,7 @@ export function useStatedBean<T>(
   const [, setVersion] = useState(0);
 
   useEffect(() => {
-    const change_event = Symbol.for(bean.constructor.name + '_changed');
+    const changeEvent = Symbol.for(bean.constructor.name + '_changed');
     const beanChangeListener = (effect: EffectContext) => {
       // console.log('receive change event', effect);
       const field = effect.fieldMeta.name;
@@ -32,11 +32,11 @@ export function useStatedBean<T>(
         setVersion(prev => prev + 1);
       }
     };
-    context.container!.on(change_event, beanChangeListener);
+    context.container!.on(changeEvent, beanChangeListener);
     return () => {
-      context.container!.off(change_event, beanChangeListener);
+      context.container!.off(changeEvent, beanChangeListener);
     };
-  }, []);
+  }, [bean.constructor.name, context.container, dependentFields]);
 
   return bean;
 }

@@ -1,6 +1,7 @@
-import * as React from 'react';
-import { useStatedBean } from '../../../../src';
 import { TodoModel, Todo } from '../../models/TodoModel';
+
+import { useStatedBean } from 'stated-bean';
+import React from 'react';
 
 function TodoList(props: { items: Todo[] }) {
   return (

@@ -1,4 +1,5 @@
-import { injectable, inject } from 'inversify';
+import { Injectable, Inject } from 'injection-js';
+
 import { StatedBean, Stated, PostProvided } from '../../../src';
 import { TodoService } from '../services/TodoService';
 
@@ -8,20 +9,16 @@ export interface Todo {
   state: 'todo' | 'done';
 }
 
-@injectable()
 @StatedBean()
+@Injectable()
 export class TodoModel {
   @Stated()
-  public todoList: Todo[] = [];
+  todoList: Todo[] = [];
 
   @Stated()
-  public current: Todo = {} as Todo;
+  current: Todo = {} as Todo;
 
-  private todoService: TodoService;
-
-  public constructor(@inject(TodoService) todoService: TodoService) {
-    this.todoService = todoService;
-  }
+  constructor(@Inject(TodoService) private readonly todoService: TodoService) {}
 
   @PostProvided()
   async fetchTodo() {

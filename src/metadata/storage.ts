@@ -1,17 +1,19 @@
 import { StatedBeanMeta, StatedFieldMeta, PostMethodMeta } from '../types';
 
 export class StatedBeanMetaStorage {
-  private beans: Map<string | symbol, StatedBeanMeta>;
+  private readonly beans: Map<string | symbol, StatedBeanMeta>;
+
   private tempTypeFields: WeakMap<Function, StatedFieldMeta[]>;
+
   private tempPostMethod: WeakMap<Function, PostMethodMeta>;
 
-  public constructor() {
+  constructor() {
     this.beans = new Map();
     this.tempTypeFields = new WeakMap();
     this.tempPostMethod = new WeakMap();
   }
 
-  public collectStatedBean(bean: StatedBeanMeta) {
+  collectStatedBean(bean: StatedBeanMeta) {
     const type = bean.target;
     const fields = this.tempTypeFields.get(type);
     bean.statedFields = fields;
@@ -22,7 +24,7 @@ export class StatedBeanMetaStorage {
     this.tempPostMethod.delete(type);
   }
 
-  public collectStatedField(field: StatedFieldMeta) {
+  collectStatedField(field: StatedFieldMeta) {
     const type = field.target;
     const fields = this.tempTypeFields.get(type);
     if (fields) {
@@ -32,15 +34,15 @@ export class StatedBeanMetaStorage {
     }
   }
 
-  public collectPostProvided(method: PostMethodMeta) {
+  collectPostProvided(method: PostMethodMeta) {
     this.tempPostMethod.set(method.target, method);
   }
 
-  public getBeanMeta(name: string | symbol): StatedBeanMeta | undefined {
+  getBeanMeta(name: string | symbol): StatedBeanMeta | undefined {
     return this.beans.get(name);
   }
 
-  public clear() {
+  clear() {
     this.beans.clear();
     this.tempTypeFields = new WeakMap();
     this.tempPostMethod = new WeakMap();

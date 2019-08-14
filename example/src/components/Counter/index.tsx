@@ -1,7 +1,7 @@
-import * as React from 'react';
-
-import { useStatedBean } from '../../../../src';
 import { CounterModel } from '../../models/CounterModel';
+
+import { useStatedBean } from 'stated-bean';
+import React from 'react';
 
 export function Counter() {
   const counter = useStatedBean(CounterModel);

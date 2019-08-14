@@ -1,0 +1,7 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/huskyrc.json",
+  "hooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+  }
+}

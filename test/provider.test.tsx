@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as renderer from 'react-test-renderer';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import * as Enzyme from 'enzyme';
+import * as Adapter from 'enzyme-adapter-react-16';
 
 import { getMetadataStorage } from '../src/metadata';
 import {
@@ -102,7 +102,7 @@ describe('react provider', () => {
       );
     };
 
-    const app = mount(<App />);
+    const app = Enzyme.mount(<App />);
 
     expect(app.html().includes('field=0')).toBe(true);
     const sample = app.find('Sample');

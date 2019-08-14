@@ -1,16 +1,85 @@
-import { StatedBeanContainer, IFactory } from '../container';
+import {
+  StatedBeanContainer,
+  StatedBeanApplication,
+  EffectContext,
+} from '../core';
+import { getStatedBeanContext } from '../context';
 import { getMetadataStorage } from '../metadata';
-import { useState, useEffect } from 'react';
-import { ClassType } from '../types/ClassType';
+import { ClassType, StatedBeanMeta, StatedFieldMeta } from '../types';
+import { useState, useEffect, useContext } from 'react';
 
-export function useContainer(types: ClassType[], beanFactory?: IFactory) {
+function createEffectContext(
+  oldValue: any,
+  bean: any,
+  beanMeta: StatedBeanMeta,
+  fieldMeta: StatedFieldMeta,
+  container: StatedBeanContainer
+): EffectContext {
+  return new EffectContext(oldValue, bean, beanMeta, fieldMeta, container);
+}
+
+export function useContainer(
+  types: ClassType[],
+  application?: StatedBeanApplication
+) {
+  const StatedBeanContext = getStatedBeanContext();
+  const context = useContext(StatedBeanContext);
+
   const [container] = useState<StatedBeanContainer>(
-    () => new StatedBeanContainer(types, beanFactory)
+    () => new StatedBeanContainer(types, context.container, application)
   );
 
   useEffect(() => {
     const beanTypes = container.getAllBeanTypes();
     const storage = getMetadataStorage();
+
+    const fieldDefine = async (
+      fieldMeta: StatedFieldMeta,
+      bean: any,
+      beanMeta: StatedBeanMeta
+    ) => {
+      const tempFieldSymbol = Symbol(fieldMeta.name.toString() + '_version');
+
+      const initEffect = createEffectContext(
+        bean[tempFieldSymbol],
+        bean,
+        beanMeta,
+        fieldMeta,
+        container
+      );
+      initEffect.setValue(bean[fieldMeta.name]);
+      await container.application.interceptStateInit(initEffect);
+
+      Object.defineProperty(bean, tempFieldSymbol, {
+        writable: true,
+        value: initEffect.getValue(),
+      });
+
+      Object.defineProperty(bean, fieldMeta.name.toString(), {
+        set(value: any) {
+          const effect = createEffectContext(
+            bean[tempFieldSymbol],
+            bean,
+            beanMeta,
+            fieldMeta,
+            container
+          );
+          effect.setValue(value);
+
+          container.application.interceptStateChange(effect).then(() => {
+            bean[tempFieldSymbol] = effect.getValue();
+            // console.log(bean.constructor.name + '_changed');
+            container.emit(
+              Symbol.for(bean.constructor.name + '_changed'),
+              effect
+            );
+          });
+        },
+        get() {
+          return bean[tempFieldSymbol];
+        },
+      });
+    };
 
     for (let t = 0; t < beanTypes.length; t++) {
       const type = beanTypes[t];
@@ -19,35 +88,16 @@ export function useContainer(types: ClassType[], beanFactory?: IFactory) {
 
       if (beanMeta && bean) {
         const fields = beanMeta.statedFields || [];
-        for (let i = 0; i < fields.length; i++) {
-          const field = fields[i];
-          const tempFieldSymbol = Symbol(field.name.toString() + '_version');
+        const defines = (fields || []).map(field =>
+          fieldDefine(field, bean, beanMeta)
+        );
 
-          Object.defineProperty(bean, tempFieldSymbol, {
-            writable: true,
-            value: bean[field.name],
-          });
-
-          Object.defineProperty(bean, field.name.toString(), {
-            set(value: any) {
-              bean[tempFieldSymbol] = value;
-              // console.log(bean.constructor.name + '_change');
-              container.emit(
-                Symbol.for(bean.constructor.name + '_change'),
-                bean,
-                field.name
-              );
-            },
-            get() {
-              return bean[tempFieldSymbol];
-            },
-          });
-        }
-
-        if (beanMeta.postMethod !== undefined) {
-          const f = beanMeta.postMethod.descriptor.value as Function;
-          f.apply(bean);
-        }
+        Promise.all(defines).then(() => {
+          if (beanMeta.postMethod !== undefined) {
+            const f = beanMeta.postMethod.descriptor.value as Function;
+            f.apply(bean);
+          }
+        });
       }
     }
   }, []);

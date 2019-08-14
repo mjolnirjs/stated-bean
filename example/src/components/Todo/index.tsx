@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useStatedBean } from '../../../../src';
-import { TodoModel } from '../../models/TodoModel';
+import { TodoModel, Todo } from '../../models/TodoModel';
 
-function TodoList(props) {
+function TodoList(props: { items: Todo[] }) {
   return (
     <ul>
       {props.items.map(item => (

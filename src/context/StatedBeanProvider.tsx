@@ -1,37 +1,28 @@
 import * as React from 'react';
 
-import { ClassType } from '../types/ClassType';
-import { IFactory } from '../container';
+import { StatedBeanApplication } from '../core';
 import { useContainer } from '../hooks';
 import { getStatedBeanContext } from './StatedBeanContext';
+import { ClassType } from '../types/ClassType';
 
 export interface StatedBeanProviderProps {
   types: ClassType[];
-  beanFactory?: IFactory;
+  application?: StatedBeanApplication;
   children: React.ReactNode | React.ReactNode[] | null;
 }
 
 export const StatedBeanProvider: React.FC<StatedBeanProviderProps> = ({
   types,
-  beanFactory,
+  application,
   children,
 }) => {
   // TODO: update container
-  const container = useContainer(types, beanFactory);
-
   const StatedBeanContext = getStatedBeanContext();
-  return (
-    <StatedBeanContext.Consumer>
-      {context => {
-        const parentContainer = context.container;
-        container.setParent(parentContainer);
+  const container = useContainer(types, application);
 
-        return (
-          <StatedBeanContext.Provider value={{ container }}>
-            {children}
-          </StatedBeanContext.Provider>
-        );
-      }}
-    </StatedBeanContext.Consumer>
+  return (
+    <StatedBeanContext.Provider value={{ container }}>
+      {children}
+    </StatedBeanContext.Provider>
   );
 };

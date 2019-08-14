@@ -1,9 +1,10 @@
-import  React from 'react';
-
 import { StatedBeanApplication } from '../core';
 import { useContainer } from '../hooks';
-import { getStatedBeanContext } from './StatedBeanContext';
 import { ClassType } from '../types/ClassType';
+
+import { getStatedBeanContext } from './StatedBeanContext';
+
+import React from 'react';
 
 export interface StatedBeanProviderProps {
   types: ClassType[];

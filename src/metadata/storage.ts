@@ -1,8 +1,10 @@
 import { StatedBeanMeta, StatedFieldMeta, PostMethodMeta } from '../types';
 
 export class StatedBeanMetaStorage {
-  private beans: Map<string | symbol, StatedBeanMeta>;
+  private readonly beans: Map<string | symbol, StatedBeanMeta>;
+
   private tempTypeFields: WeakMap<Function, StatedFieldMeta[]>;
+
   private tempPostMethod: WeakMap<Function, PostMethodMeta>;
 
   constructor() {

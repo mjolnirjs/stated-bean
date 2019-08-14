@@ -1,8 +1,9 @@
-import  React from 'react';
 import {
   StatedBeanContextValue,
   getStatedBeanContext,
 } from './StatedBeanContext';
+
+import React from 'react';
 
 export interface StatedBeanConsumerProps {
   children: (context: StatedBeanContextValue) => React.ReactNode;

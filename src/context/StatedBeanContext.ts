@@ -1,5 +1,6 @@
-import  React from 'react';
 import { StatedBeanContainer } from '../core';
+
+import React from 'react';
 
 export interface StatedBeanContextValue {
   container?: StatedBeanContainer;

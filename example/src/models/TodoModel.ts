@@ -1,6 +1,7 @@
+import { Injectable, Inject } from 'injection-js';
+
 import { StatedBean, Stated, PostProvided } from '../../../src';
 import { TodoService } from '../services/TodoService';
-import { Injectable, Inject } from 'injection-js';
 
 export interface Todo {
   id: number;
@@ -17,7 +18,7 @@ export class TodoModel {
   @Stated()
   current: Todo = {} as Todo;
 
-  constructor(@Inject(TodoService) private todoService: TodoService) {}
+  constructor(@Inject(TodoService) private readonly todoService: TodoService) {}
 
   @PostProvided()
   async fetchTodo() {

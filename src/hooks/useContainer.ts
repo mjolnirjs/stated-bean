@@ -6,6 +6,7 @@ import {
 import { getStatedBeanContext } from '../context';
 import { getMetadataStorage } from '../metadata';
 import { ClassType, StatedBeanMeta, StatedFieldMeta } from '../types';
+
 import { useState, useEffect, useContext } from 'react';
 
 function createEffectContext(
@@ -13,20 +14,20 @@ function createEffectContext(
   bean: any,
   beanMeta: StatedBeanMeta,
   fieldMeta: StatedFieldMeta,
-  container: StatedBeanContainer
+  container: StatedBeanContainer,
 ): EffectContext {
   return new EffectContext(oldValue, bean, beanMeta, fieldMeta, container);
 }
 
 export function useContainer(
   types: ClassType[],
-  application?: StatedBeanApplication
+  application?: StatedBeanApplication,
 ) {
   const StatedBeanContext = getStatedBeanContext();
   const context = useContext(StatedBeanContext);
 
   const [container] = useState<StatedBeanContainer>(
-    () => new StatedBeanContainer(types, context.container, application)
+    () => new StatedBeanContainer(types, context.container, application),
   );
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export function useContainer(
     const fieldDefine = async (
       fieldMeta: StatedFieldMeta,
       bean: any,
-      beanMeta: StatedBeanMeta
+      beanMeta: StatedBeanMeta,
     ) => {
       const tempFieldSymbol = Symbol(fieldMeta.name.toString() + '_version');
 
@@ -45,7 +46,7 @@ export function useContainer(
         bean,
         beanMeta,
         fieldMeta,
-        container
+        container,
       );
       initEffect.setValue(bean[fieldMeta.name]);
       await container.application.interceptStateInit(initEffect);
@@ -62,7 +63,7 @@ export function useContainer(
             bean,
             beanMeta,
             fieldMeta,
-            container
+            container,
           );
           effect.setValue(value);
 
@@ -71,7 +72,7 @@ export function useContainer(
             // console.log(bean.constructor.name + '_changed');
             container.emit(
               Symbol.for(bean.constructor.name + '_changed'),
-              effect
+              effect,
             );
           });
         },
@@ -81,15 +82,14 @@ export function useContainer(
       });
     };
 
-    for (let t = 0; t < beanTypes.length; t++) {
-      const type = beanTypes[t];
+    for (const type of beanTypes) {
       const beanMeta = storage.getBeanMeta(type.name);
       const bean = container.getBean(type);
 
       if (beanMeta && bean) {
         const fields = beanMeta.statedFields || [];
         const defines = (fields || []).map(field =>
-          fieldDefine(field, bean, beanMeta)
+          fieldDefine(field, bean, beanMeta),
         );
 
         Promise.all(defines).then(() => {
@@ -100,6 +100,6 @@ export function useContainer(
         });
       }
     }
-  }, []);
+  }, [container]);
   return container;
 }

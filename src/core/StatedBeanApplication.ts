@@ -1,13 +1,15 @@
-import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
 import {
   StatedInterceptor,
   InterceptMethod,
 } from '../interceptor/StatedInterceptor';
-import { EffectContext } from './EffectContext';
 import { ClassType } from '../types';
+
+import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
+import { EffectContext } from './EffectContext';
 
 export class StatedBeanApplication {
   private _beanFactory: IBeanFactory;
+
   private _interceptors: StatedInterceptor[] = [];
 
   constructor() {
@@ -44,6 +46,14 @@ export class StatedBeanApplication {
     return this._interceptors;
   }
 
+  async interceptStateInit(effect: EffectContext): Promise<void> {
+    return this.invokeInterceptors('stateInitIntercept', effect);
+  }
+
+  async interceptStateChange(effect: EffectContext): Promise<void> {
+    return this.invokeInterceptors('stateChangeIntercept', effect);
+  }
+
   private invokeInterceptors(method: string, effect: EffectContext) {
     let index = -1;
     const dispatch = (i: number): Promise<any> => {
@@ -57,7 +67,7 @@ export class StatedBeanApplication {
         interceptor = this._interceptors[i];
       }
 
-      let fn =
+      const fn =
         interceptor !== undefined
           ? ((interceptor as any)[method] as InterceptMethod)
           : undefined;
@@ -68,7 +78,7 @@ export class StatedBeanApplication {
 
       try {
         return Promise.resolve(
-          fn.apply(interceptor, [effect, dispatch.bind(this, i + 1)])
+          fn.apply(interceptor, [effect, dispatch.bind(this, i + 1)]),
         );
       } catch (e) {
         return Promise.reject(e);
@@ -76,12 +86,5 @@ export class StatedBeanApplication {
     };
 
     return dispatch(0);
-  }
-
-  async interceptStateInit(effect: EffectContext): Promise<void> {
-    return this.invokeInterceptors('stateInitIntercept', effect);
-  }
-  async interceptStateChange(effect: EffectContext): Promise<void> {
-    return this.invokeInterceptors('stateChangeIntercept', effect);
   }
 }

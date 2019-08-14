@@ -1,9 +1,6 @@
 import '@abraham/reflection';
 import { ReflectiveInjector } from 'injection-js';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 import {
   StatedBeanProvider,
   StatedBeanApplication,
@@ -12,11 +9,15 @@ import {
   StatedInterceptor,
   NextCaller,
 } from '../src';
+
 import { CounterModel } from './src/models/CounterModel';
 import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
 import { TodoService } from './src/services/TodoService';
+
+import ReactDOM from 'react-dom';
+import React from 'react';
 
 const app = new StatedBeanApplication();
 
@@ -34,6 +35,7 @@ class LoggerInterceptor implements StatedInterceptor {
     await next();
     console.log('1. after init', context.toString());
   }
+
   async stateChangeIntercept(context: EffectContext, next: NextCaller) {
     console.log('1. before change', context.toString());
     await next();
@@ -47,6 +49,7 @@ class LoggerInterceptor2 implements StatedInterceptor {
     await next();
     console.log('2. after init', context.toString());
   }
+
   async stateChangeIntercept(context: EffectContext, next: NextCaller) {
     console.log('2. before change', context.toString());
     await next();

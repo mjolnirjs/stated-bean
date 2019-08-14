@@ -8,8 +8,6 @@ export function useStatedBean<T>(
   type: ClassType<T>,
   dependentFields?: Array<string | symbol>
 ): T {
-  console.log('useStatedBean', type.name);
-
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
 

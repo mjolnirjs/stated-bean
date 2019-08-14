@@ -1,16 +1,19 @@
 {
   "name": "stated-bean",
-  "version": "0.1.0-RC",
-  "main": "dist/index.js",
-  "module": "dist/stated-bean.esm.js",
-  "typings": "dist/index.d.ts",
+  "version": "0.1.1-alpha.1",
+  "main": "./dist/lib/index.js",
+  "module": "./dist/es/index.js",
+  "typings": "./dist/types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
-    "start": "tsdx watch",
-    "build": "rimraf ./dist && tsdx build",
-    "test": "tsdx test --env=jsdom --coverage"
+    "start": "webpack-dev-server --config ./webpack.config.js --devtool source-map",
+    "build:lib": "tsc -p ./tsconfig.lib.json",
+    "build:es": "tsc -p ./tsconfig.es.json",
+    "build": "rimraf ./dist && npm run build:lib && npm run build:es",
+    "test": "yarn test --env=jsdom --coverage"
   },
   "repository": {
     "type": "git",
@@ -37,17 +40,25 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.8.5",
     "@types/react-test-renderer": "^16.9.0",
+    "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
+    "fork-ts-checker-webpack-plugin": "^1.5.0",
     "husky": "^3.0.3",
+    "inversify": "^5.0.1",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-test-renderer": "^16.9.0",
+    "reflect-metadata": "^0.1.13",
+    "remove-strict-webpack-plugin": "^0.1.2",
     "rimraf": "^2.6.3",
-    "tsdx": "^0.7.2",
+    "ts-loader": "^6.0.4",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
   }
 }

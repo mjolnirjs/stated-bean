@@ -10,15 +10,13 @@ import {
   StatedBeanApplication,
   IBeanFactory,
   EffectContext,
+  StatedInterceptor,
+  NextCaller,
 } from '../src';
 import { CounterModel } from './src/models/CounterModel';
 import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
-import {
-  StatedInterceptor,
-  NextCaller,
-} from '../src/interceptor/StatedInterceptor';
 
 const container = new Container({ autoBindInjectable: true });
 const app = new StatedBeanApplication();
@@ -67,5 +65,7 @@ const App = () => {
     </StatedBeanProvider>
   );
 };
+
+console.log('1111');
 
 ReactDOM.render(<App />, document.getElementById('root'));

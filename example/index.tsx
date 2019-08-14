@@ -1,12 +1,11 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import '@abraham/reflection';
+import { ReflectiveInjector } from 'injection-js';
 
-import { Container } from 'inversify';
-import 'reflect-metadata';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import {
   StatedBeanProvider,
-  ClassType,
   StatedBeanApplication,
   IBeanFactory,
   EffectContext,
@@ -17,15 +16,17 @@ import { CounterModel } from './src/models/CounterModel';
 import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
+import { TodoService } from './src/services/TodoService';
 
-const container = new Container({ autoBindInjectable: true });
 const app = new StatedBeanApplication();
 
-const inversifyBeanFactory = {
-  get: (type: ClassType) => {
-    return container.get(type);
+const rootInjector = ReflectiveInjector.resolveAndCreate([TodoService]);
+
+const inversifyBeanFactory: IBeanFactory = {
+  get(type) {
+    return ReflectiveInjector.resolveAndCreate([type], rootInjector).get(type);
   },
-} as IBeanFactory;
+};
 
 class LoggerInterceptor implements StatedInterceptor {
   async stateInitIntercept(context: EffectContext, next: NextCaller) {
@@ -65,7 +66,5 @@ const App = () => {
     </StatedBeanProvider>
   );
 };
-
-console.log('1111');
 
 ReactDOM.render(<App />, document.getElementById('root'));

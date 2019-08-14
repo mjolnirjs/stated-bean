@@ -10,7 +10,7 @@ export class EffectContext {
 
   private _value: unknown;
 
-  public constructor(
+  constructor(
     oldValue: unknown,
     bean: unknown,
     beanMeta: StatedBeanMeta,

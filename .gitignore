@@ -1,12 +1,9 @@
 *.log
-.DS_Store
-node_modules
+*.tsbuildinfo
 .cache
-.rts2_cache_cjs
-.rts2_cache_esm
-.rts2_cache_umd
-dist
-
-coverage
-# local history
+.DS_Store
 .history
+coverage
+dist
+node_modules
+output

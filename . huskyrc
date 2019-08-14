@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/huskyrc.json",
+  "hooks": {
+    "pre-commit": "pretty-quick --staged"
+  }
+}

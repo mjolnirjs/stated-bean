@@ -10,12 +10,12 @@ describe('metadata', () => {
     @StatedBean()
     class SampleStatedBean {
       @Stated()
-      public statedField: number;
+      statedField: number;
 
       @Stated()
-      public statedField2: string;
+      statedField2: string;
 
-      public constructor() {
+      constructor() {
         this.statedField = 0;
         this.statedField2 = 'testStatedField';
       }

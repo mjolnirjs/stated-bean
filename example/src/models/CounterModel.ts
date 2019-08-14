@@ -1,11 +1,11 @@
-import { StatedBean, Stated } from '../../../src';
-import { injectable } from 'inversify';
+import { StatedBean, Stated } from 'stated-bean';
+import { Injectable } from 'injection-js';
 
-@injectable()
 @StatedBean()
+@Injectable()
 export class CounterModel {
   @Stated()
-  public count: number = 0;
+  count: number = 0;
 
   increment = () => {
     this.count++;

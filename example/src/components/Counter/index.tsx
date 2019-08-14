@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { useStatedBean } from 'stated-bean';
+import  React from 'react';
 
-import { useStatedBean } from '../../../../src';
 import { CounterModel } from '../../models/CounterModel';
 
 export function Counter() {

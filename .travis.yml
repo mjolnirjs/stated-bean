@@ -1,0 +1,43 @@
+language: node_js
+
+node_js: --lts
+
+cache: yarn
+
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$PATH"
+  - git config --global user.name 'JounQin'
+  - git config --global user.email 'admin@1stg.me'
+
+install: yarn --frozen-lockfile
+
+before_script:
+  - export TRAVIS_REPO_OWNER=${TRAVIS_REPO_SLUG%/*}
+  - export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
+
+script:
+  - yarn test
+  - yarn build:cjs
+  - yarn build:es
+  - yarn build:example --public-url /$TRAVIS_REPO_NAME/
+
+after_success:
+  - yarn global add codecov
+  - codecov
+
+deploy:
+  provider: pages
+  email: admin@1stg.me
+  name: JounQin
+  skip_cleanup: true
+  github_token: $GH_TOKEN
+  keep_history: true
+  allow_empty_commit: false
+  local_dir: dist
+  on:
+    branch: master
+
+after_script:
+  - yarn add -D @codechecks/client @codechecks/build-size-watcher @codechecks/commit-deployment @codechecks/type-coverage-watcher -W
+  - yarn codechecks

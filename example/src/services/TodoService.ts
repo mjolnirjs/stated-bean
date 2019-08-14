@@ -1,8 +1,8 @@
-import { injectable } from 'inversify';
+import { Injectable } from 'injection-js';
 
-@injectable()
+@Injectable()
 export class TodoService {
-  public async fetchTodoList() {
+  async fetchTodoList() {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve([

@@ -8,7 +8,7 @@ export class StatedBeanContainer extends Event {
   private _types: ClassType[];
   private _beans: WeakMap<ClassType<unknown>, unknown>;
 
-  public constructor(
+  constructor(
     types: ClassType[],
     parent?: StatedBeanContainer,
     app?: StatedBeanApplication
@@ -36,7 +36,7 @@ export class StatedBeanContainer extends Event {
     });
   }
 
-  public getBean<T>(type: ClassType<T>): T | undefined {
+  getBean<T>(type: ClassType<T>): T | undefined {
     let bean = this._beans.get(type);
 
     if (bean === undefined && this.parent) {

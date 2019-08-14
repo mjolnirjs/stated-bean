@@ -10,23 +10,23 @@ export class StatedBeanApplication {
   private _beanFactory: IBeanFactory;
   private _interceptors: StatedInterceptor[] = [];
 
-  public constructor() {
+  constructor() {
     this._beanFactory = new DefaultBeanFactory();
   }
 
-  public setBeanFactory(beanFactory: IBeanFactory) {
+  setBeanFactory(beanFactory: IBeanFactory) {
     this._beanFactory = beanFactory;
   }
 
-  public getBeanFactory(): IBeanFactory {
+  getBeanFactory(): IBeanFactory {
     return this._beanFactory;
   }
 
-  public setInterceptors(...interceptors: StatedInterceptor[]): void {
+  setInterceptors(...interceptors: StatedInterceptor[]): void {
     this._interceptors = [...interceptors];
   }
 
-  public addInterceptors(
+  addInterceptors(
     ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
   ): void {
     if (interceptors) {
@@ -40,7 +40,7 @@ export class StatedBeanApplication {
     }
   }
 
-  public getInterceptors() {
+  getInterceptors() {
     return this._interceptors;
   }
 
@@ -78,10 +78,10 @@ export class StatedBeanApplication {
     return dispatch(0);
   }
 
-  public async interceptStateInit(effect: EffectContext): Promise<void> {
+  async interceptStateInit(effect: EffectContext): Promise<void> {
     return this.invokeInterceptors('stateInitIntercept', effect);
   }
-  public async interceptStateChange(effect: EffectContext): Promise<void> {
+  async interceptStateChange(effect: EffectContext): Promise<void> {
     return this.invokeInterceptors('stateChangeIntercept', effect);
   }
 }

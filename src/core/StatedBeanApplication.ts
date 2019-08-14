@@ -4,6 +4,7 @@ import {
   InterceptMethod,
 } from '../interceptor/StatedInterceptor';
 import { EffectContext } from './EffectContext';
+import { ClassType } from '../types';
 
 export class StatedBeanApplication {
   private _beanFactory: IBeanFactory;
@@ -21,8 +22,22 @@ export class StatedBeanApplication {
     return this._beanFactory;
   }
 
-  public setInterceptors(...interceptors: StatedInterceptor[]) {
-    this._interceptors.push(...interceptors);
+  public setInterceptors(...interceptors: StatedInterceptor[]): void {
+    this._interceptors = [...interceptors];
+  }
+
+  public addInterceptors(
+    ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
+  ): void {
+    if (interceptors) {
+      interceptors.forEach(interceptor => {
+        if (typeof interceptor === 'function') {
+          this._interceptors.push(this.getBeanFactory().get(interceptor));
+        } else {
+          this._interceptors.push(interceptor);
+        }
+      });
+    }
   }
 
   public getInterceptors() {

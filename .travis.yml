@@ -35,11 +35,11 @@ deploy:
   github_token: $GH_TOKEN
   keep_history: true
   allow_empty_commit: false
-  local_dir: dist
+  local_dir: output
   on:
     branch: master
 
 after_script:
   - yarn add -D @codechecks/client @codechecks/build-size-watcher @codechecks/commit-deployment @codechecks/type-coverage-watcher -W
-  - yarn build
+  - yarn build:example
   - yarn codechecks

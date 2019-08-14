@@ -60,7 +60,7 @@ app.setInterceptors(new LoggerInterceptor(), new LoggerInterceptor2());
 
 const App = () => {
   return (
-    <StatedBeanProvider app={app} types={[CounterModel, TodoModel]}>
+    <StatedBeanProvider application={app} types={[CounterModel, TodoModel]}>
       <Counter />
       <hr />
       <TodoApp />

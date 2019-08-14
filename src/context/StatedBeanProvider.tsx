@@ -7,18 +7,18 @@ import { ClassType } from '../types/ClassType';
 
 export interface StatedBeanProviderProps {
   types: ClassType[];
-  app?: StatedBeanApplication;
+  application?: StatedBeanApplication;
   children: React.ReactNode | React.ReactNode[] | null;
 }
 
 export const StatedBeanProvider: React.FC<StatedBeanProviderProps> = ({
   types,
-  app,
+  application,
   children,
 }) => {
   // TODO: update container
   const StatedBeanContext = getStatedBeanContext();
-  const container = useContainer(types, app);
+  const container = useContainer(types, application);
 
   return (
     <StatedBeanContext.Provider value={{ container }}>

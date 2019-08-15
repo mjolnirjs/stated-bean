@@ -22,24 +22,24 @@ before_script:
 script:
   - yarn lint
   - yarn test
-  - rm -rf dist output
-  - yarn build:cjs
-  - yarn build:es
-  - yarn build:example --public-url /$TRAVIS_REPO_NAME/
+  - yarn build
 
 after_success:
   - yarn global add codecov
   - codecov
 
+before_deploy: yarn build:example --public-url /$TRAVIS_REPO_NAME/
+
 deploy:
   provider: pages
+  skip_cleanup: true
   email: admin@1stg.me
   name: JounQin
   github_token: $GH_TOKEN
   keep_history: true
   allow_empty_commit: false
   local_dir: output
-  on:
+  edge:
     branch: master
 
 after_script:

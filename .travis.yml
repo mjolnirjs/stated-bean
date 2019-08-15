@@ -39,8 +39,8 @@ deploy:
   keep_history: true
   allow_empty_commit: false
   local_dir: output
-  on:
-    branch: develop
+  edge:
+    branch: master
 
 after_script:
   - yarn add -D @codechecks/client @codechecks/build-size-watcher @codechecks/commit-deployment @codechecks/type-coverage-watcher

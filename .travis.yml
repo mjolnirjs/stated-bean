@@ -34,7 +34,7 @@ deploy:
   - provider: script
     skip_cleanup: true
     script: bash deploy.sh
-    edge:
+    on:
       branch: master
   - provider: pages
     skip_cleanup: true
@@ -44,7 +44,7 @@ deploy:
     keep_history: true
     allow_empty_commit: false
     local_dir: output
-    edge:
+    on:
       branch: master
 
 after_script:

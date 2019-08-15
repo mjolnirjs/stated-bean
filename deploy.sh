@@ -8,8 +8,6 @@ npm set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
 git fetch origin "$TRAVIS_BRANCH":"$TRAVIS_BRANCH"
 git checkout "$TRAVIS_BRANCH"
 
-cd dist
-
 PKG_VERSION=$(jq -r '.version' package.json)
 
 git fetch origin v"$PKG_VERSION" || {

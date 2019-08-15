@@ -2,7 +2,10 @@ language: node_js
 
 node_js: --lts
 
-cache: yarn
+cache:
+  - yarn
+  - directories:
+      - .cache
 
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -19,6 +22,7 @@ before_script:
 script:
   - yarn lint
   - yarn test
+  - rm -rf dist output
   - yarn build:cjs
   - yarn build:es
   - yarn build:example --public-url /$TRAVIS_REPO_NAME/
@@ -31,15 +35,14 @@ deploy:
   provider: pages
   email: admin@1stg.me
   name: JounQin
-  skip_cleanup: true
   github_token: $GH_TOKEN
   keep_history: true
   allow_empty_commit: false
-  local_dir: dist
+  local_dir: output
   on:
     branch: master
 
 after_script:
-  - yarn add -D @codechecks/client @codechecks/build-size-watcher @codechecks/commit-deployment @codechecks/type-coverage-watcher -W
-  - yarn build
+  - yarn add -D @codechecks/client @codechecks/build-size-watcher @codechecks/commit-deployment @codechecks/type-coverage-watcher
+  - yarn build:example
   - yarn codechecks

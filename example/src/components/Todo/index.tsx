@@ -1,5 +1,4 @@
-import { TodoModel } from '../../models/TodoModel';
-import { Todo } from '../../services/TodoService';
+import { TodoModel, Todo } from '../../models/TodoModel';
 
 import { useStatedBean } from 'stated-bean';
 import React from 'react';
@@ -16,6 +15,7 @@ function TodoList(props: { items: Todo[] }) {
 
 export const TodoApp = () => {
   const todo = useStatedBean(TodoModel);
+
   console.log('todo.current', todo.current);
   return (
     <div>
@@ -33,7 +33,7 @@ export const TodoApp = () => {
           onChange={e => {
             todo.current = {
               ...todo.current,
-              text: e.currentTarget.value,
+              text: e.target.value,
             };
           }}
           value={todo.current.text || ''}

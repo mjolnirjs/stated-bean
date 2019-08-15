@@ -22,7 +22,7 @@
     "build": "rimraf dist output && run-p build:**",
     "lint": "cross-env EFF_NO_LINK_RULES=true eslint . --ext .js,.ts,.tsx -f friendly",
     "test": "jest --env=jsdom --coverage",
-    "type-coverage": "type-coverage --ignore-catch --ignore-files 'dist/**/*' --strict"
+    "type-coverage": "type-coverage --ignore-files dist --strict"
   },
   "peerDependencies": {
     "react": ">=16.8.0"
@@ -66,6 +66,6 @@
     "stated-bean": "./src"
   },
   "typeCoverage": {
-    "atLeast": 97
+    "atLeast": 94
   }
 }

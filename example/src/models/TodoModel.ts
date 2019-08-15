@@ -1,8 +1,13 @@
 import { Injectable, Inject } from 'injection-js';
 
-import { TodoService, Todo } from '../services/TodoService';
+import { StatedBean, Stated, PostProvided } from '../../../src';
+import { TodoService } from '../services/TodoService';
 
-import { StatedBean, Stated, PostProvided } from 'stated-bean';
+export interface Todo {
+  id: number;
+  text: string;
+  state: 'todo' | 'done';
+}
 
 @StatedBean()
 @Injectable()
@@ -11,23 +16,20 @@ export class TodoModel {
   todoList: Todo[] = [];
 
   @Stated()
-  current: Todo = {};
+  current: Todo = {} as Todo;
 
   constructor(@Inject(TodoService) private readonly todoService: TodoService) {}
 
   @PostProvided()
   async fetchTodo() {
-    this.todoList = await this.todoService.fetchTodoList();
+    this.todoList = (await this.todoService.fetchTodoList()) as Todo[];
   }
 
   addTodo = () => {
     this.todoList = [
       ...this.todoList,
-      {
-        id: this.todoList.length + 1,
-        ...this.current,
-      },
+      { id: this.todoList.length + 1, ...this.current },
     ];
-    this.current = {};
+    this.current = {} as Todo;
   };
 }

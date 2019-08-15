@@ -9,32 +9,24 @@ import { ClassType, StatedBeanMeta, StatedFieldMeta } from '../types';
 
 import { useState, useEffect, useContext } from 'react';
 
-function createEffectContext<Bean, Value>(
-  oldValue: Value,
-  bean: Bean,
+function createEffectContext(
+  oldValue: any,
+  bean: any,
   beanMeta: StatedBeanMeta,
   fieldMeta: StatedFieldMeta,
   container: StatedBeanContainer,
-  value?: Value,
 ): EffectContext {
-  return new EffectContext(
-    oldValue,
-    bean,
-    beanMeta,
-    fieldMeta,
-    container,
-    value,
-  );
+  return new EffectContext(oldValue, bean, beanMeta, fieldMeta, container);
 }
 
-export function useContainer<T>(
-  types: Array<ClassType<T>>,
+export function useContainer(
+  types: ClassType[],
   application?: StatedBeanApplication,
 ) {
   const StatedBeanContext = getStatedBeanContext();
   const context = useContext(StatedBeanContext);
 
-  const [container] = useState(
+  const [container] = useState<StatedBeanContainer>(
     () => new StatedBeanContainer(types, context.container, application),
   );
 
@@ -55,8 +47,8 @@ export function useContainer<T>(
         beanMeta,
         fieldMeta,
         container,
-        bean[fieldMeta.name],
       );
+      initEffect.setValue(bean[fieldMeta.name]);
       await container.application.interceptStateInit(initEffect);
 
       Object.defineProperty(bean, tempFieldSymbol, {
@@ -65,15 +57,15 @@ export function useContainer<T>(
       });
 
       Object.defineProperty(bean, fieldMeta.name.toString(), {
-        set(value) {
+        set(value: any) {
           const effect = createEffectContext(
             bean[tempFieldSymbol],
             bean,
             beanMeta,
             fieldMeta,
             container,
-            value,
           );
+          effect.setValue(value);
 
           container.application.interceptStateChange(effect).then(() => {
             bean[tempFieldSymbol] = effect.getValue();
@@ -101,9 +93,9 @@ export function useContainer<T>(
         );
 
         Promise.all(defines).then(() => {
-          if (beanMeta.postMethod != null) {
-            const f = beanMeta.postMethod.descriptor.value;
-            f!.apply(bean);
+          if (beanMeta.postMethod !== undefined) {
+            const f = beanMeta.postMethod.descriptor.value as Function;
+            f.apply(bean);
           }
         });
       }

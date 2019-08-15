@@ -1,14 +1,16 @@
 import { getMetadataStorage } from '../metadata';
 
-export const PostProvided = (): MethodDecorator => (
-  prototype,
-  propertyKey,
-  descriptor: TypedPropertyDescriptor<any>,
-) => {
-  getMetadataStorage().collectPostProvided({
-    name: propertyKey,
-    target: prototype.constructor,
-    descriptor,
-  });
-  return descriptor;
-};
+export function PostProvided(): MethodDecorator {
+  return (
+    prototype: Record<string, any>,
+    propertyKey: string | symbol,
+    descriptor: TypedPropertyDescriptor<any>,
+  ) => {
+    getMetadataStorage().collectPostProvided({
+      name: propertyKey,
+      target: prototype.constructor,
+      descriptor,
+    });
+    return descriptor;
+  };
+}

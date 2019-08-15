@@ -1,8 +1,10 @@
 import { StatedBeanMetaStorage } from './storage';
 
-let StateBeanMetaStorage: StatedBeanMetaStorage | undefined;
-
-export const getMetadataStorage = () =>
-  StateBeanMetaStorage || (StateBeanMetaStorage = new StatedBeanMetaStorage());
+export function getMetadataStorage(): StatedBeanMetaStorage {
+  return (
+    (window as any).StateBeanMetadataStorage ||
+    ((window as any).StateBeanMetadataStorage = new StatedBeanMetaStorage())
+  );
+}
 
 export * from './storage';

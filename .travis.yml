@@ -31,16 +31,21 @@ after_success:
 before_deploy: yarn build:example --public-url /$TRAVIS_REPO_NAME/
 
 deploy:
-  provider: pages
-  skip_cleanup: true
-  email: admin@1stg.me
-  name: JounQin
-  github_token: $GH_TOKEN
-  keep_history: true
-  allow_empty_commit: false
-  local_dir: output
-  edge:
-    branch: master
+  - provider: script
+    skip_cleanup: true
+    script: bash deploy.sh
+    edge:
+      branch: master
+  - provider: pages
+    skip_cleanup: true
+    email: admin@1stg.me
+    name: JounQin
+    github_token: $GH_TOKEN
+    keep_history: true
+    allow_empty_commit: false
+    local_dir: output
+    edge:
+      branch: master
 
 after_script:
   - yarn add -D @codechecks/client @codechecks/build-size-watcher @codechecks/commit-deployment @codechecks/type-coverage-watcher

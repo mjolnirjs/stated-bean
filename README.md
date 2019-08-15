@@ -13,48 +13,56 @@
 [![Conventional Commits](https://img.shields.io/badge/conventional%20commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![codechecks.io](https://raw.githubusercontent.com/codechecks/docs/master/images/badges/badge-default.svg?sanitize=true)](https://codechecks.io)
-## Introduction
 
-stated-bean is a lite & scalable state management library with react hooks. Inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next)
+> A light but scalable state management library with react hooks, inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next).
 
 ## Install
 
-```
-npm install stated-bean
+```sh
+# yarn
+yarn add stated-bean
+
+# npm
+npm i stated-bean
 ```
 
 ## Features
 
-- OOP: easily integrated with DI(dependency inject) framework together
+- OOP: easy to integrate with DI(dependency inject) framework together
 - Familiar API: just provider and hooks
 - Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript
 
 ## API
 
-`@StatedBean() @Stated() @PostProvided`
+### Decorators
 
-- @StatedBean - the stated class.
-- @Stated - the stated fields.
-- @PostProvided - the method with @PostProvided will be invoked in `useEffect(..., [])`
+- `@StatedBean` - the stated class.
+- `@Stated` - the stated fields.
+- `@PostProvided` - the method with `@PostProvided` will be invoked in `useEffect(..., [])`
 
-`<StatedBeanProvider types={[CounterModel]}>`
+### Provider
 
-The `StatedBeanProvider` is responsible for creating an instance of the stated bean and throwing an event after capturing its data changes.
+```tsx
+<StatedBeanProvider types={[CounterModel]}>
+```
+
+The `StatedBeanProvider` is responsible for creating an instance of the stated bean and dispatching an event after data changes.
+
+### React Hooks
 
 `useStatedBean(CounterModel)`
 
-The `useStatedBean` will find an instance of the stated bean from the context and listen for its data changes to trigger the re-rendering of the current component.
+The `useStatedBean` will get/create an instance of the stated bean from the context and listen for its data changes to trigger the re-rendering of the current component.
+
+## Online Demo
+
+[GitHub Pages](https://mjolnirjs.github.io/stated-bean): Integration with [injection-js](https://github.com/mgechev/injection-js)
 
 ## Usage
 
-### Online Example
-
-- [Counter Example](https://codesandbox.io/embed/stated-bean-counter-example-116tu)
-- [Todo Example with InversifyJS](https://codesandbox.io/embed/stated-bean-todo-example-2w104)
-
 <details open>
-<summary><b>write a class with @StatedBean</b></summary>
+<summary><b>write a class with <code>@StatedBean</code></b></summary>
 
 ```ts
 import { StatedBean, Stated } from 'stated-bean';
@@ -77,9 +85,9 @@ export class Counter {
 </details>
 
 <details open>
-<summary><b>use StatedBeanProvider</b></summary>
+<summary><b>use <code>StatedBeanProvider</code></b></summary>
 
-```ts
+```tsx
 import { StatedBeanProvider } from 'stated-bean';
 
 const App = () => {
@@ -103,9 +111,9 @@ ReactDOM.render(<App />, document.getElementById('root'));
 </details>
 
 <details open>
-<summary><b>get the instance from useStatedBean</b></summary>
+<summary><b>get/create the instance from <code>useStatedBean</code></b></summary>
 
-```ts
+```tsx
 import { useStatedBean } from 'stated-bean';
 
 function CounterDisplay() {
@@ -125,4 +133,4 @@ function CounterDisplay() {
 
 ## License
 
-MIT
+[MIT](http://opensource.org/licenses/MIT)

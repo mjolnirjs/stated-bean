@@ -23,20 +23,20 @@ const app = new StatedBeanApplication();
 
 const rootInjector = ReflectiveInjector.resolveAndCreate([TodoService]);
 
-const inversifyBeanFactory: IBeanFactory = {
+const beanFactory: IBeanFactory = {
   get(type) {
     return ReflectiveInjector.resolveAndCreate([type], rootInjector).get(type);
   },
 };
 
 class LoggerInterceptor implements StatedInterceptor {
-  async stateInitIntercept(context: EffectContext, next: NextCaller) {
+  async stateInit(context: EffectContext, next: NextCaller) {
     console.log('1. before init', context.toString());
     await next();
     console.log('1. after init', context.toString());
   }
 
-  async stateChangeIntercept(context: EffectContext, next: NextCaller) {
+  async stateChange(context: EffectContext, next: NextCaller) {
     console.log('1. before change', context.toString());
     await next();
     console.log('1. after change', context.toString());
@@ -44,20 +44,20 @@ class LoggerInterceptor implements StatedInterceptor {
 }
 
 class LoggerInterceptor2 implements StatedInterceptor {
-  async stateInitIntercept(context: EffectContext, next: NextCaller) {
+  async stateInit(context: EffectContext, next: NextCaller) {
     console.log('2. before init', context.toString());
     await next();
     console.log('2. after init', context.toString());
   }
 
-  async stateChangeIntercept(context: EffectContext, next: NextCaller) {
+  async stateChange(context: EffectContext, next: NextCaller) {
     console.log('2. before change', context.toString());
     await next();
     console.log('2. after change', context.toString());
   }
 }
 
-app.setBeanFactory(inversifyBeanFactory);
+app.setBeanFactory(beanFactory);
 app.setInterceptors(new LoggerInterceptor(), new LoggerInterceptor2());
 
 const App = () => {

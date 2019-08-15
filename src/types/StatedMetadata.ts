@@ -10,8 +10,8 @@ export interface StatedFieldMeta {
   target: Function;
 }
 
-export interface PostMethodMeta {
+export interface PostMethodMeta<T = Function> {
   name: string | symbol;
   target: Function;
-  descriptor: TypedPropertyDescriptor<unknown>;
+  descriptor: TypedPropertyDescriptor<T>;
 }

@@ -10,8 +10,5 @@ checks:
     options:
       ignoreCatch: true
       ignoreFiles:
-        - .cache
-        - coverage
-        - dist
-        - output
+        - dist/**/*
       strict: true

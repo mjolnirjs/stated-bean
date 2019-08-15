@@ -37,7 +37,7 @@ describe('metadata', () => {
     expect(beanMeta!.name).toEqual(sampleStatedBeanName);
     expect(beanMeta!.statedFields).not.toBeNull();
 
-    if (beanMeta !== undefined && beanMeta.statedFields !== undefined) {
+    if (beanMeta != null && beanMeta.statedFields != null) {
       const field1 = beanMeta.statedFields[0];
       expect(field1.name).toEqual('statedField');
     }

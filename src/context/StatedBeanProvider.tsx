@@ -1,6 +1,6 @@
 import { StatedBeanApplication } from '../core';
 import { useContainer } from '../hooks';
-import { ClassType } from '../types/ClassType';
+import { ClassType } from '../types';
 
 import { getStatedBeanContext } from './StatedBeanContext';
 

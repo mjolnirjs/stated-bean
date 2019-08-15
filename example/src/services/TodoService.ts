@@ -1,9 +1,15 @@
 import { Injectable } from 'injection-js';
 
+export type Todo = Partial<{
+  id: number;
+  text: string;
+  state: 'todo' | 'done';
+}>;
+
 @Injectable()
 export class TodoService {
   async fetchTodoList() {
-    return new Promise(resolve => {
+    return new Promise<Todo[]>(resolve => {
       setTimeout(() => {
         resolve([
           {

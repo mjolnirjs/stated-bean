@@ -1,60 +1,57 @@
-import {
-  StatedInterceptor,
-  InterceptMethod,
-} from '../interceptor/StatedInterceptor';
+import { StatedInterceptor } from '../interceptor/StatedInterceptor';
 import { ClassType } from '../types';
 
 import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
 import { EffectContext } from './EffectContext';
 
 export class StatedBeanApplication {
-  private _beanFactory: IBeanFactory;
+  private _beanFactory: IBeanFactory = new DefaultBeanFactory();
 
   private _interceptors: StatedInterceptor[] = [];
-
-  constructor() {
-    this._beanFactory = new DefaultBeanFactory();
-  }
-
-  setBeanFactory(beanFactory: IBeanFactory) {
-    this._beanFactory = beanFactory;
-  }
 
   getBeanFactory(): IBeanFactory {
     return this._beanFactory;
   }
 
-  setInterceptors(...interceptors: StatedInterceptor[]): void {
-    this._interceptors = [...interceptors];
-  }
-
-  addInterceptors(
-    ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
-  ): void {
-    if (interceptors) {
-      interceptors.forEach(interceptor => {
-        if (typeof interceptor === 'function') {
-          this._interceptors.push(this.getBeanFactory().get(interceptor));
-        } else {
-          this._interceptors.push(interceptor);
-        }
-      });
-    }
+  setBeanFactory(beanFactory: IBeanFactory) {
+    this._beanFactory = beanFactory;
+    return this;
   }
 
   getInterceptors() {
     return this._interceptors;
   }
 
-  async interceptStateInit(effect: EffectContext): Promise<void> {
-    return this.invokeInterceptors('stateInitIntercept', effect);
+  setInterceptors(...interceptors: StatedInterceptor[]) {
+    this._interceptors = [...interceptors];
+    return this;
   }
 
-  async interceptStateChange(effect: EffectContext): Promise<void> {
-    return this.invokeInterceptors('stateChangeIntercept', effect);
+  addInterceptors(
+    ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
+  ) {
+    interceptors.forEach(interceptor =>
+      this._interceptors.push(
+        typeof interceptor === 'function'
+          ? this.getBeanFactory().get(interceptor)
+          : interceptor,
+      ),
+    );
+    return this;
   }
 
-  private invokeInterceptors(method: string, effect: EffectContext) {
+  interceptStateInit<Bean, Value>(effect: EffectContext<Bean, Value>) {
+    return this.invokeInterceptors('stateInit', effect);
+  }
+
+  interceptStateChange<Bean, Value>(effect: EffectContext<Bean, Value>) {
+    return this.invokeInterceptors('stateChange', effect);
+  }
+
+  private invokeInterceptors<Bean, Value>(
+    method: keyof StatedInterceptor,
+    effect: EffectContext<Bean, Value>,
+  ) {
     let index = -1;
     const dispatch = (i: number): Promise<any> => {
       if (i <= index) {
@@ -67,10 +64,7 @@ export class StatedBeanApplication {
         interceptor = this._interceptors[i];
       }
 
-      const fn =
-        interceptor !== undefined
-          ? ((interceptor as any)[method] as InterceptMethod)
-          : undefined;
+      const fn = interceptor && interceptor[method];
 
       if (!fn) {
         return Promise.resolve();

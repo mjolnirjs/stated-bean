@@ -2,25 +2,17 @@
 
 exports[`react provider StatedBeanProvider 1`] = `
 Array [
-  <div>
-    0
-     
-    <button
-      id="addBtn"
-      onClick={[Function]}
-    >
-      add
-    </button>
-  </div>,
-  <div>
-    0
-     
-    <button
-      id="addBtn"
-      onClick={[Function]}
-    >
-      add
-    </button>
-  </div>,
+  "0",
+  <button
+    onClick={[Function]}
+  >
+    add
+  </button>,
+  "0",
+  <button
+    onClick={[Function]}
+  >
+    add
+  </button>,
 ]
 `;

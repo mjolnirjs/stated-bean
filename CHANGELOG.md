@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1-alpha.3](https://github.com/mjolnirjs/stated-bean/compare/v0.1.1-alpha.2...v0.1.1-alpha.3) (2019-08-16)
+
+
+### Bug Fixes
+
+* workaround for descriptor undefined ([596b1b6](https://github.com/mjolnirjs/stated-bean/commit/596b1b6))
+
 ### 0.1.1-alpha.2 (2019-08-15)
 
 

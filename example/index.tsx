@@ -65,6 +65,8 @@ const App = () => {
     <StatedBeanProvider application={app} types={[CounterModel, TodoModel]}>
       <Counter />
       <hr />
+      <Counter />
+      <hr />
       <TodoApp />
     </StatedBeanProvider>
   );

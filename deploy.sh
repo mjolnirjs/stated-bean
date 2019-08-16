@@ -11,8 +11,8 @@ git checkout "$TRAVIS_BRANCH"
 PKG_VERSION=$(jq -r '.version' package.json)
 
 git fetch origin v"$PKG_VERSION" || {
-  yarn add -D standard-version
-  yarn run standard-version -a --release-as "$PKG_VERSION"
+  yarn global add standard-version
+  standard-version -a --release-as "$PKG_VERSION"
   git push --follow-tags origin "$TRAVIS_BRANCH"
   npm publish --access=public
 }

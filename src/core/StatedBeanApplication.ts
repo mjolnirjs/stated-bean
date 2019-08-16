@@ -30,13 +30,20 @@ export class StatedBeanApplication {
   addInterceptors(
     ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
   ) {
-    interceptors.forEach(interceptor =>
-      this._interceptors.push(
-        typeof interceptor === 'function'
-          ? this.getBeanFactory().get(interceptor)
-          : interceptor,
-      ),
-    );
+    interceptors.forEach(interceptor => {
+      if (typeof interceptor === 'function') {
+        const interceptorBean = this.getBeanFactory().get(interceptor);
+        if (interceptorBean) {
+          this._interceptors.push(interceptorBean);
+        } else {
+          throw new Error(
+            `get interceptor[${interceptor.name}] from bean factory fail`,
+          );
+        }
+      } else {
+        this._interceptors.push(interceptor);
+      }
+    });
     return this;
   }
 

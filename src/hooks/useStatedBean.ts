@@ -15,14 +15,14 @@ export function useStatedBean<T extends ClassType>(
     dependentFields: [],
     scope: StatedBeanScope.DEFAULT,
   },
-): InstanceType<T> | undefined {
+): InstanceType<T> {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
 
   const getContainer = useCallback(() => {
     let container;
     if (option.scope === StatedBeanScope.DEFAULT) {
-      if (!context.container || !context.container.hasBean(type)) {
+      if (context.container === undefined || !context.container.hasBean(type)) {
         container = new StatedBeanContainer();
       } else {
         container = context.container;
@@ -32,31 +32,36 @@ export function useStatedBean<T extends ClassType>(
     } else if (option.scope === StatedBeanScope.CONTEXT) {
       container = context.container;
     }
+
+    if (container === undefined) {
+      container = new StatedBeanContainer();
+    }
+    container.register(type);
     return container;
   }, [option.scope, context.container, type]);
-  const [container, setContainer] = useState<StatedBeanContainer | undefined>(
-    () => getContainer(),
+  const [container, setContainer] = useState<StatedBeanContainer>(() =>
+    getContainer(),
+  );
+
+  const [bean, setBean] = useState(() =>
+    container.getBean<InstanceType<T>>(type),
   );
 
   useEffect(() => {
     const container = getContainer();
     setContainer(container);
 
-    if (container) {
-      container.register(type);
-    }
+    container.register(type);
+    setBean(container.getBean<InstanceType<T>>(type));
   }, [getContainer, type]);
 
   if (container === undefined) {
     throw new Error('not found container');
   }
-  const [bean, setBean] = useState(() =>
-    container.getBean<InstanceType<T>>(type),
-  );
 
-  useEffect(() => {
-    setBean(container.getBean<InstanceType<T>>(type));
-  }, [container, type]);
+  if (bean === undefined) {
+    throw new Error(`get bean[${type.name}] error`);
+  }
 
   const [, setVersion] = useState(0);
 

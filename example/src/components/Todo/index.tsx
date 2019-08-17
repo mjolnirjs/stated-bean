@@ -16,7 +16,7 @@ function TodoList(props: { items: Todo[] }) {
 
 export const TodoApp = () => {
   const todo = useStatedBean(TodoModel);
-  console.log('todo.current', todo.current);
+
   return (
     <div>
       <h3>TODO</h3>

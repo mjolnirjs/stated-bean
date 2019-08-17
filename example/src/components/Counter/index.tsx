@@ -1,10 +1,12 @@
 import { CounterModel } from '../../models/CounterModel';
 
-import { useStatedBean } from 'stated-bean';
+import { useStatedBean, StatedBeanScope } from 'stated-bean';
 import React from 'react';
 
 export function Counter() {
-  const counter = useStatedBean(CounterModel);
+  const counter = useStatedBean(CounterModel, {
+    scope: StatedBeanScope.REQUEST,
+  });
 
   return (
     <div>

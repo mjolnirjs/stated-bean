@@ -8,10 +8,6 @@ export function Counter() {
     scope: StatedBeanScope.REQUEST,
   });
 
-  if (counter === undefined) {
-    return null;
-  }
-
   return (
     <div>
       <button onClick={counter.decrement}>-</button>

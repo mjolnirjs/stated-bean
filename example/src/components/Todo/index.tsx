@@ -17,9 +17,6 @@ function TodoList(props: { items: Todo[] }) {
 export const TodoApp = () => {
   const todo = useStatedBean(TodoModel);
 
-  if (todo === undefined) {
-    return null;
-  }
   return (
     <div>
       <h3>TODO</h3>

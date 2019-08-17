@@ -32,18 +32,11 @@ class SampleStatedBean {
 describe('react provider', () => {
   const TestStatedBean = SampleStatedBean;
 
-  class T {
-    t!: number;
-  }
-
   beforeAll(() => getMetadataStorage().clear());
 
   it('StatedBeanProvider', () => {
     const Sample = () => {
       const bean = useStatedBean(TestStatedBean);
-
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      expect(() => useStatedBean(T)).toThrow();
 
       expect(bean).not.toBeNull();
       expect(bean.statedField).toEqual(0);
@@ -93,7 +86,7 @@ describe('react provider', () => {
 
     app.find('button').simulate('click');
 
-    setTimeout(() => expect(app.find('.field').text()).toBe('field=1'));
+    setTimeout(() => expect(app.find('.field').text()).toBe('field=1'), 200);
   });
 
   it('StatedBeanConsumer', () => {

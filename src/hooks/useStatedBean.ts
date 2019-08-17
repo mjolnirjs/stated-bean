@@ -21,27 +21,22 @@ export function useStatedBean<T extends ClassType>(
 
   const getContainer = useCallback(() => {
     let container;
-    if (option.scope === StatedBeanScope.DEFAULT) {
-      if (context.container === undefined || !context.container.hasBean(type)) {
-        container = new StatedBeanContainer();
-      } else {
-        container = context.container;
-      }
-    } else if (option.scope === StatedBeanScope.REQUEST) {
-      container = new StatedBeanContainer();
-    } else if (option.scope === StatedBeanScope.CONTEXT) {
-      container = context.container;
-    }
 
-    if (container === undefined) {
-      container = new StatedBeanContainer();
+    if (option.scope === StatedBeanScope.CONTEXT) {
+      container = context.container;
+    } else {
+      container = context.container || new StatedBeanContainer();
+      container.register(type);
     }
-    container.register(type);
     return container;
   }, [option.scope, context.container, type]);
-  const [container, setContainer] = useState<StatedBeanContainer>(() =>
-    getContainer(),
+  const [container, setContainer] = useState<StatedBeanContainer | undefined>(
+    () => getContainer(),
   );
+
+  if (container === undefined) {
+    throw new Error('not found container');
+  }
 
   const [bean, setBean] = useState(() =>
     container.getBean<InstanceType<T>>(type),
@@ -49,15 +44,13 @@ export function useStatedBean<T extends ClassType>(
 
   useEffect(() => {
     const container = getContainer();
-    setContainer(container);
 
-    container.register(type);
-    setBean(container.getBean<InstanceType<T>>(type));
+    if (container) {
+      setContainer(container);
+      container.register(type);
+      setBean(container.getBean<InstanceType<T>>(type));
+    }
   }, [getContainer, type]);
-
-  if (container === undefined) {
-    throw new Error('not found container');
-  }
 
   if (bean === undefined) {
     throw new Error(`get bean[${type.name}] error`);
@@ -66,10 +59,6 @@ export function useStatedBean<T extends ClassType>(
   const [, setVersion] = useState(0);
 
   useEffect(() => {
-    if (bean === undefined) {
-      return;
-    }
-
     const changeEvent = Symbol.for(bean.constructor.name + '_changed');
     const beanChangeListener = (effect: EffectContext) => {
       // console.log('receive change event', effect);

@@ -24,10 +24,14 @@ export function useStatedBean<T extends ClassType>(
 
     if (option.scope === StatedBeanScope.CONTEXT) {
       container = context.container;
+    } else if (option.scope === StatedBeanScope.REQUEST) {
+      container = new StatedBeanContainer();
+      container.register(type);
     } else {
       container = context.container || new StatedBeanContainer();
       container.register(type);
     }
+
     return container;
   }, [option.scope, context.container, type]);
   const [container, setContainer] = useState<StatedBeanContainer | undefined>(

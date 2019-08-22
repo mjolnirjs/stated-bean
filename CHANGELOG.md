@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-RC.1](https://github.com/mjolnirjs/stated-bean/compare/v0.1.2-RC...v0.1.2-RC.1) (2019-08-22)
+
+
+### Bug Fixes
+
+* **event:** timing of event subscribe ([08fc419](https://github.com/mjolnirjs/stated-bean/commit/08fc419))
+
 ### [0.1.2-RC](https://github.com/mjolnirjs/stated-bean/compare/v0.1.2-alpha.2...v0.1.2-RC) (2019-08-22)
 
 ### [0.1.2-alpha.2](https://github.com/mjolnirjs/stated-bean/compare/v0.1.2-alpha.1...v0.1.2-alpha.2) (2019-08-19)

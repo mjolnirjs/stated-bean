@@ -1,12 +1,12 @@
 {
   "name": "stated-bean",
-  "version": "0.1.2-alpha.2",
+  "version": "0.1.2-RC",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
   "main": "dist/cjs",
   "module": "dist/es",
   "unpkg": "dist/umd",
-  "types": "dist/types",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],

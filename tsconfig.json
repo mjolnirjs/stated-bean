@@ -15,7 +15,7 @@
     "paths": {
       "stated-bean": ["src"]
     },
-    "sourceMap": true,
+    "inlineSourceMap": true,
     "strict": true,
     "stripInternal": true,
     "target": "es5"

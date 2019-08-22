@@ -18,7 +18,7 @@ export class TodoService {
             state: 'todo',
           },
         ]);
-      }, 500);
+      }, 1);
     });
   }
 }

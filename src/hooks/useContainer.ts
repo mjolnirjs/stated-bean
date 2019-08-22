@@ -12,12 +12,11 @@ export function useContainer(
   const context = useContext(StatedBeanContext);
 
   const [container] = useState(() => {
-    const c = new StatedBeanContainer(context.container, application);
-    c.register(...types);
-    return c;
+    return new StatedBeanContainer(context.container, application);
   });
 
   useEffect(() => {
+    console.log('stated-bean register,', (types || []).map(t => t.name));
     container.register(...types);
   }, [container, types]);
   return container;

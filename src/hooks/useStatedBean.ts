@@ -18,8 +18,25 @@ export function useStatedBean<T extends ClassType>(
 ): InstanceType<T> {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
+  const [, setVersion] = useState(0);
+  const [changeEvent] = useState(Symbol.for(type.name + '_changed'));
 
-  const getContainer = useCallback(() => {
+  const beanChangeListener = useCallback(
+    (effect: EffectContext) => {
+      // console.log('receive change event', effect);
+      const field = effect.fieldMeta.name;
+      if (
+        option.dependentFields == null ||
+        option.dependentFields.length === 0 ||
+        option.dependentFields.includes(field)
+      ) {
+        setVersion(prev => prev + 1);
+      }
+    },
+    [option.dependentFields],
+  );
+
+  const [container] = useState<StatedBeanContainer | undefined>(() => {
     let container;
 
     if (option.scope === StatedBeanScope.CONTEXT) {
@@ -32,52 +49,28 @@ export function useStatedBean<T extends ClassType>(
       container.register(type);
     }
 
+    if (container !== undefined) {
+      container.on(changeEvent, beanChangeListener);
+    }
     return container;
-  }, [option.scope, context.container, type]);
-  const [container, setContainer] = useState<StatedBeanContainer | undefined>(
-    () => getContainer(),
-  );
+  });
 
   if (container === undefined) {
     throw new Error('not found container');
   }
 
-  const [bean, setBean] = useState(() =>
-    container.getBean<InstanceType<T>>(type),
-  );
-
-  useEffect(() => {
-    const container = getContainer();
-
-    if (container) {
-      setContainer(container);
-      container.register(type);
-      setBean(container.getBean<InstanceType<T>>(type));
-    }
-  }, [getContainer, type]);
+  const [bean] = useState(() => {
+    return container.getBean<InstanceType<T>>(type);
+  });
 
   if (bean === undefined) {
     throw new Error(`get bean[${type.name}] error`);
   }
 
-  const [, setVersion] = useState(0);
-
   useEffect(() => {
-    const changeEvent = Symbol.for(bean.constructor.name + '_changed');
-    const beanChangeListener = (effect: EffectContext) => {
-      // console.log('receive change event', effect);
-      const field = effect.fieldMeta.name;
-      if (
-        option.dependentFields == null ||
-        option.dependentFields.length === 0 ||
-        option.dependentFields.includes(field)
-      ) {
-        setVersion(prev => prev + 1);
-      }
-    };
-    container.on(changeEvent, beanChangeListener);
     return () => container.off(changeEvent, beanChangeListener);
-  }, [container, bean, option.dependentFields]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return bean;
 }

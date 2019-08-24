@@ -123,6 +123,7 @@ export class StatedBeanContainer extends Event {
           value,
         );
 
+        bean[tempFieldSymbol] = effect.getValue();
         self.application.interceptStateChange(effect).then(() => {
           bean[tempFieldSymbol] = effect.getValue();
           // console.log(bean.constructor.name + '_changed');

@@ -1,4 +1,4 @@
-export const enum StatedBeanScope {
+export enum StatedBeanScope {
   DEFAULT = 'DEFAULT',
   REQUEST = 'REQUEST',
   CONTEXT = 'CONTEXT',

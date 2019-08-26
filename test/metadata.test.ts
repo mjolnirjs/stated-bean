@@ -2,7 +2,7 @@ import { getMetadataStorage } from '../src/metadata';
 import { StatedBean, Stated } from '../src';
 
 describe('metadata', () => {
-  let sampleStatedBeanName: string;
+  let sampleStatedBean: Function;
 
   beforeAll(() => {
     getMetadataStorage().clear();
@@ -21,7 +21,7 @@ describe('metadata', () => {
       }
     }
 
-    sampleStatedBeanName = SampleStatedBean.name;
+    sampleStatedBean = SampleStatedBean;
   });
 
   it('get metadata storage from window', () => {
@@ -31,10 +31,10 @@ describe('metadata', () => {
 
   it('stated bean decorator metadata collected', () => {
     const storage = getMetadataStorage();
-    const beanMeta = storage.getBeanMeta(sampleStatedBeanName);
+    const beanMeta = storage.getBeanMeta(sampleStatedBean);
 
     expect(beanMeta).not.toBeNull();
-    expect(beanMeta!.name).toEqual(sampleStatedBeanName);
+    expect(beanMeta!.target).toEqual(sampleStatedBean);
     expect(beanMeta!.statedFields).not.toBeNull();
 
     if (beanMeta != null && beanMeta.statedFields != null) {

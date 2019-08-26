@@ -1,24 +1,24 @@
 type EventListenFn = (...args: any) => void;
-type EventTypes = Map<string | symbol, EventListenFn[]>;
+type EventTypes = WeakMap<Function, EventListenFn[]>;
 
 export class Event {
-  events: EventTypes = new Map();
+  events: EventTypes = new WeakMap();
 
-  on(evtName: string | symbol, cb: EventListenFn) {
-    this.events.set(evtName, (this.events.get(evtName) || []).concat(cb));
+  on(type: Function, cb: EventListenFn) {
+    this.events.set(type, (this.events.get(type) || []).concat(cb));
   }
 
-  emit(evtName: string | symbol, ...data: any) {
-    if (this.events.has(evtName)) {
-      this.events.get(evtName)!.forEach(cb => {
+  emit(type: Function, ...data: any) {
+    if (this.events.has(type)) {
+      this.events.get(type)!.forEach(cb => {
         cb(...data);
       });
     }
   }
 
-  off(evtName: string | symbol, cb: EventListenFn) {
-    if (this.events.has(evtName)) {
-      this.events.set(evtName, this.events.get(evtName)!.filter(c => c !== cb));
+  off(type: Function, cb: EventListenFn) {
+    if (this.events.has(type)) {
+      this.events.set(type, this.events.get(type)!.filter(c => c !== cb));
     }
   }
 }

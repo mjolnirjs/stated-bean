@@ -49,7 +49,7 @@ describe('StatedBeanApplication', () => {
         ).toEqual(true);
         expect(
           context.beanMeta ===
-            getMetadataStorage().getBeanMeta(SampleStatedBean.name),
+            getMetadataStorage().getBeanMeta(SampleStatedBean),
         ).toEqual(true);
         expect(
           context.beanMeta.statedFields!.includes(context.fieldMeta),

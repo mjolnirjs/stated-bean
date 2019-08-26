@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2-RC.3](https://github.com/mjolnirjs/stated-bean/compare/v0.1.2-RC.2...v0.1.2-RC.3) (2019-08-26)
+
+
+### Bug Fixes
+
+* **core:** preserve enum StatedBeanScope in build ([#36](https://github.com/mjolnirjs/stated-bean/issues/36)) ([d7ae4b4](https://github.com/mjolnirjs/stated-bean/commit/d7ae4b4))
+
 ### [0.1.2-RC.2](https://github.com/mjolnirjs/stated-bean/compare/v0.1.2-RC.1...v0.1.2-RC.2) (2019-08-24)
 
 

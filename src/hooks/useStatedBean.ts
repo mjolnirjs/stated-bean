@@ -48,9 +48,6 @@ export function useStatedBean<T extends ClassType>(
       container.register(type);
     }
 
-    if (container !== undefined) {
-      container.on(type, beanChangeListener);
-    }
     return container;
   });
 
@@ -59,7 +56,11 @@ export function useStatedBean<T extends ClassType>(
   }
 
   const [bean] = useState(() => {
-    return container.getBean<InstanceType<T>>(type);
+    const bean = container.getBean<InstanceType<T>>(type);
+    if (container !== undefined) {
+      container.on(bean, beanChangeListener);
+    }
+    return bean;
   });
 
   if (bean === undefined) {

@@ -4,6 +4,7 @@ import { getMetadataStorage } from '../metadata';
 
 import { StatedBeanApplication } from './StatedBeanApplication';
 import { EffectContext } from './EffectContext';
+import { ForceUpdate } from './ForceUpdate';
 
 export class StatedBeanContainer extends Event {
   private readonly _parent?: StatedBeanContainer;
@@ -75,11 +76,12 @@ export class StatedBeanContainer extends Event {
       return;
     }
 
+    this.addForceUpdate(bean, beanMeta);
+
     const fields = beanMeta.statedFields || [];
     const observers = (fields || []).map(field =>
       this.observeBeanField(bean, field, beanMeta),
     );
-
     await Promise.all(observers);
 
     if (
@@ -89,6 +91,32 @@ export class StatedBeanContainer extends Event {
       const f = beanMeta.postMethod.descriptor.value;
       f!.apply(bean);
     }
+  }
+
+  addForceUpdate<T>(bean: T, beanMeta: StatedBeanMeta) {
+    const self = this;
+    Object.defineProperty(bean, ForceUpdate, {
+      value: function(field: keyof T & string) {
+        if (bean[field] === undefined) {
+          return;
+        }
+        const fieldMeta = (beanMeta.statedFields || []).find(
+          f => f.name === field,
+        );
+        if (fieldMeta === undefined) {
+          return;
+        }
+        const effect = self.createEffectContext(
+          bean[field],
+          bean,
+          beanMeta,
+          fieldMeta,
+          bean[field],
+        );
+
+        self.emit(bean, effect);
+      },
+    });
   }
 
   async observeBeanField(
@@ -123,11 +151,13 @@ export class StatedBeanContainer extends Event {
           value,
         );
 
-        bean[proxyField] = effect.getValue();
+        bean[proxyField] = value;
         self.application.interceptStateChange(effect).then(() => {
-          bean[proxyField] = effect.getValue();
+          if (effect.getValue() !== value) {
+            bean[proxyField] = effect.getValue();
+          }
           // console.log(bean.constructor.name + '_changed');
-          self.emit(beanMeta.target, effect);
+          self.emit(bean, effect);
         });
       },
       get() {

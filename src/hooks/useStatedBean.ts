@@ -19,7 +19,6 @@ export function useStatedBean<T extends ClassType>(
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
-  const [changeEvent] = useState(Symbol.for(type.name + '_changed'));
 
   const beanChangeListener = useCallback(
     (effect: EffectContext) => {
@@ -50,7 +49,7 @@ export function useStatedBean<T extends ClassType>(
     }
 
     if (container !== undefined) {
-      container.on(changeEvent, beanChangeListener);
+      container.on(type, beanChangeListener);
     }
     return container;
   });
@@ -68,7 +67,7 @@ export function useStatedBean<T extends ClassType>(
   }
 
   useEffect(() => {
-    return () => container.off(changeEvent, beanChangeListener);
+    return () => container.off(type, beanChangeListener);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

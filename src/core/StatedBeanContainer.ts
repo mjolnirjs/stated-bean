@@ -69,7 +69,7 @@ export class StatedBeanContainer extends Event {
 
   async registerBean<T>(type: ClassType<T>, bean: T | undefined) {
     const storage = getMetadataStorage();
-    const beanMeta = storage.getBeanMeta(type.name);
+    const beanMeta = storage.getBeanMeta(type);
 
     if (beanMeta === undefined || bean === undefined) {
       return;
@@ -96,10 +96,10 @@ export class StatedBeanContainer extends Event {
     fieldMeta: StatedFieldMeta,
     beanMeta: StatedBeanMeta,
   ) {
-    const tempFieldSymbol = Symbol(fieldMeta.name.toString() + '_version');
+    const proxyField = Symbol(fieldMeta.name.toString() + '_v');
 
     const initEffect = this.createEffectContext(
-      bean[tempFieldSymbol],
+      bean[proxyField],
       bean,
       beanMeta,
       fieldMeta,
@@ -107,7 +107,7 @@ export class StatedBeanContainer extends Event {
     );
     await this.application.interceptStateInit(initEffect);
 
-    Object.defineProperty(bean, tempFieldSymbol, {
+    Object.defineProperty(bean, proxyField, {
       writable: true,
       value: initEffect.getValue(),
     });
@@ -116,22 +116,22 @@ export class StatedBeanContainer extends Event {
     Object.defineProperty(bean, fieldMeta.name.toString(), {
       set(value) {
         const effect = self.createEffectContext(
-          bean[tempFieldSymbol],
+          bean[proxyField],
           bean,
           beanMeta,
           fieldMeta,
           value,
         );
 
-        bean[tempFieldSymbol] = effect.getValue();
+        bean[proxyField] = effect.getValue();
         self.application.interceptStateChange(effect).then(() => {
-          bean[tempFieldSymbol] = effect.getValue();
+          bean[proxyField] = effect.getValue();
           // console.log(bean.constructor.name + '_changed');
-          self.emit(Symbol.for(bean.constructor.name + '_changed'), effect);
+          self.emit(beanMeta.target, effect);
         });
       },
       get() {
-        return bean[tempFieldSymbol];
+        return bean[proxyField];
       },
     });
   }

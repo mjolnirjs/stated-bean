@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.1.2-RC.3",
+  "version": "0.1.2-RC.4",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
   "main": "dist/cjs",

@@ -1,14 +1,14 @@
 import { StatedBeanMeta, StatedFieldMeta, PostMethodMeta } from '../types';
 
 export class StatedBeanMetaStorage {
-  private readonly beans: Map<string | symbol, StatedBeanMeta>;
+  private beans: WeakMap<Function, StatedBeanMeta>;
 
   private tempTypeFields: WeakMap<Function, StatedFieldMeta[]>;
 
   private tempPostMethod: WeakMap<Function, PostMethodMeta>;
 
   constructor() {
-    this.beans = new Map();
+    this.beans = new WeakMap();
     this.tempTypeFields = new WeakMap();
     this.tempPostMethod = new WeakMap();
   }
@@ -18,7 +18,7 @@ export class StatedBeanMetaStorage {
     const fields = this.tempTypeFields.get(type);
     bean.statedFields = fields;
     bean.postMethod = this.tempPostMethod.get(type);
-    this.beans.set(bean.name, bean);
+    this.beans.set(type, bean);
 
     this.tempTypeFields.delete(type);
     this.tempPostMethod.delete(type);
@@ -38,12 +38,12 @@ export class StatedBeanMetaStorage {
     this.tempPostMethod.set(method.target, method);
   }
 
-  getBeanMeta(name: string | symbol): StatedBeanMeta | undefined {
-    return this.beans.get(name);
+  getBeanMeta(type: Function): StatedBeanMeta | undefined {
+    return this.beans.get(type);
   }
 
   clear() {
-    this.beans.clear();
+    this.beans = new WeakMap();
     this.tempTypeFields = new WeakMap();
     this.tempPostMethod = new WeakMap();
   }

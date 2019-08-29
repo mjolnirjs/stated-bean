@@ -1,10 +1,4 @@
-import {
-  StatedBean,
-  Stated,
-  StatedBeanProvider,
-  useStatedBean,
-  StatedBeanScope,
-} from '../src';
+import { StatedBean, Stated, StatedBeanProvider, useStatedBean } from '../src';
 import { getMetadataStorage } from '../src/metadata';
 
 import React from 'react';
@@ -27,27 +21,15 @@ describe('useStatedBean test', () => {
 
   it('DEFAULT scope', () => {
     const Sample = () => {
-      const bean = useStatedBean(StatedBeanScopeSample);
+      // expect(() => {
+      //   // eslint-disable-next-line react-hooks/rules-of-hooks
+      //   useStatedBean(StatedBeanScopeSample);
+      // }).toThrow();
 
-      expect(bean).not.toBeNull();
-      expect(bean.test).toEqual(0);
-
-      expect(() => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useStatedBean(StatedBeanScopeSample2, {
-          scope: StatedBeanScope.CONTEXT,
-        });
-      }).toThrow();
-
-      const bean2 = useStatedBean(StatedBeanScopeSample2);
+      const bean2 = useStatedBean(() => new StatedBeanScopeSample2());
       expect(bean2).not.toBeNull();
 
-      const bean3 = useStatedBean(StatedBeanScopeSample2, {
-        scope: StatedBeanScope.REQUEST,
-      });
-      expect(bean3).not.toBeNull();
-
-      return <>{bean.test}</>;
+      return <>{bean2.test}</>;
     };
 
     const App = () => (

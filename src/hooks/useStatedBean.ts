@@ -1,4 +1,4 @@
-import { EffectContext, StatedBeanScope, StatedBeanContainer } from '../core';
+import { EffectContext, StatedBeanContainer, isStatedBean } from '../core';
 import { getStatedBeanContext } from '../context';
 import { ClassType } from '../types/ClassType';
 
@@ -6,16 +6,12 @@ import { useContext, useState, useEffect, useCallback } from 'react';
 
 export interface UseStatedBeanOption {
   dependentFields: Array<string | symbol>;
-  scope: StatedBeanScope;
 }
 
-export function useStatedBean<T extends ClassType>(
-  type: T,
-  option: Partial<UseStatedBeanOption> = {
-    dependentFields: [],
-    scope: StatedBeanScope.DEFAULT,
-  },
-): InstanceType<T> {
+export function useStatedBean<T>(
+  type: ClassType<T> | (() => T),
+  option: Partial<UseStatedBeanOption> = {},
+): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
@@ -35,20 +31,25 @@ export function useStatedBean<T extends ClassType>(
     [option.dependentFields],
   );
 
-  const [container] = useState<StatedBeanContainer | undefined>(() => {
+  const [{ container, classType }] = useState<{
+    container: StatedBeanContainer | undefined;
+    classType: ClassType<T>;
+  }>(() => {
+    let classType: ClassType<T> = type as ClassType<T>;
     let container;
-
-    if (option.scope === StatedBeanScope.CONTEXT) {
-      container = context.container;
-    } else if (option.scope === StatedBeanScope.REQUEST) {
+    if (!Object.hasOwnProperty.call(type, isStatedBean)) {
+      const bean = (type as (() => T))();
+      classType = (bean as any).constructor;
       container = new StatedBeanContainer();
-      container.register(type);
+      container.registerType(classType, bean);
     } else {
-      container = context.container || new StatedBeanContainer();
-      container.register(type);
+      container = context.container;
+      if (container !== undefined) {
+        container.register(classType);
+      }
     }
 
-    return container;
+    return { container, classType };
   });
 
   if (container === undefined) {
@@ -56,7 +57,7 @@ export function useStatedBean<T extends ClassType>(
   }
 
   const [bean] = useState(() => {
-    const bean = container.getBean<InstanceType<T>>(type);
+    const bean = container.getBean<T>(classType);
     if (container !== undefined) {
       container.on(bean, beanChangeListener);
     }

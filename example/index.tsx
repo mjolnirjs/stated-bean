@@ -10,7 +10,6 @@ import {
   NextCaller,
 } from '../src';
 
-import { CounterModel } from './src/models/CounterModel';
 import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
@@ -62,7 +61,7 @@ app.setInterceptors(new LoggerInterceptor(), new LoggerInterceptor2());
 
 const App = () => {
   return (
-    <StatedBeanProvider application={app} types={[CounterModel, TodoModel]}>
+    <StatedBeanProvider application={app} types={[TodoModel]}>
       <Counter />
       <hr />
       <Counter />

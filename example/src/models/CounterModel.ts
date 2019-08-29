@@ -8,6 +8,10 @@ export class CounterModel {
   @Stated()
   count = 0;
 
+  constructor(count: number) {
+    this.count = count;
+  }
+
   increment = () => {
     this.count++;
   };

@@ -4,11 +4,17 @@ import { StatedBeanContainer } from './StatedBeanContainer';
 
 export class EffectContext<Bean = unknown, Value = unknown> {
   constructor(
+    // @internal
     private readonly _oldValue: Value,
+    // @internal
     private readonly _bean: Bean,
+    // @internal
     private readonly _beanMeta: StatedBeanMeta,
+    // @internal
     private readonly _fieldMeta: StatedFieldMeta,
+    // @internal
     private readonly _container: StatedBeanContainer,
+    // @internal
     private _value?: Value,
   ) {}
 

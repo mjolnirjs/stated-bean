@@ -58,7 +58,6 @@ export class StatedBeanContainer extends Event {
         const bean = beanFactory.get(type);
 
         this._types.push(type);
-        this._beans.set(type, bean);
         return this.registerBean(type, bean);
       } else {
         return Promise.resolve();
@@ -68,7 +67,12 @@ export class StatedBeanContainer extends Event {
     return Promise.all(registers).then(() => {});
   }
 
+  registerType<T>(type: ClassType<T>, bean?: T) {
+    return this.registerBean(type, bean);
+  }
+
   async registerBean<T>(type: ClassType<T>, bean: T | undefined) {
+    this._beans.set(type, bean);
     const storage = getMetadataStorage();
     const beanMeta = storage.getBeanMeta(type);
 

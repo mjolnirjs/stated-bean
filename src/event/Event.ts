@@ -7,6 +7,7 @@ export class Event {
   events: EventTypes = new WeakMap();
 
   on(type: InstanceType<ClassType>, cb: EventListenFn) {
+    console.log('on', type);
     this.events.set(type, (this.events.get(type) || []).concat(cb));
   }
 

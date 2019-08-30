@@ -21,6 +21,8 @@ export class StatedBeanRegistry {
 
   register<T>(type: ClassType<T>, bean: T, name?: string | symbol) {
     const beanName = name || this.getBeanMetaName(type) || type.name;
+
+    console.log('register bean', beanName, type.name);
     const typedBeans = this.beans.get(beanName);
     if (typedBeans === undefined) {
       this.beans.set(beanName, new WeakMap().set(type, bean));

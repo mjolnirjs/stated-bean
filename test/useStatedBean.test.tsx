@@ -1,8 +1,10 @@
 import { StatedBean, Stated, StatedBeanProvider, useStatedBean } from '../src';
-import { getMetadataStorage } from '../src/metadata';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 @StatedBean()
 class StatedBeanScopeSample {
@@ -17,19 +19,23 @@ class StatedBeanScopeSample2 {
 }
 
 describe('useStatedBean test', () => {
-  beforeAll(() => getMetadataStorage().clear());
-
-  it('DEFAULT scope', () => {
+  it('bean create', () => {
     const Sample = () => {
-      // expect(() => {
-      //   // eslint-disable-next-line react-hooks/rules-of-hooks
-      //   useStatedBean(StatedBeanScopeSample);
-      // }).toThrow();
+      const bean = useStatedBean(StatedBeanScopeSample);
+      expect(bean).not.toBeNull();
 
       const bean2 = useStatedBean(() => new StatedBeanScopeSample2());
       expect(bean2).not.toBeNull();
 
-      return <>{bean2.test}</>;
+      return <>{bean.test}</>;
+    };
+
+    const Sample2 = () => {
+      expect(() => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        useStatedBean(StatedBeanScopeSample);
+      }).toThrow();
+      return null;
     };
 
     const App = () => (
@@ -37,12 +43,10 @@ describe('useStatedBean test', () => {
         <StatedBeanProvider types={[StatedBeanScopeSample]}>
           <Sample />
         </StatedBeanProvider>
-        <Sample />
+        <Sample2 />
       </>
     );
 
-    const div = document.createElement('div');
-    ReactDOM.render(<App />, div);
-    ReactDOM.unmountComponentAtNode(div);
+    Enzyme.mount(<App />);
   });
 });

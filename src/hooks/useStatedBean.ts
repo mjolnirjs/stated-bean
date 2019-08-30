@@ -63,7 +63,7 @@ export function useStatedBean<T>(
 
   const [bean] = useState(() => {
     const bean = container.getBean<T>(classType);
-    if (container !== undefined) {
+    if (container !== undefined && bean !== undefined) {
       container.on(bean, beanChangeListener);
     }
     return bean;

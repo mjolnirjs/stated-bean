@@ -38,6 +38,17 @@ export const TodoApp = () => {
           }}
           value={todo.current.text || ''}
         />
+        <select
+          onChange={e => {
+            todo.current = {
+              ...todo.current,
+              state: e.target.value as any,
+            };
+          }}
+        >
+          <option value="todo">todo</option>
+          <option value="done">done</option>
+        </select>
         <button>Add #{todo.todoList.length + 1}</button>
       </form>
     </div>

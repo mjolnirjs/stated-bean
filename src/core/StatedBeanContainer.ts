@@ -88,11 +88,11 @@ export class StatedBeanContainer extends Event {
 
     this.registry.register(type, bean, options.name);
 
-    this.defineForceUpdate(bean, beanMeta);
+    this._defineForceUpdate(bean, beanMeta);
 
     const fields = beanMeta.statedFields || [];
     const observers = (fields || []).map(field =>
-      this.observeBeanField(bean, field, beanMeta),
+      this._observeBeanField(bean, field, beanMeta),
     );
     await Promise.all(observers);
 
@@ -105,7 +105,8 @@ export class StatedBeanContainer extends Event {
     }
   }
 
-  defineForceUpdate<T>(bean: T, beanMeta: StatedBeanMeta) {
+  // @internal
+  private _defineForceUpdate<T>(bean: T, beanMeta: StatedBeanMeta) {
     const self = this;
     Object.defineProperty(bean, ForceUpdate, {
       value: function(field: keyof T & string) {
@@ -118,7 +119,7 @@ export class StatedBeanContainer extends Event {
         if (fieldMeta === undefined) {
           return;
         }
-        const effect = self.createEffectContext(
+        const effect = self._createEffectContext(
           bean[field],
           bean,
           beanMeta,
@@ -132,14 +133,14 @@ export class StatedBeanContainer extends Event {
   }
 
   // @internal
-  async observeBeanField(
+  private async _observeBeanField(
     bean: any,
     fieldMeta: StatedFieldMeta,
     beanMeta: StatedBeanMeta,
   ) {
     const proxyField = Symbol(fieldMeta.name.toString() + '_v');
 
-    const initEffect = this.createEffectContext(
+    const initEffect = this._createEffectContext(
       bean[proxyField],
       bean,
       beanMeta,
@@ -156,7 +157,7 @@ export class StatedBeanContainer extends Event {
     const self = this;
     Object.defineProperty(bean, fieldMeta.name.toString(), {
       set(value) {
-        const effect = self.createEffectContext(
+        const effect = self._createEffectContext(
           bean[proxyField],
           bean,
           beanMeta,
@@ -179,7 +180,8 @@ export class StatedBeanContainer extends Event {
     });
   }
 
-  createEffectContext<Bean, Value>(
+  // @internal
+  private _createEffectContext<Bean, Value>(
     oldValue: Value,
     bean: Bean,
     beanMeta: StatedBeanMeta,

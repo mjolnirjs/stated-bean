@@ -4,4 +4,4 @@ export * from './StatedBeanContainer';
 export * from './StatedBeanFactory';
 export * from './ForceUpdate';
 
-export const isStatedBean = Symbol('stated-bean');
+export const StatedBeanSymbol = Symbol('stated-bean');

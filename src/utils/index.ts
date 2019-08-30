@@ -1,4 +1,4 @@
-import { isStatedBean as StatedBeanSymbol } from '../core';
+import { StatedBeanSymbol } from '../core';
 
 export const isFunction = (func: any) => typeof func === 'function';
 

@@ -156,12 +156,12 @@ export class StatedBeanContainer extends Event {
         );
 
         bean[proxyField] = value;
+        self.emit(bean, effect);
         self.application.interceptStateChange(effect).then(() => {
           if (effect.getValue() !== value) {
             bean[proxyField] = effect.getValue();
+            self.emit(bean, effect);
           }
-          // console.log(bean.constructor.name + '_changed');
-          self.emit(bean, effect);
         });
       },
       get() {

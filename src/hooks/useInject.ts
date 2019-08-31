@@ -1,6 +1,6 @@
 import { getStatedBeanContext } from '../context';
 import { EffectContext } from '../core';
-import { ClassType } from '../types/ClassType';
+import { ClassType, StatedBeanType } from '../types';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -12,7 +12,7 @@ export interface UseStatedBeanOption<T> {
 export function useInject<T>(
   type: ClassType<T>,
   option: UseStatedBeanOption<T> = {},
-): T {
+): StatedBeanType<T> {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);

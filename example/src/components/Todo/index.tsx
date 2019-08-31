@@ -1,7 +1,7 @@
 import { TodoModel } from '../../models/TodoModel';
 import { Todo } from '../../services/TodoService';
 
-import { useStatedBean } from 'stated-bean';
+import { useInject } from 'stated-bean';
 import React from 'react';
 
 function TodoList(props: { items: Todo[] }) {
@@ -15,7 +15,7 @@ function TodoList(props: { items: Todo[] }) {
 }
 
 export const TodoApp = () => {
-  const todo = useStatedBean(TodoModel);
+  const todo = useInject(TodoModel);
 
   return (
     <div>

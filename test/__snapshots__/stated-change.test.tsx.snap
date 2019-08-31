@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stated value changed test StatedBeanProvider 1`] = `
+Array [
+  "0",
+  <button
+    onClick={[Function]}
+  >
+    add
+  </button>,
+  "0",
+  <button
+    onClick={[Function]}
+  >
+    add
+  </button>,
+]
+`;

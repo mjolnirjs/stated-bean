@@ -1,17 +1,19 @@
 import { Event } from '../event';
+import { getMetadataStorage } from '../metadata';
 import {
+  BeanRegisterOption,
   ClassType,
   StatedBeanMeta,
+  StatedBeanType,
   StatedFieldMeta,
-  BeanRegisterOption,
 } from '../types';
 import { isFunction } from '../utils';
 
 import { EffectContext } from './EffectContext';
-import { ForceUpdate } from './ForceUpdate';
 import { NoSuchBeanDefinitionError } from './NoSuchBeanDefinitionError';
 import { StatedBeanApplication } from './StatedBeanApplication';
 import { StatedBeanRegistry } from './StatedBeanRegistry';
+import { ForceUpdate, StatedBeanSymbol } from './Symbols';
 
 export class StatedBeanContainer extends Event {
   private readonly _parent?: StatedBeanContainer;
@@ -33,14 +35,44 @@ export class StatedBeanContainer extends Event {
     }
   }
 
-  getBean<T>(type: ClassType<T>, name?: string): T | undefined {
-    let bean = this.registry.getBean(type, name);
+  destroy() {
+    console.info('container destroyed.');
+  }
+
+  getBeanIdentity<T>(type: ClassType<T>, name?: string | symbol) {
+    return name || this.getBeanMetaName(type) || type.name;
+  }
+
+  getBeanMetaName<T>(type: ClassType<T>): string | symbol | undefined {
+    const beanMeta = this.getBeanMeta(type);
+
+    return beanMeta === undefined ? undefined : beanMeta.name;
+  }
+
+  getBeanMeta<T>(type: ClassType<T>): StatedBeanMeta | undefined {
+    const storage = getMetadataStorage();
+    return storage.getBeanMeta(type);
+  }
+
+  getBean<T>(
+    type: ClassType<T>,
+    name?: string | symbol,
+  ): StatedBeanType<T> | undefined {
+    const beanIdentity = this.getBeanIdentity(type, name);
+    let bean = this.registry.getBean(type, beanIdentity);
 
     if (bean == null && this.parent) {
       bean = this.parent.getBean(type, name);
     }
 
-    return bean as T;
+    return bean as StatedBeanType<T>;
+  }
+
+  addBean<T>(bean: StatedBeanType<T>) {
+    const { name, container } = bean[StatedBeanSymbol];
+    // TODO: if need off the listener.
+    container.on(bean, e => this.emit(bean, e));
+    this.registry.register(bean.constructor, bean, name);
   }
 
   hasBean<T>(type: ClassType<T>, name?: string): boolean {
@@ -64,7 +96,8 @@ export class StatedBeanContainer extends Event {
     beanOrSupplier: T | (() => T),
     options: BeanRegisterOption = {},
   ): Promise<void> {
-    if (this.registry.getBean(type, options.name) !== undefined) {
+    const identity = this.getBeanIdentity(type, options.name);
+    if (this.registry.getBean(type, identity) !== undefined) {
       return;
     }
 
@@ -80,14 +113,15 @@ export class StatedBeanContainer extends Event {
       throw new Error(`bean ${bean} mast be an instance of ${type.name}`);
     }
 
-    const beanMeta = this.registry.getBeanMeta(type);
+    const beanMeta = this.getBeanMeta(type);
 
     if (beanMeta === undefined) {
       throw new NoSuchBeanDefinitionError(type.name);
     }
 
-    this.registry.register(type, bean, options.name);
+    this.registry.register(type, bean, identity);
 
+    this._defineStatedBean(bean, this.getBeanIdentity(type, options.name));
     this._defineForceUpdate(bean, beanMeta);
 
     const fields = beanMeta.statedFields || [];
@@ -103,6 +137,16 @@ export class StatedBeanContainer extends Event {
       const f = beanMeta.postMethod.descriptor.value;
       f!.apply(bean);
     }
+  }
+
+  // @internal
+  private _defineStatedBean<T>(bean: T, name: string | symbol) {
+    Object.defineProperty(bean, StatedBeanSymbol, {
+      value: {
+        name,
+        container: this,
+      },
+    });
   }
 
   // @internal

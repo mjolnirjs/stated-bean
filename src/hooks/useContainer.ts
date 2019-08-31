@@ -1,17 +1,20 @@
-import { StatedBeanContainer, StatedBeanApplication } from '../core';
 import { getStatedBeanContext } from '../context';
-import { ClassType, BeanProvider } from '../types';
+import { StatedBeanApplication, StatedBeanContainer } from '../core';
+import { BeanProvider, ClassType } from '../types';
 
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import { StatedBeanType } from 'src/types/StatedBeanType';
 
 export interface UseContainerOption {
   types?: Array<ClassType<unknown>>;
+  beans?: Array<StatedBeanType<unknown>>;
   beanProvider?: BeanProvider;
   application?: StatedBeanApplication;
 }
 
 export function useContainer({
   types,
+  beans,
   beanProvider,
   application,
 }: UseContainerOption) {
@@ -19,18 +22,27 @@ export function useContainer({
   const context = useContext(StatedBeanContext);
 
   const [container] = useState(() => {
-    return new StatedBeanContainer(context.container, application);
-  });
+    const container = new StatedBeanContainer(context.container, application);
 
-  useEffect(() => {
-    console.log('stated-bean register,', (types || []).map(t => t.name));
     (types || []).forEach(type => {
       container.register(type);
+    });
+
+    (beans || []).forEach(bean => {
+      container.addBean(bean);
     });
 
     if (beanProvider !== undefined) {
       beanProvider(container.registerBean.bind(container));
     }
-  }, [container, types, beanProvider]);
+    return container;
+  });
+
+  useEffect(() => {
+    return () => {
+      container.destroy();
+    };
+  }, [container]);
+
   return container;
 }

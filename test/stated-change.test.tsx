@@ -1,17 +1,17 @@
-import {
-  StatedBean,
-  Stated,
-  StatedBeanConsumer,
-  StatedBeanProvider,
-  useStatedBean,
-  StatedBeanContextValue,
-} from '../src';
-
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
-import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+
+import {
+  Stated,
+  StatedBean,
+  StatedBeanConsumer,
+  StatedBeanContextValue,
+  StatedBeanProvider,
+  useInject,
+} from '../src';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -28,14 +28,14 @@ class SampleStatedBean {
   };
 }
 
-describe('react provider', () => {
+describe('stated value changed test', () => {
   const TestStatedBean = SampleStatedBean;
 
   // beforeAll(() => getMetadataStorage().clear());
 
   it('StatedBeanProvider', () => {
     const Sample = () => {
-      const bean = useStatedBean(TestStatedBean);
+      const bean = useInject(TestStatedBean);
 
       expect(bean).not.toBeNull();
       expect(bean.statedField).toEqual(0);
@@ -62,9 +62,9 @@ describe('react provider', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('useStatedBean and change the stated field', () => {
+  it('useInject and change the stated field', () => {
     const Sample = () => {
-      const bean = useStatedBean(TestStatedBean);
+      const bean = useInject(TestStatedBean);
       return (
         <>
           <span className="field">field={bean.statedField}</span>
@@ -85,7 +85,7 @@ describe('react provider', () => {
 
     app.find('button').simulate('click');
 
-    setTimeout(() => expect(app.find('.field').text()).toBe('field=1'), 200);
+    setTimeout(() => expect(app.find('.field').text()).toBe('field=1'), 100);
   });
 
   it('StatedBeanConsumer', () => {

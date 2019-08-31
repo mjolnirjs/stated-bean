@@ -8,6 +8,7 @@ import {
   EffectContext,
   StatedInterceptor,
   NextCaller,
+  useBean,
 } from '../src';
 
 import { Counter } from './src/components/Counter';
@@ -42,26 +43,13 @@ class LoggerInterceptor implements StatedInterceptor {
   }
 }
 
-class LoggerInterceptor2 implements StatedInterceptor {
-  async stateInit(context: EffectContext, next: NextCaller) {
-    console.log('2. before init', context.toString());
-    await next();
-    console.log('2. after init', context.toString());
-  }
-
-  async stateChange(context: EffectContext, next: NextCaller) {
-    console.log('2. before change', context.toString());
-    await next();
-    console.log('2. after change', context.toString());
-  }
-}
-
 app.setBeanFactory(beanFactory);
-app.setInterceptors(new LoggerInterceptor(), new LoggerInterceptor2());
+app.setInterceptors(new LoggerInterceptor());
 
 const App = () => {
+  const model = useBean(() => beanFactory.get(TodoModel));
   return (
-    <StatedBeanProvider application={app} types={[TodoModel]}>
+    <StatedBeanProvider application={app} beans={[model]}>
       <Counter />
       <hr />
       <Counter />

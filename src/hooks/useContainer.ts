@@ -1,13 +1,20 @@
 import { StatedBeanContainer, StatedBeanApplication } from '../core';
 import { getStatedBeanContext } from '../context';
-import { ClassType } from '../types';
+import { ClassType, BeanProvider } from '../types';
 
 import { useState, useEffect, useContext } from 'react';
 
-export function useContainer(
-  types: Array<ClassType<unknown>>,
-  application?: StatedBeanApplication,
-) {
+export interface UseContainerOption {
+  types?: Array<ClassType<unknown>>;
+  beanProvider?: BeanProvider;
+  application?: StatedBeanApplication;
+}
+
+export function useContainer({
+  types,
+  beanProvider,
+  application,
+}: UseContainerOption) {
   const StatedBeanContext = getStatedBeanContext();
   const context = useContext(StatedBeanContext);
 
@@ -17,7 +24,13 @@ export function useContainer(
 
   useEffect(() => {
     console.log('stated-bean register,', (types || []).map(t => t.name));
-    container.register(...types);
-  }, [container, types]);
+    (types || []).forEach(type => {
+      container.register(type);
+    });
+
+    if (beanProvider !== undefined) {
+      beanProvider(container.registerBean.bind(container));
+    }
+  }, [container, types, beanProvider]);
   return container;
 }

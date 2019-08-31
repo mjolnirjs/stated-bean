@@ -1,5 +1,5 @@
 export interface StatedBeanMeta {
-  name: string;
+  name: string | symbol;
   target: Function;
   statedFields?: StatedFieldMeta[];
   postMethod?: PostMethodMeta;

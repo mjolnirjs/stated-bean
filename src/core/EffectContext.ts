@@ -47,7 +47,7 @@ export class EffectContext<Bean = unknown, Value = unknown> {
   }
 
   toString() {
-    return `[${this.beanMeta.name}] ${String(this.fieldMeta.name)} ${
+    return `[${String(this.beanMeta.name)}] ${String(this.fieldMeta.name)} ${
       this.oldValue
     } => ${this._value}`;
   }

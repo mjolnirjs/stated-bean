@@ -1,19 +1,24 @@
-import { ClassType, StatedFieldMeta, StatedBeanMeta } from '../types';
 import { Event } from '../event';
-import { getMetadataStorage } from '../metadata';
+import {
+  ClassType,
+  StatedBeanMeta,
+  StatedFieldMeta,
+  BeanRegisterOption,
+} from '../types';
+import { isFunction } from '../utils';
 
-import { StatedBeanApplication } from './StatedBeanApplication';
 import { EffectContext } from './EffectContext';
 import { ForceUpdate } from './ForceUpdate';
+import { NoSuchBeanDefinitionError } from './NoSuchBeanDefinitionError';
+import { StatedBeanApplication } from './StatedBeanApplication';
+import { StatedBeanRegistry } from './StatedBeanRegistry';
 
 export class StatedBeanContainer extends Event {
   private readonly _parent?: StatedBeanContainer;
 
   private readonly _app!: StatedBeanApplication;
 
-  private readonly _types: ClassType[] = [];
-
-  private readonly _beans = new WeakMap<ClassType, unknown>();
+  private readonly registry: StatedBeanRegistry = new StatedBeanRegistry();
 
   constructor(parent?: StatedBeanContainer, app?: StatedBeanApplication) {
     super();
@@ -26,65 +31,68 @@ export class StatedBeanContainer extends Event {
       this._parent = parent;
       this._app = parent.application;
     }
-
-    // this._types.forEach(type => {
-    //   const bean = this._app.getBeanFactory().get(type);
-    //   this._beans.set(type, bean);
-    // });
   }
 
-  getBean<T>(type: ClassType<T>): T | undefined {
-    let bean = this._beans.get(type);
+  getBean<T>(type: ClassType<T>, name?: string): T | undefined {
+    let bean = this.registry.getBean(type, name);
 
     if (bean == null && this.parent) {
-      bean = this.parent.getBean(type);
+      bean = this.parent.getBean(type, name);
     }
 
     return bean as T;
   }
 
-  hasBean<T>(type: ClassType<T>): boolean {
-    return this.getBean(type) !== undefined;
+  hasBean<T>(type: ClassType<T>, name?: string): boolean {
+    return this.getBean(type, name) !== undefined;
   }
 
-  register(...types: Array<ClassType<unknown>>) {
-    if (types === undefined || types.length === 0) {
+  register<T>(type: ClassType<T>, options?: BeanRegisterOption) {
+    const beanFactory = this.application.getBeanFactory();
+    const bean = beanFactory.get(type);
+
+    if (bean === undefined) {
+      throw new Error(
+        `The bean is undefined get from the BeanFactory[${beanFactory.constructor.name}]`,
+      );
+    }
+    return this.registerBean(type, bean, options);
+  }
+
+  async registerBean<T>(
+    type: ClassType<T>,
+    beanOrSupplier: T | (() => T),
+    options: BeanRegisterOption = {},
+  ): Promise<void> {
+    if (this.registry.getBean(type, options.name) !== undefined) {
       return;
     }
 
-    const registers = types.map(type => {
-      if (!this._types.includes(type)) {
-        const beanFactory = this.application.getBeanFactory();
-        const bean = beanFactory.get(type);
-
-        this._types.push(type);
-        return this.registerBean(type, bean);
-      } else {
-        return Promise.resolve();
-      }
-    });
-
-    return Promise.all(registers).then(() => {});
-  }
-
-  registerType<T>(type: ClassType<T>, bean?: T) {
-    return this.registerBean(type, bean);
-  }
-
-  async registerBean<T>(type: ClassType<T>, bean: T | undefined) {
-    this._beans.set(type, bean);
-    const storage = getMetadataStorage();
-    const beanMeta = storage.getBeanMeta(type);
-
-    if (beanMeta === undefined || bean === undefined) {
-      return;
+    let bean: T;
+    if (isFunction(beanOrSupplier)) {
+      const supplier = beanOrSupplier as () => T;
+      bean = supplier();
+    } else {
+      bean = beanOrSupplier as T;
     }
 
-    this.addForceUpdate(bean, beanMeta);
+    if (!(bean instanceof type)) {
+      throw new Error(`bean ${bean} mast be an instance of ${type.name}`);
+    }
+
+    const beanMeta = this.registry.getBeanMeta(type);
+
+    if (beanMeta === undefined) {
+      throw new NoSuchBeanDefinitionError(type.name);
+    }
+
+    this.registry.register(type, bean, options.name);
+
+    this._defineForceUpdate(bean, beanMeta);
 
     const fields = beanMeta.statedFields || [];
     const observers = (fields || []).map(field =>
-      this.observeBeanField(bean, field, beanMeta),
+      this._observeBeanField(bean, field, beanMeta),
     );
     await Promise.all(observers);
 
@@ -97,7 +105,8 @@ export class StatedBeanContainer extends Event {
     }
   }
 
-  addForceUpdate<T>(bean: T, beanMeta: StatedBeanMeta) {
+  // @internal
+  private _defineForceUpdate<T>(bean: T, beanMeta: StatedBeanMeta) {
     const self = this;
     Object.defineProperty(bean, ForceUpdate, {
       value: function(field: keyof T & string) {
@@ -110,7 +119,7 @@ export class StatedBeanContainer extends Event {
         if (fieldMeta === undefined) {
           return;
         }
-        const effect = self.createEffectContext(
+        const effect = self._createEffectContext(
           bean[field],
           bean,
           beanMeta,
@@ -123,14 +132,15 @@ export class StatedBeanContainer extends Event {
     });
   }
 
-  async observeBeanField(
+  // @internal
+  private async _observeBeanField(
     bean: any,
     fieldMeta: StatedFieldMeta,
     beanMeta: StatedBeanMeta,
   ) {
     const proxyField = Symbol(fieldMeta.name.toString() + '_v');
 
-    const initEffect = this.createEffectContext(
+    const initEffect = this._createEffectContext(
       bean[proxyField],
       bean,
       beanMeta,
@@ -147,7 +157,7 @@ export class StatedBeanContainer extends Event {
     const self = this;
     Object.defineProperty(bean, fieldMeta.name.toString(), {
       set(value) {
-        const effect = self.createEffectContext(
+        const effect = self._createEffectContext(
           bean[proxyField],
           bean,
           beanMeta,
@@ -170,7 +180,8 @@ export class StatedBeanContainer extends Event {
     });
   }
 
-  createEffectContext<Bean, Value>(
+  // @internal
+  private _createEffectContext<Bean, Value>(
     oldValue: Value,
     bean: Bean,
     beanMeta: StatedBeanMeta,
@@ -178,10 +189,6 @@ export class StatedBeanContainer extends Event {
     value?: Value,
   ): EffectContext {
     return new EffectContext(oldValue, bean, beanMeta, fieldMeta, this, value);
-  }
-
-  getAllBeanTypes() {
-    return this._types;
   }
 
   get parent() {

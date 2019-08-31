@@ -1,10 +1,10 @@
 import { getMetadataStorage } from '../metadata';
-import { isStatedBean } from '../core';
+import { StatedBeanSymbol } from '../core';
 
 export function StatedBean(): ClassDecorator;
 export function StatedBean(name?: string | symbol): ClassDecorator {
   return (target: any) => {
-    Object.defineProperty(target, isStatedBean, {
+    Object.defineProperty(target, StatedBeanSymbol, {
       writable: false,
       value: true,
     });

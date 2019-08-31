@@ -1,4 +1,3 @@
-import { getMetadataStorage } from '../src/metadata';
 import {
   StatedBean,
   Stated,
@@ -32,7 +31,7 @@ class SampleStatedBean {
 describe('react provider', () => {
   const TestStatedBean = SampleStatedBean;
 
-  beforeAll(() => getMetadataStorage().clear());
+  // beforeAll(() => getMetadataStorage().clear());
 
   it('StatedBeanProvider', () => {
     const Sample = () => {

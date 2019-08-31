@@ -16,6 +16,8 @@
 
 > A light but scalable state management library with react hooks, inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next).
 
+`stated-bean` is a lightweight state management library that allows you to manage the state data of multiple views together. Make cross-component data transfer simple.
+
 ## Install
 
 ```sh
@@ -33,39 +35,14 @@ npm i stated-bean
 - Small size: ~3kb (zipped ~1kb)
 - Written in TypeScript
 
-## API
-
-### Decorators
-
-- `@StatedBean` - the stated class.
-- `@Stated` - the stated fields.
-- `@PostProvided` - the method with `@PostProvided` will be invoked in `useEffect(..., [])`
-
-### Provider
-
-```tsx
-<StatedBeanProvider types={[CounterModel]}>
-```
-
-The `StatedBeanProvider` is responsible for creating an instance of the stated bean and dispatching an event after data changes.
-
-### React Hooks
-
-`useStatedBean(CounterModel)`
-
-The `useStatedBean` will get/create an instance of the stated bean from the context and listen for its data changes to trigger the re-rendering of the current component.
-
 ## Online Demo
 
 [GitHub Pages](https://mjolnirjs.github.io/stated-bean): Integration with [injection-js](https://github.com/mgechev/injection-js)
 
 ## Usage
 
-<details open>
-<summary><b>write a class with <code>@StatedBean</code></b></summary>
-
 ```ts
-import { StatedBean, Stated } from 'stated-bean';
+import { StatedBean, Stated, useStatedBean } from 'stated-bean';
 
 @StatedBean()
 export class Counter {
@@ -80,41 +57,6 @@ export class Counter {
     this.count--;
   };
 }
-```
-
-</details>
-
-<details open>
-<summary><b>use <code>StatedBeanProvider</code></b></summary>
-
-```tsx
-import { StatedBeanProvider } from 'stated-bean';
-
-const App = () => {
-  return (
-    <StatedBeanProvider types={[Counter]}>
-      <div>
-        <CounterDisplay />
-      </div>
-      <CounterDisplay />
-
-      <StatedBeanProvider types={[Counter]}>
-        <CounterDisplay />
-      </StatedBeanProvider>
-    </StatedBeanProvider>
-  );
-};
-
-ReactDOM.render(<App />, document.getElementById('root'));
-```
-
-</details>
-
-<details open>
-<summary><b>get/create the instance from <code>useStatedBean</code></b></summary>
-
-```tsx
-import { useStatedBean } from 'stated-bean';
 
 function CounterDisplay() {
   const counter = useStatedBean(Counter);
@@ -129,7 +71,82 @@ function CounterDisplay() {
 }
 ```
 
-</details>
+## API
+
+### Decorators
+
+#### `@StatedBean(name?: string | symbol): ClassDecorator`
+
+Indicates that an annotated class is a `StatedBean`. The `name` may indicate a suggestion for the bean name. Its default value is `Class.name`
+MethodDecorator
+
+#### `@Stated(): PropertyDecorator`
+
+Indicates that an annotated property is `Stated`. Its reassignment will be observed and will be notified to update with components of `useStatedBean(Model)`.
+
+#### `@PostProvided(): MethodDecorator`
+
+The `PostProvided` decorator is used on a method that needs to be executed after the `StatedBean` be instanced to perform any initialization.
+
+### use Hooks
+
+#### `useStatedBean<T>(type: ClassType<T> | () => T, option?: UseStatedBeanOption): T`
+
+The `useStatedBean` will get/create an instance of the stated bean from the context and listen for its data changes to trigger the re-rendering of the current component.
+
+##### Get the instance from the container in the `React Context`
+
+```tsx
+function SampleComponent() {
+  const model = useStatedBean(UserModel);
+
+  return; //...;
+}
+
+function App() {
+  return (
+    <StatedBeanProvider types={[UserModel]}>
+      <SampleComponent />
+    </StatedBeanProvider>
+  );
+}
+```
+
+##### Create the temporary instance for current `Component`
+
+```tsx
+function SampleComponent() {
+  const model = useStatedBean(() => new UserModel());
+
+  // pass the model to its children
+  return <ChildComponent model={model} />;
+}
+```
+
+##### The `UseStatedBeanOption`
+
+```ts
+option = {
+  name: string | symbol;   // get/create the instance with special name
+  dependentFields: Array<string | symbol>;   // do re-render when the special property changed
+};
+```
+
+### Provider
+
+#### `<StatedBeanProvider {...props: StatedBeanProviderProps} />`
+
+The `StatedBeanProvider` is responsible for creating an instance of the stated bean and dispatching an event after data changes.
+
+**StatedBeanProviderProps**
+
+```ts
+interface StatedBeanProviderProps {
+  types?: ClassType[];
+  beanProvider?: BeanProvider;
+  application?: StatedBeanApplication;
+}
+```
 
 ## License
 

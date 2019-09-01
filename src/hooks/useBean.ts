@@ -42,6 +42,7 @@ export function useBean<T>(
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;
       bean = supplier() as StatedBeanType<T>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       classType = (bean as any).constructor as ClassType<T>;
       container.registerBean(classType, bean, { name });
     } else {

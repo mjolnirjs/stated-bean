@@ -24,11 +24,14 @@ import { ForceUpdate, StatedBeanSymbol } from './Symbols';
  * @extends {Event}
  */
 export class StatedBeanContainer extends Event {
+  // @internal
   private readonly _parent?: StatedBeanContainer;
 
+  // @internal
   private readonly _app!: StatedBeanApplication;
 
-  private readonly registry: StatedBeanRegistry = new StatedBeanRegistry();
+  // @internal
+  private readonly _registry: StatedBeanRegistry = new StatedBeanRegistry();
 
   constructor(parent?: StatedBeanContainer, app?: StatedBeanApplication) {
     super();
@@ -67,7 +70,7 @@ export class StatedBeanContainer extends Event {
     name?: string | symbol,
   ): StatedBeanType<T> | undefined {
     const beanIdentity = this.getBeanIdentity(type, name);
-    let bean = this.registry.getBean(type, beanIdentity);
+    let bean = this._registry.getBean(type, beanIdentity);
 
     if (bean == null && this.parent) {
       bean = this.parent.getBean(type, name);
@@ -80,7 +83,7 @@ export class StatedBeanContainer extends Event {
     const { name, container } = bean[StatedBeanSymbol];
     // TODO: if need off the listener.
     container.on(bean, e => this.emit(bean, e));
-    this.registry.register(bean.constructor, bean, name);
+    this._registry.register(bean.constructor, bean, name);
   }
 
   hasBean<T>(type: ClassType<T>, name?: string): boolean {
@@ -105,7 +108,7 @@ export class StatedBeanContainer extends Event {
     options: BeanRegisterOption = {},
   ): Promise<void> {
     const identity = this.getBeanIdentity(type, options.name);
-    if (this.registry.getBean(type, identity) !== undefined) {
+    if (this._registry.getBean(type, identity) !== undefined) {
       return;
     }
 
@@ -127,7 +130,7 @@ export class StatedBeanContainer extends Event {
       throw new NoSuchBeanDefinitionError(type.name);
     }
 
-    this.registry.register(type, bean, identity);
+    this._registry.register(type, bean, identity);
 
     this._defineStatedBean(bean, this.getBeanIdentity(type, options.name));
     this._defineForceUpdate(bean, beanMeta);
@@ -186,6 +189,7 @@ export class StatedBeanContainer extends Event {
 
   // @internal
   private async _observeBeanField(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     bean: any,
     fieldMeta: StatedFieldMeta,
     beanMeta: StatedBeanMeta,

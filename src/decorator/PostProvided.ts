@@ -10,6 +10,7 @@ export function PostProvided(): MethodDecorator {
   return (
     prototype,
     propertyKey,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor?: TypedPropertyDescriptor<any>,
   ) => {
     if (descriptor === undefined) {

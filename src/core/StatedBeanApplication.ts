@@ -53,19 +53,19 @@ export class StatedBeanApplication {
   }
 
   interceptStateInit<Bean, Value>(effect: EffectContext<Bean, Value>) {
-    return this.invokeInterceptors('stateInit', effect);
+    return this._invokeInterceptors('stateInit', effect);
   }
 
   interceptStateChange<Bean, Value>(effect: EffectContext<Bean, Value>) {
-    return this.invokeInterceptors('stateChange', effect);
+    return this._invokeInterceptors('stateChange', effect);
   }
 
-  private invokeInterceptors<Bean, Value>(
+  private _invokeInterceptors<Bean, Value>(
     method: keyof StatedInterceptor,
     effect: EffectContext<Bean, Value>,
   ) {
     let index = -1;
-    const dispatch = (i: number): Promise<any> => {
+    const dispatch = (i: number): Promise<void> => {
       if (i <= index) {
         return Promise.reject(new Error('next() called multiple times'));
       }

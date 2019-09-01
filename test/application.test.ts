@@ -29,9 +29,8 @@ describe('StatedBeanApplication', () => {
     const application = new StatedBeanApplication();
 
     class CustomBeanFactory implements IBeanFactory {
-      get(type: ClassType) {
-        // eslint-disable-next-line new-cap
-        return new type();
+      get<T>(Type: ClassType<T>) {
+        return new Type();
       }
     }
 

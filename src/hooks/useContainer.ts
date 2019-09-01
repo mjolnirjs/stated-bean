@@ -12,6 +12,18 @@ export interface UseContainerOption {
   application?: StatedBeanApplication;
 }
 
+/**
+ * creates a new `StatedBeanContainer` and registers the `types`, `beans` which given by the `UseContainerOption`.
+ *
+ * @export
+ * @param {UseContainerOption} {
+ *   types,
+ *   beans,
+ *   beanProvider,
+ *   application,
+ * }
+ * @returns
+ */
 export function useContainer({
   types,
   beans,

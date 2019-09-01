@@ -15,6 +15,14 @@ import { StatedBeanApplication } from './StatedBeanApplication';
 import { StatedBeanRegistry } from './StatedBeanRegistry';
 import { ForceUpdate, StatedBeanSymbol } from './Symbols';
 
+/**
+ * `StatedBeanContainer` is responsible for registering and managing `bean` and observing its `@Stated()` property changes.
+ *
+ * @internal
+ * @export
+ * @class StatedBeanContainer
+ * @extends {Event}
+ */
 export class StatedBeanContainer extends Event {
   private readonly _parent?: StatedBeanContainer;
 

@@ -3,6 +3,12 @@ import { ClassType } from '../types';
 type EventListenFn = (...args: any[]) => void;
 type EventTypes = WeakMap<InstanceType<ClassType>, EventListenFn[]>;
 
+/**
+ * the event emitter for the StatedBean
+ *
+ * @export
+ * @class Event
+ */
 export class Event {
   events: EventTypes = new WeakMap();
 

@@ -9,6 +9,15 @@ export interface UseStatedBeanOption<T> {
   fields?: Array<keyof T>;
 }
 
+/**
+ * injects the bean from the current context which has been provided.
+ *
+ * @export
+ * @template T
+ * @param {ClassType<T>} type the `ClassType` of the bean.
+ * @param {UseStatedBeanOption<T>} [option={}]
+ * @returns {StatedBeanType<T>}
+ */
 export function useInject<T>(
   type: ClassType<T>,
   option: UseStatedBeanOption<T> = {},

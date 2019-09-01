@@ -1,9 +1,3 @@
-import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import renderer from 'react-test-renderer';
-
 import {
   Stated,
   StatedBean,
@@ -12,6 +6,12 @@ import {
   StatedBeanProvider,
   useInject,
 } from '../src';
+
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import renderer from 'react-test-renderer';
 
 Enzyme.configure({ adapter: new Adapter() });
 

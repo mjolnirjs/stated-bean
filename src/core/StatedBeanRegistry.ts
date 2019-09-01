@@ -1,5 +1,11 @@
 import { ClassType } from '../types';
 
+/**
+ * The named and types bean storage with `Map<string | symbol, WeakMap<ClassType, unknown>>`.
+ *
+ * @export
+ * @class StatedBeanRegistry
+ */
 export class StatedBeanRegistry {
   // @internal
   private readonly beans = new Map<

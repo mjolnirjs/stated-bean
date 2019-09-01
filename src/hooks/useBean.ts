@@ -5,6 +5,19 @@ import { isFunction, isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
+/**
+ * creates a temporary `StatedBeanContainer` and registers the bean to the container.
+ *
+ * and add listener watch the `EffectContext` from the container to change the stated `version`.
+ *
+ * it will be destroyed when the used component unmounted.
+ *
+ * @export
+ * @template T
+ * @param {(ClassType<T> | (() => T))} typeOrSupplier
+ * @param {(string | symbol)} [name]
+ * @returns {StatedBeanType<T>}
+ */
 export function useBean<T>(
   typeOrSupplier: ClassType<T> | (() => T),
   name?: string | symbol,

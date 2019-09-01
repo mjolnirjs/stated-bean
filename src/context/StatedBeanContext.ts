@@ -1,4 +1,4 @@
-import { StatedBeanContainer } from '../core';
+import { StatedBeanContainer } from '../core/StatedBeanContainer';
 
 import React from 'react';
 

@@ -1,11 +1,11 @@
 {
   "name": "stated-bean",
-  "version": "0.2.0-alpha",
+  "version": "0.2.0-alpha.1",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
   "main": "lib/cjs/index.js",
   "es2015": "lib/es/index.js",
-  "module": "lib/ems.js",
+  "module": "lib/esm.js",
   "browser": "lib/umd.js",
   "unpkg": "lib/umd.min.js",
   "types": "lib/types/index.d.ts",

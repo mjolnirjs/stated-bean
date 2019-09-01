@@ -1,2 +1,3 @@
 export * from './useContainer';
-export * from './useStatedBean';
+export * from './useInject';
+export * from './useBean';

@@ -77,12 +77,11 @@ function CounterDisplay() {
 
 #### `@StatedBean(name?: string | symbol): ClassDecorator`
 
-Indicates that an annotated class is a `StatedBean`. The `name` may indicate a suggestion for the bean name. Its default value is `Class.name`
-MethodDecorator
+Indicates that an annotated class is a `StatedBean`. The `name` may indicate a suggestion for the bean name. Its default value is `Class.name`.
 
 #### `@Stated(): PropertyDecorator`
 
-Indicates that an annotated property is `Stated`. Its reassignment will be observed and will be notified to update with components of `useStatedBean(Model)`.
+Indicates that an annotated property is `Stated`. Its reassignment will be observed and notified to the container.
 
 #### `@PostProvided(): MethodDecorator`
 

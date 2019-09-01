@@ -1,6 +1,11 @@
-import { getMetadataStorage } from '../metadata';
-import { ClassType, StatedBeanMeta } from '../types';
+import { ClassType } from '../types';
 
+/**
+ * The named and types bean storage with `Map<string | symbol, WeakMap<ClassType, unknown>>`.
+ *
+ * @export
+ * @class StatedBeanRegistry
+ */
 export class StatedBeanRegistry {
   // @internal
   private readonly beans = new Map<
@@ -8,9 +13,8 @@ export class StatedBeanRegistry {
     WeakMap<ClassType, unknown>
   >();
 
-  getBean<T>(type: ClassType<T>, name?: string | symbol): T | undefined {
-    const beanName = name || this.getBeanMetaName(type) || type.name;
-    const typedBeans = this.beans.get(beanName);
+  getBean<T>(type: ClassType<T>, identity: string | symbol): T | undefined {
+    const typedBeans = this.beans.get(identity);
 
     if (typedBeans === undefined) {
       return undefined;
@@ -19,26 +23,12 @@ export class StatedBeanRegistry {
     }
   }
 
-  register<T>(type: ClassType<T>, bean: T, name?: string | symbol) {
-    const beanName = name || this.getBeanMetaName(type) || type.name;
-
-    console.log('register bean', beanName, type.name);
-    const typedBeans = this.beans.get(beanName);
+  register<T>(type: ClassType<T>, bean: T, identity: string | symbol) {
+    const typedBeans = this.beans.get(identity);
     if (typedBeans === undefined) {
-      this.beans.set(beanName, new WeakMap().set(type, bean));
+      this.beans.set(identity, new WeakMap().set(type, bean));
     } else {
       typedBeans.set(type, bean);
     }
-  }
-
-  getBeanMetaName<T>(type: ClassType<T>): string | symbol | undefined {
-    const beanMeta = this.getBeanMeta(type);
-
-    return beanMeta === undefined ? undefined : beanMeta.name;
-  }
-
-  getBeanMeta<T>(type: ClassType<T>): StatedBeanMeta | undefined {
-    const storage = getMetadataStorage();
-    return storage.getBeanMeta(type);
   }
 }

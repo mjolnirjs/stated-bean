@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`react provider StatedBeanProvider 1`] = `
+exports[`stated value changed test StatedBeanProvider 1`] = `
 Array [
   "0",
   <button

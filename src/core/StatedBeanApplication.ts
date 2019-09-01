@@ -4,6 +4,11 @@ import { ClassType } from '../types';
 import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
 import { EffectContext } from './EffectContext';
 
+/**
+ *
+ * @export
+ * @class StatedBeanApplication
+ */
 export class StatedBeanApplication {
   private _beanFactory: IBeanFactory = new DefaultBeanFactory();
 

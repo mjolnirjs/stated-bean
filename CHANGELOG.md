@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0-alpha](https://github.com/mjolnirjs/stated-bean/compare/v0.1.5-beta...v0.2.0-alpha) (2019-09-01)
+
+
+### Features
+
+* **core:** new api useBean & useInject ([#45](https://github.com/mjolnirjs/stated-bean/issues/45)) ([3a1ce82](https://github.com/mjolnirjs/stated-bean/commit/3a1ce82))
+
 ### [0.1.5-beta](https://github.com/mjolnirjs/stated-bean/compare/v0.1.4-beta.1...v0.1.5-beta) (2019-08-31)
 
 

@@ -1,6 +1,6 @@
 import { ClassType } from '../types';
 
-type EventListenFn = (...args: any) => void;
+type EventListenFn = (...args: any[]) => void;
 type EventTypes = WeakMap<InstanceType<ClassType>, EventListenFn[]>;
 
 export class Event {
@@ -11,7 +11,7 @@ export class Event {
     this.events.set(type, (this.events.get(type) || []).concat(cb));
   }
 
-  emit(type: InstanceType<ClassType>, ...data: any) {
+  emit(type: InstanceType<ClassType>, ...data: any[]) {
     if (this.events.has(type)) {
       this.events.get(type)!.forEach(cb => {
         cb(...data);

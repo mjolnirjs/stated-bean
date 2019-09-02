@@ -1,10 +1,10 @@
 {
   "name": "stated-bean",
-  "version": "0.2.0-alpha.2",
+  "version": "0.2.0-alpha.3",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
   "main": "./lib/cjs/index.js",
-  "es2015": "./lib/es/index.js",
+  "es2015": "./lib/es2015.js",
   "module": "./lib/esm.js",
   "browser": "./lib/umd.js",
   "unpkg": "./lib/umd.min.js",
@@ -27,16 +27,19 @@
     "type-coverage": "type-coverage --ignore-catch --ignore-files 'lib/**/*' --strict"
   },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "react": ">=16.8.0",
+    "tslib": ">=1.0.0"
   },
   "devDependencies": {
+    "@1stg/babel-preset": "^0.5.0",
     "@1stg/eslint-config": "^0.6.0",
     "@1stg/husky-config": "^0.3.0",
     "@1stg/lint-staged": "^0.5.0",
     "@1stg/prettier-config": "^0.2.0",
-    "@1stg/rollup-config": "^0.2.2",
+    "@1stg/rollup-config": "^0.3.0",
     "@1stg/tsconfig": "^0.3.0",
     "@abraham/reflection": "^0.5.1",
+    "@babel/core": "^7.5.5",
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
     "@types/enzyme": "^3.10.3",

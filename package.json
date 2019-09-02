@@ -34,7 +34,7 @@
     "@1stg/husky-config": "^0.3.0",
     "@1stg/lint-staged": "^0.5.0",
     "@1stg/prettier-config": "^0.2.0",
-    "@1stg/rollup-config": "^0.2.1",
+    "@1stg/rollup-config": "^0.2.2",
     "@1stg/tsconfig": "^0.3.0",
     "@abraham/reflection": "^0.5.1",
     "@commitlint/cli": "^8.1.0",

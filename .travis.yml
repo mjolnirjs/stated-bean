@@ -43,7 +43,7 @@ deploy:
     github_token: $GH_TOKEN
     keep_history: true
     allow_empty_commit: false
-    local_dir: output
+    local_dir: dist
     on:
       branch: master
 

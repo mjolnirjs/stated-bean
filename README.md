@@ -3,7 +3,6 @@
 [![Travis](https://img.shields.io/travis/com/mjolnirjs/stated-bean.svg)](https://travis-ci.com/mjolnirjs/stated-bean)
 [![Codecov](https://img.shields.io/codecov/c/gh/mjolnirjs/stated-bean)](https://codecov.io/gh/mjolnirjs/stated-bean)
 [![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fmjolnirjs%2Fstated-bean%2Fmaster%2Fpackage.json)](https://github.com/plantain-00/type-coverage)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/stated-bean)
 [![npm](https://img.shields.io/npm/v/stated-bean.svg)](https://www.npmjs.com/package/stated-bean)
 [![GitHub release](https://img.shields.io/github/release/mjolnirjs/stated-bean)](https://github.com/mjolnirjs/stated-bean/releases)
 
@@ -33,7 +32,7 @@ npm i stated-bean
 
 - OOP: easy to integrate with DI(dependency inject) framework together
 - Familiar API: just provider and hooks
-- Small size: ~3kb (zipped ~1kb)
+- Small size: ![npm bundle size](https://img.shields.io/bundlephobia/min/stated-bean) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/stated-bean)
 - Written in TypeScript
 
 ## Online Demo

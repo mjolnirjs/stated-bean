@@ -2,13 +2,13 @@ checks:
   - name: build-size-watcher
     options:
       files:
-        - path: dist/**/*.*
+        - path: lib/**/*.*
   - name: commit-deployment
     options:
-      buildPath: ./output
+      buildPath: ./dist
   - name: type-coverage-watcher
     options:
       ignoreCatch: true
       ignoreFiles:
-        - dist/**/*
+        - lib/**/*
       strict: true

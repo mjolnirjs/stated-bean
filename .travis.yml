@@ -25,7 +25,8 @@ script:
   - yarn build
 
 after_success:
-  - yarn global add codecov
+  - yarn global add bundlesize codecov
+  - bundlesize -f lib/esm.min.js -s 3kB
   - codecov
 
 before_deploy: yarn build:example --public-url /$TRAVIS_REPO_NAME/

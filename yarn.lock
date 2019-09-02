@@ -43,10 +43,10 @@
   resolved "https://registry.yarnpkg.com/@1stg/prettier-config/-/prettier-config-0.2.0.tgz#853c1142834f31d9287cd9e30f2b91d46e4961d6"
   integrity sha512-wL0qdfsJyHQvOO0vG50StqTSIOX9kauhu6NbLHMgAXE+s3rQ4/N0slwAwYCrqHSwYRVqpeqN8EblYF6UIZiwZQ==
 
-"@1stg/rollup-config@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@1stg/rollup-config/-/rollup-config-0.2.1.tgz#b97f653618f324e92f5875dc484aa7e43f7c1661"
-  integrity sha512-SYPTPTieSQVnKgYQWqgwDPRuTaF0X4zRvs6sjzGV7bvGkGSQBuRyYyNnrNWrQuflfuAuJWEIadzoPX7+mG7lWA==
+"@1stg/rollup-config@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@1stg/rollup-config/-/rollup-config-0.2.2.tgz#027c7037eb13834cde453b0d150ae57461526b49"
+  integrity sha512-9WVsqqZZp5/gX5rqas16MQf/JlyT/BwjFaNBQX1oGPoDwjFFWhJCNMgaXHQfzd9DrGYDEmvUcRTTDiXcRwBXgw==
   dependencies:
     lodash "^4.17.15"
     rollup-plugin-terser "^5.1.1"

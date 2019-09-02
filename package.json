@@ -27,7 +27,7 @@
     "type-coverage": "type-coverage --ignore-catch --ignore-files 'lib/**/*' --strict"
   },
   "peerDependencies": {
-    "react": ">=16.8.0"
+    "react": ">=16.9.0"
   },
   "devDependencies": {
     "@1stg/eslint-config": "^0.6.0",

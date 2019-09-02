@@ -43,10 +43,10 @@
   resolved "https://registry.yarnpkg.com/@1stg/prettier-config/-/prettier-config-0.2.0.tgz#853c1142834f31d9287cd9e30f2b91d46e4961d6"
   integrity sha512-wL0qdfsJyHQvOO0vG50StqTSIOX9kauhu6NbLHMgAXE+s3rQ4/N0slwAwYCrqHSwYRVqpeqN8EblYF6UIZiwZQ==
 
-"@1stg/rollup-config@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@1stg/rollup-config/-/rollup-config-0.2.2.tgz#027c7037eb13834cde453b0d150ae57461526b49"
-  integrity sha512-9WVsqqZZp5/gX5rqas16MQf/JlyT/BwjFaNBQX1oGPoDwjFFWhJCNMgaXHQfzd9DrGYDEmvUcRTTDiXcRwBXgw==
+"@1stg/rollup-config@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@1stg/rollup-config/-/rollup-config-0.3.0.tgz#c8123192e0661ec5074d87990074c59537229a23"
+  integrity sha512-5uusRTvJZBivltUbXmKICPGl5FrgQoN+XPKraDpaWgpvod6RTDOvhXFzJC/uyD/zwWx7xQTHSiFBCevjNhJt8w==
   dependencies:
     lodash "^4.17.15"
     rollup-plugin-terser "^5.1.1"
@@ -3698,8 +3698,9 @@ eslint-import-resolver-node@^0.3.2:
     debug "^2.6.9"
     resolve "^1.5.0"
 
-"eslint-import-resolver-typescript@github:JounQin/eslint-import-resolver-typescript#feat/resolve_dts":
+eslint-import-resolver-typescript@JounQin/eslint-import-resolver-typescript#feat/resolve_dts:
   version "1.1.1"
+  uid "23e2e8cf71ee6c19da9f55e85b2ab34543d2a12e"
   resolved "https://codeload.github.com/JounQin/eslint-import-resolver-typescript/tar.gz/23e2e8cf71ee6c19da9f55e85b2ab34543d2a12e"
   dependencies:
     debug "^4.0.1"

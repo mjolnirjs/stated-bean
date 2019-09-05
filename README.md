@@ -89,15 +89,19 @@ The `PostProvided` decorator is used on a method that needs to be executed after
 
 ### use Hooks
 
-#### `useStatedBean<T>(type: ClassType<T> | () => T, option?: UseStatedBeanOption): T`
+#### `useBean<T>(typeOrSupplier: ClassType<T> | () => T, name?: string | symbol): T`
 
-The `useStatedBean` will get/create an instance of the stated bean from the context and listen for its data changes to trigger the re-rendering of the current component.
+The `useBean` will create an instance of the stated bean with a new `StatedBeanContainer` and listen for its data changes to trigger the re-rendering of the current component.
+
+### `useInject<T>(type: ClassType<T>, option: UseStatedBeanOption<T> = {}): T`
+
+The `useInject` will get the instance of the stated bean from the `StatedBeanContainer` in the context and listen for its data changes to trigger the re-rendering of the current component.
 
 ##### Get the instance from the container in the `React Context`
 
 ```tsx
 function SampleComponent() {
-  const model = useStatedBean(UserModel);
+  const model = useInject(UserModel);
 
   return; //...;
 }
@@ -115,7 +119,7 @@ function App() {
 
 ```tsx
 function SampleComponent() {
-  const model = useStatedBean(() => new UserModel());
+  const model = useBean(() => new UserModel());
 
   // pass the model to its children
   return <ChildComponent model={model} />;

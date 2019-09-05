@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.2.0",
+  "version": "0.3.0-alpha",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
   "main": "./lib/cjs/index.js",
@@ -79,5 +79,8 @@
   "sideEffects": false,
   "typeCoverage": {
     "atLeast": 98
+  },
+  "dependencies": {
+    "src": "^1.1.2"
   }
 }

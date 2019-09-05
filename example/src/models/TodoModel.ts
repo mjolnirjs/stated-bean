@@ -2,7 +2,7 @@ import { Injectable, Inject } from 'injection-js';
 
 import { TodoService, Todo } from '../services/TodoService';
 
-import { StatedBean, Stated, PostProvided } from 'stated-bean';
+import { StatedBean, Stated, PostProvided, Effect } from 'stated-bean';
 
 @StatedBean()
 @Injectable()
@@ -16,6 +16,7 @@ export class TodoModel {
   constructor(@Inject(TodoService) private readonly todoService: TodoService) {}
 
   @PostProvided()
+  @Effect('fetchTodo')
   async fetchTodo() {
     this.todoList = await this.todoService.fetchTodoList();
   }

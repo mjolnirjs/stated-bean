@@ -1,8 +1,7 @@
-import { StatedInterceptor } from '../interceptor/StatedInterceptor';
-import { ClassType } from '../types';
+import { MiddlewareMethod } from '../middleware';
 
 import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
-import { EffectContext } from './EffectContext';
+import { EffectEvent } from './EffectEvent';
 
 /**
  *
@@ -12,7 +11,7 @@ import { EffectContext } from './EffectContext';
 export class StatedBeanApplication {
   private _beanFactory: IBeanFactory = new DefaultBeanFactory();
 
-  private _interceptors: StatedInterceptor[] = [];
+  private readonly _middleware: MiddlewareMethod[] = [];
 
   getBeanFactory(): IBeanFactory {
     return this._beanFactory;
@@ -23,47 +22,12 @@ export class StatedBeanApplication {
     return this;
   }
 
-  getInterceptors() {
-    return this._interceptors;
-  }
-
-  setInterceptors(...interceptors: StatedInterceptor[]) {
-    this._interceptors = [...interceptors];
+  use(middleware: MiddlewareMethod) {
+    this._middleware.push(middleware);
     return this;
   }
 
-  addInterceptors(
-    ...interceptors: Array<StatedInterceptor | ClassType<StatedInterceptor>>
-  ) {
-    interceptors.forEach(interceptor => {
-      if (typeof interceptor === 'function') {
-        const interceptorBean = this.getBeanFactory().get(interceptor);
-        if (interceptorBean) {
-          this._interceptors.push(interceptorBean);
-        } else {
-          throw new Error(
-            `get interceptor[${interceptor.name}] from bean factory fail`,
-          );
-        }
-      } else {
-        this._interceptors.push(interceptor);
-      }
-    });
-    return this;
-  }
-
-  interceptStateInit<Bean, Value>(effect: EffectContext<Bean, Value>) {
-    return this._invokeInterceptors('stateInit', effect);
-  }
-
-  interceptStateChange<Bean, Value>(effect: EffectContext<Bean, Value>) {
-    return this._invokeInterceptors('stateChange', effect);
-  }
-
-  private _invokeInterceptors<Bean, Value>(
-    method: keyof StatedInterceptor,
-    effect: EffectContext<Bean, Value>,
-  ) {
+  invokeMiddleware<Bean, Value>(effect: EffectEvent<Bean, Value>) {
     let index = -1;
     const dispatch = (i: number): Promise<void> => {
       if (i <= index) {
@@ -71,21 +35,17 @@ export class StatedBeanApplication {
       }
       index = i;
 
-      let interceptor: StatedInterceptor | undefined;
-      if (i < this._interceptors.length) {
-        interceptor = this._interceptors[i];
+      let middleware: MiddlewareMethod | undefined;
+      if (i < this._middleware.length) {
+        middleware = this._middleware[i];
       }
 
-      const fn = interceptor && interceptor[method];
-
-      if (!fn) {
+      if (!middleware) {
         return Promise.resolve();
       }
 
       try {
-        return Promise.resolve(
-          fn.apply(interceptor, [effect, dispatch.bind(this, i + 1)]),
-        );
+        return Promise.resolve(middleware(effect, dispatch.bind(this, i + 1)));
       } catch (e) {
         return Promise.reject(e);
       }

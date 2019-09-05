@@ -14,9 +14,7 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![codechecks.io](https://raw.githubusercontent.com/codechecks/docs/master/images/badges/badge-default.svg?sanitize=true)](https://codechecks.io)
 
-> A light but scalable state management library with react hooks, inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next).
-
-`stated-bean` is a lightweight state management library that allows you to manage the state data of multiple views together. Make cross-component data transfer simple.
+> A light but scalable state management library with react hooks, inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next). that allows you to manage the state data of multiple views together. Make cross-component data transfer simple.
 
 ## Install
 
@@ -42,7 +40,7 @@ npm i stated-bean
 ## Usage
 
 ```ts
-import { StatedBean, Stated, useStatedBean } from 'stated-bean';
+import { StatedBean, Stated, useBean } from 'stated-bean';
 
 @StatedBean()
 export class Counter {
@@ -59,7 +57,7 @@ export class Counter {
 }
 
 function CounterDisplay() {
-  const counter = useStatedBean(Counter);
+  const counter = useBean(Counter);
 
   return (
     <div>
@@ -146,6 +144,7 @@ The `StatedBeanProvider` is responsible for creating an instance of the stated b
 ```ts
 interface StatedBeanProviderProps {
   types?: ClassType[];
+  beans?: Array<StatedBeanType<unknown>>;
   beanProvider?: BeanProvider;
   application?: StatedBeanApplication;
 }

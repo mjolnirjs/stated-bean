@@ -47,7 +47,7 @@ export class StatedBeanContainer extends Event {
   }
 
   destroy() {
-    console.info('container destroyed.');
+    // container destroy
   }
 
   getBeanIdentity<T>(type: ClassType<T>, name?: string | symbol) {

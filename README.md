@@ -85,13 +85,17 @@ Indicates that an annotated property is `Stated`. Its reassignment will be obser
 
 The `PostProvided` decorator is used on a method that needs to be executed after the `StatedBean` be instanced to perform any initialization.
 
+#### `@Effect(name?: string | symbol): MethodDecorator`
+
+The `Effect` decorator is used on a method that can get the execution state by `useObserveEffect`.
+
 ### use Hooks
 
 #### `useBean<T>(typeOrSupplier: ClassType<T> | () => T, name?: string | symbol): T`
 
 The `useBean` will create an instance of the stated bean with a new `StatedBeanContainer` and listen for its data changes to trigger the re-rendering of the current component.
 
-### `useInject<T>(type: ClassType<T>, option: UseStatedBeanOption<T> = {}): T`
+#### `useInject<T>(type: ClassType<T>, option: UseStatedBeanOption<T> = {}): T`
 
 The `useInject` will get the instance of the stated bean from the `StatedBeanContainer` in the context and listen for its data changes to trigger the re-rendering of the current component.
 
@@ -130,6 +134,27 @@ function SampleComponent() {
 option = {
   name: string | symbol;   // get/create the instance with special name
   dependentFields: Array<string | symbol>;   // do re-render when the special property changed
+};
+```
+
+#### `useObserveEffect(bean: StatedBeanType, name: string | symbol): EffectAction`
+
+observe the execution state of the method which with `@Effect`.
+
+```tsx
+@StatedBean
+class UserModel {
+  @Effect()
+  fetchUser() {
+    // ...
+  }
+}
+
+const UserInfo = () => {
+  const model = useBean(() => new UserModel());
+  const { loading, error } = useObserveEffect(model, 'fetchUser');
+
+  return; //...;
 };
 ```
 

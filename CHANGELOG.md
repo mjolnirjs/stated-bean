@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-alpha](https://github.com/mjolnirjs/stated-bean/compare/v0.2.0...v0.3.0-alpha) (2019-09-06)
+
+
+### Features
+
+* supports effect action ([#53](https://github.com/mjolnirjs/stated-bean/issues/53)) ([77c2c5d](https://github.com/mjolnirjs/stated-bean/commit/77c2c5d))
+
 ## [0.2.0](https://github.com/mjolnirjs/stated-bean/compare/v0.2.0-alpha.3...v0.2.0) (2019-09-05)
 
 ## [0.2.0-alpha.3](https://github.com/mjolnirjs/stated-bean/compare/v0.2.0-alpha.2...v0.2.0-alpha.3) (2019-09-02)

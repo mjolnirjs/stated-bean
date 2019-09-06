@@ -2,14 +2,13 @@ import {
   StatedBeanApplication,
   IBeanFactory,
   ClassType,
-  StatedInterceptor,
-  EffectContext,
   NextCaller,
   StatedBean,
   Stated,
   StatedBeanContainer,
+  EffectEvent,
+  StateChanged,
 } from '../src';
-import { getMetadataStorage } from '../src/metadata';
 
 @StatedBean()
 class SampleStatedBean {
@@ -41,38 +40,17 @@ describe('StatedBeanApplication', () => {
   });
 
   it('application interceptor test', async () => {
-    class CustomInterceptor implements StatedInterceptor {
-      async stateInit(context: EffectContext, next: NextCaller) {
-        expect(
-          context.bean === context.container.getBean(SampleStatedBean),
-        ).toEqual(true);
-        expect(
-          context.beanMeta ===
-            getMetadataStorage().getBeanMeta(SampleStatedBean),
-        ).toEqual(true);
-        expect(
-          context.beanMeta.statedFields!.includes(context.fieldMeta),
-        ).toEqual(true);
-        await next();
-      }
-
-      async stateChange(_context: EffectContext, next: NextCaller) {
-        await next();
-      }
-    }
+    const CustomMiddleware = async (
+      event: EffectEvent<SampleStatedBean, StateChanged<number>>,
+      next: NextCaller,
+    ) => {
+      expect(event.value.newValue).toEqual(1);
+      await next();
+    };
 
     const application = new StatedBeanApplication();
 
-    application.setInterceptors(new CustomInterceptor());
-    application.addInterceptors(CustomInterceptor, new CustomInterceptor());
-
-    expect(application.getInterceptors().length).toEqual(3);
-    expect(
-      application.getInterceptors()[0] instanceof CustomInterceptor,
-    ).toEqual(true);
-    expect(
-      application.getInterceptors()[1] instanceof CustomInterceptor,
-    ).toEqual(true);
+    application.use(CustomMiddleware);
 
     const container = new StatedBeanContainer(undefined, application);
 

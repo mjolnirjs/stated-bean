@@ -1,12 +1,12 @@
-import { StatedBeanType, EffectAction } from '../types';
+import { EffectAction, StatedBeanType } from '../types';
 import { StatedBeanSymbol, EffectEvent, EffectEventType } from '../core';
 
 import { useState, useEffect, useCallback } from 'react';
 
-export function useObserveEffect<T>(
-  bean: StatedBeanType<T>,
+export function useObserveEffect<T extends StatedBeanType<any>>(
+  bean: T,
   effect: string | symbol,
-) {
+): EffectAction {
   const [effectState, setEffectState] = useState<EffectAction>(() => {
     return {
       loading: false,
@@ -26,7 +26,8 @@ export function useObserveEffect<T>(
     [effect],
   );
   const [container] = useState(() => {
-    const container = bean[StatedBeanSymbol].container;
+    const statedBean = bean as StatedBeanType<any>;
+    const container = statedBean[StatedBeanSymbol].container;
 
     container.on(bean, listener);
     return container;

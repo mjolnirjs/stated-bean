@@ -1,4 +1,8 @@
-import { StatedBean, Stated, PostProvided, StatedBeanContainer } from '../src';
+import { renderHook } from '@testing-library/react-hooks';
+
+import { PostProvided, Stated, StatedBean, useBean } from '../src';
+
+import { delay } from './utils';
 
 @StatedBean()
 class PostProvidedSample {
@@ -6,20 +10,18 @@ class PostProvidedSample {
   test = 0;
 
   @PostProvided()
-  postMethod() {
+  async postMethod() {
+    await delay(100);
     this.test = 1;
   }
 }
 
 describe('PostProvided', () => {
   it('PostProvided method invoke', async () => {
-    const container = new StatedBeanContainer();
-    await container.register(PostProvidedSample);
-
-    const bean = container.getBean(PostProvidedSample);
-
-    if (bean) {
-      expect(bean.test).toEqual(1);
-    }
+    const { result, waitForNextUpdate } = renderHook(() => {
+      return useBean(() => new PostProvidedSample());
+    });
+    await waitForNextUpdate();
+    expect(result.current.test).toEqual(1);
   });
 });

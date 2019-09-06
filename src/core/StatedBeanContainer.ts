@@ -3,13 +3,14 @@ import { getMetadataStorage } from '../metadata';
 import {
   BeanRegisterOption,
   ClassType,
+  StateChanged,
   StatedBeanMeta,
   StatedBeanType,
   StatedFieldMeta,
 } from '../types';
 import { isFunction } from '../utils';
 
-import { EffectContext } from './EffectContext';
+import { EffectEvent, EffectEventType } from './EffectEvent';
 import { NoSuchBeanDefinitionError } from './NoSuchBeanDefinitionError';
 import { StatedBeanApplication } from './StatedBeanApplication';
 import { StatedBeanRegistry } from './StatedBeanRegistry';
@@ -174,12 +175,16 @@ export class StatedBeanContainer extends Event {
         if (fieldMeta === undefined) {
           return;
         }
-        const effect = self._createEffectContext(
-          bean[field],
+        const effect = new EffectEvent<T, StateChanged<unknown>>(
           bean,
-          beanMeta,
-          fieldMeta,
-          bean[field],
+          EffectEventType.StateChanged,
+          field,
+          {
+            newValue: bean[field],
+            oldValue: bean[field],
+            fieldMeta,
+            beanMeta,
+          },
         );
 
         self.emit(bean, effect);
@@ -188,63 +193,42 @@ export class StatedBeanContainer extends Event {
   }
 
   // @internal
-  private async _observeBeanField(
+  private _observeBeanField<T>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    bean: any,
+    bean: T,
     fieldMeta: StatedFieldMeta,
     beanMeta: StatedBeanMeta,
   ) {
-    const proxyField = Symbol(fieldMeta.name.toString() + '_v');
-
-    const initEffect = this._createEffectContext(
-      bean[proxyField],
-      bean,
-      beanMeta,
-      fieldMeta,
-      bean[fieldMeta.name],
-    );
-    await this.application.interceptStateInit(initEffect);
+    const proxyField = Symbol(fieldMeta.name.toString() + '_v') as keyof T;
 
     Object.defineProperty(bean, proxyField, {
       writable: true,
-      value: initEffect.getValue(),
+      value: bean[fieldMeta.name as keyof T],
     });
 
     const self = this;
     Object.defineProperty(bean, fieldMeta.name.toString(), {
       set(value) {
-        const effect = self._createEffectContext(
-          bean[proxyField],
+        const effect = new EffectEvent<T, StateChanged<unknown>>(
           bean,
-          beanMeta,
-          fieldMeta,
-          value,
+          EffectEventType.StateChanged,
+          fieldMeta.name,
+          {
+            newValue: value,
+            oldValue: bean[proxyField],
+            fieldMeta,
+            beanMeta,
+          },
         );
 
         bean[proxyField] = value;
         self.emit(bean, effect);
-        self.application.interceptStateChange(effect).then(() => {
-          if (effect.getValue() !== value) {
-            bean[proxyField] = effect.getValue();
-            self.emit(bean, effect);
-          }
-        });
+        self.application.invokeMiddleware(effect);
       },
       get() {
         return bean[proxyField];
       },
     });
-  }
-
-  // @internal
-  private _createEffectContext<Bean, Value>(
-    oldValue: Value,
-    bean: Bean,
-    beanMeta: StatedBeanMeta,
-    fieldMeta: StatedFieldMeta,
-    value?: Value,
-  ): EffectContext {
-    return new EffectContext(oldValue, bean, beanMeta, fieldMeta, this, value);
   }
 
   get parent() {

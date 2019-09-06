@@ -1,7 +1,7 @@
 import { TodoModel } from '../../models/TodoModel';
 import { Todo } from '../../services/TodoService';
 
-import { useInject } from 'stated-bean';
+import { useInject, useObserveEffect } from 'stated-bean';
 import React from 'react';
 
 function TodoList(props: { items: Todo[] }) {
@@ -16,10 +16,14 @@ function TodoList(props: { items: Todo[] }) {
 
 export const TodoApp = () => {
   const todo = useInject(TodoModel);
+  const { loading } = useObserveEffect(todo, 'fetchTodo');
+
+  console.log(loading);
 
   return (
     <div>
       <h3>TODO</h3>
+      {loading && 'loading'}
       <TodoList items={todo.todoList} />
       <form
         onSubmit={e => {

@@ -1,5 +1,5 @@
 import { getStatedBeanContext } from '../context';
-import { EffectContext, StatedBeanContainer } from '../core';
+import { EffectEvent, StatedBeanContainer } from '../core';
 import { ClassType, StatedBeanType } from '../types';
 import { isFunction, isStatedBean } from '../utils';
 
@@ -26,7 +26,7 @@ export function useBean<T>(
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
 
-  const beanChangeListener = useCallback((_effect: EffectContext) => {
+  const beanChangeListener = useCallback((_effect: EffectEvent) => {
     setVersion(prev => prev + 1);
   }, []);
 

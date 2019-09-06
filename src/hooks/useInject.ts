@@ -1,6 +1,6 @@
 import { getStatedBeanContext } from '../context';
-import { EffectContext } from '../core';
-import { ClassType, StatedBeanType } from '../types';
+import { EffectEvent, EffectEventType } from '../core';
+import { ClassType, StateChanged, StatedBeanType } from '../types';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -27,14 +27,17 @@ export function useInject<T>(
   const [, setVersion] = useState(0);
 
   const beanChangeListener = useCallback(
-    (effect: EffectContext) => {
-      const field = effect.fieldMeta.name as keyof T;
-      if (
-        option.fields == null ||
-        option.fields.length === 0 ||
-        option.fields.includes(field)
-      ) {
-        setVersion(prev => prev + 1);
+    (event: EffectEvent<T, StateChanged<unknown>>) => {
+      if (event.type === EffectEventType.StateChanged) {
+        const changedState = event.value;
+        const field = changedState.fieldMeta.name as keyof T;
+        if (
+          option.fields == null ||
+          option.fields.length === 0 ||
+          option.fields.includes(field)
+        ) {
+          setVersion(prev => prev + 1);
+        }
       }
     },
     [option.fields],

@@ -1,6 +1,6 @@
 import { Injectable } from 'injection-js';
 
-import { StatedBean, Stated } from 'stated-bean';
+import { StatedBean, Stated, Effect } from 'stated-bean';
 
 @StatedBean()
 @Injectable()
@@ -12,9 +12,10 @@ export class CounterModel {
     this.count = count;
   }
 
-  increment = () => {
+  @Effect('11')
+  increment() {
     this.count++;
-  };
+  }
 
   decrement = () => {
     this.count--;

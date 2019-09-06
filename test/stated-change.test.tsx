@@ -1,3 +1,5 @@
+import { act, renderHook } from '@testing-library/react-hooks';
+
 import {
   Stated,
   StatedBean,
@@ -7,13 +9,9 @@ import {
   useInject,
 } from '../src';
 
-import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 @StatedBean()
 class SampleStatedBean {
@@ -29,13 +27,9 @@ class SampleStatedBean {
 }
 
 describe('stated value changed test', () => {
-  const TestStatedBean = SampleStatedBean;
-
-  // beforeAll(() => getMetadataStorage().clear());
-
   it('StatedBeanProvider', () => {
     const Sample = () => {
-      const bean = useInject(TestStatedBean);
+      const bean = useInject(SampleStatedBean);
 
       expect(bean).not.toBeNull();
       expect(bean.statedField).toEqual(0);
@@ -49,9 +43,9 @@ describe('stated value changed test', () => {
     };
 
     const App = () => (
-      <StatedBeanProvider types={[TestStatedBean]}>
+      <StatedBeanProvider types={[SampleStatedBean]}>
         <Sample />
-        <StatedBeanProvider types={[TestStatedBean]}>
+        <StatedBeanProvider types={[SampleStatedBean]}>
           <Sample />
         </StatedBeanProvider>
       </StatedBeanProvider>
@@ -63,29 +57,22 @@ describe('stated value changed test', () => {
   });
 
   it('useInject and change the stated field', () => {
-    const Sample = () => {
-      const bean = useInject(TestStatedBean);
-      return (
-        <>
-          <span className="field">field={bean.statedField}</span>
-          <button onClick={bean.addStatedField}>add</button>
-        </>
-      );
-    };
-
-    const App = () => (
-      <StatedBeanProvider types={[TestStatedBean]}>
-        <Sample />
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <StatedBeanProvider types={[SampleStatedBean]}>
+        {children}
       </StatedBeanProvider>
     );
+    const { result } = renderHook(
+      () => {
+        return useInject(SampleStatedBean);
+      },
+      { wrapper },
+    );
 
-    const app = Enzyme.mount(<App />);
-
-    expect(app.find('.field').text()).toBe('field=0');
-
-    app.find('button').simulate('click');
-
-    setTimeout(() => expect(app.find('.field').text()).toBe('field=1'), 100);
+    act(() => {
+      result.current.addStatedField();
+    });
+    expect(result.current.statedField).toEqual(1);
   });
 
   it('StatedBeanConsumer', () => {
@@ -100,7 +87,7 @@ describe('stated value changed test', () => {
     );
 
     const App = () => (
-      <StatedBeanProvider types={[TestStatedBean]}>
+      <StatedBeanProvider types={[SampleStatedBean]}>
         <Sample />
       </StatedBeanProvider>
     );

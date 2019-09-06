@@ -76,8 +76,5 @@
   "sideEffects": false,
   "typeCoverage": {
     "atLeast": 98
-  },
-  "dependencies": {
-    "src": "^1.1.2"
   }
 }

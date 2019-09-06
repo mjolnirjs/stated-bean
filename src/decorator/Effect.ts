@@ -7,7 +7,7 @@ import { isPromise } from '../utils';
  * @export
  * @returns {MethodDecorator}
  */
-export function Effect(name: string | symbol): MethodDecorator {
+export function Effect(name?: string | symbol): MethodDecorator {
   return (
     prototype,
     propertyKey,
@@ -17,6 +17,7 @@ export function Effect(name: string | symbol): MethodDecorator {
     if (descriptor === undefined) {
       descriptor = Object.getOwnPropertyDescriptor(prototype, propertyKey)!;
     }
+    const effectName = name || propertyKey;
     const originalMethod = descriptor.value;
     descriptor.value = function(
       this: StatedBeanType<unknown>,
@@ -30,7 +31,7 @@ export function Effect(name: string | symbol): MethodDecorator {
           new EffectEvent<unknown, EffectAction>(
             this,
             EffectEventType.EffectAction,
-            name,
+            effectName,
             action,
           ),
         );

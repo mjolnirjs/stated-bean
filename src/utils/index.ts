@@ -5,10 +5,6 @@ export const isFunction = (func: unknown) => typeof func === 'function';
 export const isStatedBean = (obj: unknown) =>
   Object.hasOwnProperty.call(obj, StatedBeanSymbol);
 
-export function isPromise(value: any): value is Promise<unknown> {
-  return (
-    !!value &&
-    typeof value.subscribe !== 'function' &&
-    typeof value.then === 'function'
-  );
+export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
+  return !!value && typeof (value as { then: unknown }).then === 'function';
 }

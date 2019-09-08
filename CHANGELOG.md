@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0-beta](https://github.com/mjolnirjs/stated-bean/compare/v0.3.0-alpha...v0.3.0-beta) (2019-09-08)
+
+
+### Bug Fixes
+
+* **deps:** bump dependencies, improve build and lint usage ([#54](https://github.com/mjolnirjs/stated-bean/issues/54)) ([4253bb2](https://github.com/mjolnirjs/stated-bean/commit/4253bb2))
+
 ## [0.3.0-alpha](https://github.com/mjolnirjs/stated-bean/compare/v0.2.0...v0.3.0-alpha) (2019-09-06)
 
 

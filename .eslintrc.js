@@ -5,14 +5,16 @@ module.exports = {
   overrides: [
     ...overrides,
     {
-      files: '*.{ts,tsx}',
+      files: '*.tsx',
       rules: {
-        '@typescript-eslint/interface-name-prefix': 0,
-        '@typescript-eslint/no-floating-promises': 0,
-        '@typescript-eslint/no-type-alias': 0,
-        '@typescript-eslint/unbound-method': 0,
         'react/jsx-handler-names': 0,
       },
     },
   ],
+  settings: {
+    node:{
+      allowModules: ['stated-bean']
+    },
+    polyfills: ['Object.getOwnPropertySymbols', 'Promise', 'Reflect', 'Symbol'],
+  },
 };

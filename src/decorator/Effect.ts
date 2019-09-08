@@ -18,7 +18,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
       descriptor = Object.getOwnPropertyDescriptor(prototype, propertyKey)!;
     }
     const effectName = name || propertyKey;
-    const originalMethod = descriptor.value;
+    const originalMethod: Function = descriptor.value;
     descriptor.value = function(
       this: StatedBeanType<unknown>,
       ...args: unknown[]

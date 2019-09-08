@@ -69,9 +69,8 @@ describe('stated value changed test', () => {
       { wrapper },
     );
 
-    act(() => {
-      result.current.addStatedField();
-    });
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    act(() => result.current.addStatedField());
     expect(result.current.statedField).toEqual(1);
   });
 

@@ -10,6 +10,7 @@ export function Counter() {
     <div>
       <button onClick={counter.decrement}>-</button>
       <span>{counter.count}</span>
+      {/* eslint-disable-next-line @typescript-eslint/unbound-method */}
       <button onClick={counter.increment}>+</button>
     </div>
   );

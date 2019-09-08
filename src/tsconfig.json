@@ -2,8 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "declarationDir": "../lib/types",
-    "module": "esnext",
-    "outDir": "../lib/es",
-    "target": "es2015"
+    "inlineSources": true,
+    "outDir": "../lib/es"
   }
 }

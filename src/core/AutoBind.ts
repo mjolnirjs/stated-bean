@@ -3,7 +3,7 @@ export function boundMethod(
   key: string | number | symbol,
   descriptor: PropertyDescriptor,
 ) {
-  let fn = descriptor.value;
+  let fn: unknown = descriptor.value;
 
   if (typeof fn !== 'function') {
     throw new TypeError(
@@ -19,7 +19,6 @@ export function boundMethod(
   return {
     configurable: true,
     get() {
-      // eslint-disable-next-line no-prototype-builtins
       if (
         definingProperty ||
         this === target.prototype ||
@@ -59,7 +58,6 @@ export function boundClass(target: Function) {
   } else {
     keys = Object.getOwnPropertyNames(target.prototype);
     // Use symbols if support is provided
-    // eslint-disable-next-line @typescript-eslint/unbound-method
     if (typeof Object.getOwnPropertySymbols === 'function') {
       keys = keys.concat(Object.getOwnPropertySymbols(target.prototype));
     }

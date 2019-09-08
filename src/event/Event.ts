@@ -1,8 +1,6 @@
 import { ClassType } from '../types';
 
 type EventListenFn = (...args: unknown[]) => void;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type EventTypes = WeakMap<InstanceType<ClassType<any>>, EventListenFn[]>;
 
 /**
  * the event emitter for the StatedBean
@@ -11,7 +9,8 @@ type EventTypes = WeakMap<InstanceType<ClassType<any>>, EventListenFn[]>;
  * @class Event
  */
 export class Event {
-  events: EventTypes = new WeakMap();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  events = new WeakMap<InstanceType<ClassType<any>>, EventListenFn[]>();
 
   on(type: InstanceType<ClassType>, cb: EventListenFn) {
     this.events.set(type, (this.events.get(type) || []).concat(cb));
@@ -19,10 +18,7 @@ export class Event {
 
   emit(type: InstanceType<ClassType>, ...data: unknown[]) {
     if (this.events.has(type)) {
-      this.events.get(type)!.forEach(cb => {
-        // eslint-disable-next-line standard/no-callback-literal
-        cb(...data);
-      });
+      this.events.get(type)!.forEach(emit => emit(...data));
     }
   }
 

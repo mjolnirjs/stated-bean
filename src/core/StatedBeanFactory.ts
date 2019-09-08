@@ -6,6 +6,7 @@ import { ClassType } from '../types';
  * @export
  * @interface IBeanFactory
  */
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IBeanFactory {
   get<T>(Type: ClassType<T>): T | undefined;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from 'injection-js';
 
+// eslint-disable-next-line @typescript-eslint/no-type-alias
 export type Todo = Partial<{
   id: number;
   text: string;

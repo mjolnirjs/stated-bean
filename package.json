@@ -24,7 +24,7 @@
     "build": "rimraf dist lib && run-p build:**",
     "lint": "cross-env EFF_NO_LINK_RULES=true eslint . --ext js,md,mdx,ts,tsx -f friendly",
     "test": "jest --env=jsdom --coverage --preset ts-jest",
-    "type-coverage": "type-coverage --ignore-catch --ignore-files 'lib/**/*' --strict"
+    "type-coverage": "type-coverage --detail --ignore-catch --ignore-files 'lib/**/*' --strict"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

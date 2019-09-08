@@ -36,6 +36,7 @@ export function useContainer({
   const [container] = useState(() => {
     const container = new StatedBeanContainer(context.container, application);
     (types || []).forEach(type => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       container.register(type);
     });
     (beans || []).forEach(bean => {

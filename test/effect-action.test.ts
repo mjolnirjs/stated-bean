@@ -24,9 +24,7 @@ describe('effect action', () => {
       return { bean, action };
     });
     expect(result.current.action.loading).toBe(false);
-    const addPromise = act(() => {
-      return result.current.bean.add();
-    });
+    const addPromise = act(() => result.current.bean.add());
     expect(result.current.action.loading).toBe(true);
     await addPromise;
     expect(result.current.action.loading).toBe(false);

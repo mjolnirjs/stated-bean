@@ -44,9 +44,11 @@ export function useBean<T>(
       bean = supplier() as StatedBeanType<T>;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       classType = (bean as any).constructor as ClassType<T>;
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       container.registerBean(classType, bean, { name });
     } else {
       classType = typeOrSupplier as ClassType<T>;
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       container.register(classType, { name });
       bean = container.getBean(classType)!;
     }

@@ -8,6 +8,7 @@ checks:
       buildPath: ./dist
   - name: type-coverage-watcher
     options:
+      atLeast: 98
       ignoreCatch: true
       ignoreFiles:
         - lib/**/*

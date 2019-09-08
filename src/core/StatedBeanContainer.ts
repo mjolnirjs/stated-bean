@@ -208,7 +208,7 @@ export class StatedBeanContainer extends Event {
 
     const self = this;
     Object.defineProperty(bean, fieldMeta.name.toString(), {
-      set(value) {
+      set(value: T[keyof T]) {
         const effect = new EffectEvent<T, StateChanged<unknown>>(
           bean,
           EffectEventType.StateChanged,
@@ -223,7 +223,7 @@ export class StatedBeanContainer extends Event {
 
         bean[proxyField] = value;
         self.emit(bean, effect);
-        self.application.invokeMiddleware(effect);
+        return self.application.invokeMiddleware(effect);
       },
       get() {
         return bean[proxyField];

@@ -13,12 +13,12 @@ export class TodoModel {
   @Stated()
   current: Todo = {};
 
-  constructor(@Inject(TodoService) private readonly todoService: TodoService) {}
+  constructor(@Inject(TodoService) private readonly _todo: TodoService) {}
 
   @PostProvided()
-  @Effect('fetchTodo')
+  @Effect()
   async fetchTodo() {
-    this.todoList = await this.todoService.fetchTodoList();
+    this.todoList = await this._todo.fetchTodoList();
   }
 
   addTodo = () => {

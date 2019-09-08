@@ -16,7 +16,27 @@
 
 > A light but scalable state management library with react hooks, inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next). that allows you to manage the state data of multiple views together. Make cross-component data transfer simple.
 
-## Install
+## TOC <!-- omit in TOC -->
+
+- [Features](#features)
+- [Online Demo](#online-demo)
+- [Usage](#usage)
+- [API](#api)
+  - [Decorators](#decorators)
+    - [`StatedBean`](#statedbean)
+    - [`Stated`](#stated)
+    - [`PostProvided`](#postprovided)
+    - [`Effect`](#effect)
+  - [use Hooks](#use-hooks)
+    - [`useBean`](#usebean)
+    - [`useInject`](#useinject)
+      - [Get the instance from the container in the `React Context`](#get-the-instance-from-the-container-in-the-react-context)
+      - [Create the temporary instance for current `Component`](#create-the-temporary-instance-for-current-component)
+      - [`UseStatedBeanOption`](#usestatedbeanoption)
+    - [`useObserveEffect`](#useobserveeffect)
+  - [Provider](#provider)
+    - [`<StatedBeanProvider {...props: StatedBeanProviderProps} />`](#statedbeanprovider-props-statedbeanproviderprops-)
+- [License](#license)
 
 ```sh
 # yarn
@@ -47,13 +67,13 @@ export class Counter {
   @Stated()
   count: number = 0;
 
-  increment = () => {
+  increment() {
     this.count++;
-  };
+  }
 
-  decrement = () => {
+  decrement() {
     this.count--;
-  };
+  }
 }
 
 function CounterDisplay() {
@@ -73,29 +93,41 @@ function CounterDisplay() {
 
 ### Decorators
 
-#### `@StatedBean(name?: string | symbol): ClassDecorator`
+#### `StatedBean`
+
+_Signature_: `@StatedBean(name?: string | symbol): ClassDecorator`
 
 Indicates that an annotated class is a `StatedBean`. The `name` may indicate a suggestion for the bean name. Its default value is `Class.name`.
 
-#### `@Stated(): PropertyDecorator`
+#### `Stated`
+
+_Signature_: `@Stated(): PropertyDecorator`
 
 Indicates that an annotated property is `Stated`. Its reassignment will be observed and notified to the container.
 
-#### `@PostProvided(): MethodDecorator`
+#### `PostProvided`
+
+_Signature_: `@PostProvided(): MethodDecorator`
 
 The `PostProvided` decorator is used on a method that needs to be executed after the `StatedBean` be instanced to perform any initialization.
 
-#### `@Effect(name?: string | symbol): MethodDecorator`
+#### `Effect`
+
+_Signature_: `@Effect(name?: string | symbol): MethodDecorator`
 
 The `Effect` decorator is used on a method that can get the execution state by `useObserveEffect`.
 
 ### use Hooks
 
-#### `useBean<T>(typeOrSupplier: ClassType<T> | () => T, name?: string | symbol): T`
+#### `useBean`
+
+_Signature_: `useBean<T>(typeOrSupplier: ClassType<T> | () => T, name?: string | symbol): T`
 
 The `useBean` will create an instance of the stated bean with a new `StatedBeanContainer` and listen for its data changes to trigger the re-rendering of the current component.
 
-#### `useInject<T>(type: ClassType<T>, option: UseStatedBeanOption<T> = {}): T`
+#### `useInject`
+
+_Signature_: `useInject<T>(type: ClassType<T>, option: UseStatedBeanOption<T> = {}): T`
 
 The `useInject` will get the instance of the stated bean from the `StatedBeanContainer` in the context and listen for its data changes to trigger the re-rendering of the current component.
 
@@ -104,8 +136,7 @@ The `useInject` will get the instance of the stated bean from the `StatedBeanCon
 ```tsx
 function SampleComponent() {
   const model = useInject(UserModel);
-
-  return; //...;
+  // ...
 }
 
 function App() {
@@ -128,7 +159,7 @@ function SampleComponent() {
 }
 ```
 
-##### The `UseStatedBeanOption`
+##### `UseStatedBeanOption`
 
 ```ts
 option = {
@@ -137,11 +168,13 @@ option = {
 };
 ```
 
-#### `useObserveEffect(bean: StatedBeanType, name: string | symbol): EffectAction`
+#### `useObserveEffect`
+
+_Signature_: `useObserveEffect(bean: StatedBeanType, name: string | symbol): EffectAction`
 
 observe the execution state of the method which with `@Effect`.
 
-```tsx
+```ts
 @StatedBean
 class UserModel {
   @Effect()
@@ -153,8 +186,7 @@ class UserModel {
 const UserInfo = () => {
   const model = useBean(() => new UserModel());
   const { loading, error } = useObserveEffect(model, 'fetchUser');
-
-  return; //...;
+  // ...
 };
 ```
 

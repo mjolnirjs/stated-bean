@@ -15,4 +15,10 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    node:{
+      allowModules: ['stated-bean']
+    },
+    polyfills: ['Object.getOwnPropertySymbols', 'Promise', 'Reflect', 'Symbol'],
+  },
 };

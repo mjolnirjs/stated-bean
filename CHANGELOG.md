@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1-beta.1](https://github.com/mjolnirjs/stated-bean/compare/v0.3.1-beta...v0.3.1-beta.1) (2019-09-09)
+
+
+### Bug Fixes
+
+* **types:** remove unnecessary internal flag ([83a0e26](https://github.com/mjolnirjs/stated-bean/commit/83a0e26))
+
 ### [0.3.1-beta](https://github.com/mjolnirjs/stated-bean/compare/v0.3.0-beta...v0.3.1-beta) (2019-09-09)
 
 

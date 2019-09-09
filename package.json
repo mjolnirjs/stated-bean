@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.3.1-beta",
+  "version": "0.3.1-beta.1",
   "description": "A light but scalable state management library with react hooks",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "build:example": "parcel build ./example/index.html",
     "build": "rimraf dist lib && run-p build:**",
     "lint": "cross-env EFF_NO_LINK_RULES=true eslint . --ext js,md,mdx,ts,tsx -f friendly",
-    "test": "jest --env=jsdom --coverage --preset ts-jest",
+    "test": "jest",
     "type-coverage": "type-coverage --detail --ignore-catch --ignore-files 'lib/**/*' --strict"
   },
   "peerDependencies": {
@@ -65,11 +65,9 @@
     "react-dom": "^16.9.0",
     "react-test-renderer": "^16.9.0",
     "rimraf": "^3.0.0",
-    "rollup": "^1.21.0",
+    "rollup": "^1.21.1",
     "serve": "^11.1.0",
     "ts-jest": "^24.0.2",
-    "ts-node": "^8.3.0",
-    "tslib": "^1.10.0",
     "type-coverage": "^2.2.0",
     "typescript": "^3.6.2"
   },

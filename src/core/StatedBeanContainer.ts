@@ -18,11 +18,6 @@ import { ForceUpdate, StatedBeanSymbol } from './Symbols';
 
 /**
  * `StatedBeanContainer` is responsible for registering and managing `bean` and observing its `@Stated()` property changes.
- *
- * @internal
- * @export
- * @class StatedBeanContainer
- * @extends {Event}
  */
 export class StatedBeanContainer extends Event {
   // @internal

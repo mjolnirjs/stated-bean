@@ -1,13 +1,13 @@
 {
   "name": "stated-bean",
-  "version": "0.3.0-beta",
+  "version": "0.3.1-beta",
+  "description": "A light but scalable state management library with react hooks",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
   "main": "lib/cjs.js",
   "es2015": "lib/es2015.js",
   "fesm5": "lib/esm.js",
   "module": "lib/es",
-  "browser": "lib/umd.js",
   "unpkg": "lib/umd.min.js",
   "types": "lib/types",
   "files": [

@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "jsx": "react",
     "declarationDir": "../lib/types",
     "inlineSources": true,
     "outDir": "../lib/es"

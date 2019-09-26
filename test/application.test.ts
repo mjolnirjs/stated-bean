@@ -1,7 +1,6 @@
 import {
   StatedBeanApplication,
   IBeanFactory,
-  ClassType,
   NextCaller,
   StatedBean,
   Stated,
@@ -28,8 +27,16 @@ describe('StatedBeanApplication', () => {
     const application = new StatedBeanApplication();
 
     class CustomBeanFactory implements IBeanFactory {
-      get<T>(Type: ClassType<T>) {
-        return new Type();
+      get<T>(): T | undefined {
+        return undefined;
+      }
+
+      register() {
+        //
+      }
+
+      remove() {
+        //
       }
     }
 
@@ -39,7 +46,7 @@ describe('StatedBeanApplication', () => {
     expect(application.getBeanFactory() === beanFactory).toEqual(true);
   });
 
-  it('application interceptor test', async () => {
+  it('application interceptor test', () => {
     const CustomMiddleware = async (
       event: EffectEvent<SampleStatedBean, StateChanged<number>>,
       next: NextCaller,
@@ -54,7 +61,7 @@ describe('StatedBeanApplication', () => {
 
     const container = new StatedBeanContainer(undefined, application);
 
-    await container.register(SampleStatedBean);
+    container.register({ type: SampleStatedBean });
 
     const bean = container.getBean(SampleStatedBean);
 

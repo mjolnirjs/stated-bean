@@ -1,6 +1,6 @@
 import { getStatedBeanContext } from '../context';
 import { EffectEvent } from '../core';
-import { ClassType } from '../types';
+import { ClassType, BeanProvider } from '../types';
 import { isFunction, isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -36,34 +36,35 @@ export function useBean<T>(
     throw new Error('not found stated bean container.');
   }
 
-  const [bean] = useState<T>(() => {
-    let bean: T;
-    let classType: ClassType<T>;
+  const [provider] = useState<BeanProvider<T>>(() => {
+    let provider: BeanProvider<T>;
+    let bean: T | undefined;
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;
       bean = supplier();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      classType = (bean as any).constructor as ClassType<T>;
-      if (
-        classType.name === 'Object' &&
-        (name === undefined || name === null)
-      ) {
+      const type = (bean as any).constructor as ClassType<T>;
+      if (type.name === 'Object' && (name === undefined || name === null)) {
         throw new Error('plain object bean must be named.');
       }
-      container.registerBean(classType, bean, { name });
+      provider = { type, bean, identity: name };
     } else {
-      classType = typeOrSupplier as ClassType<T>;
-      container.register(classType, { name });
-      bean = container.getBean(classType)!;
+      provider = { type: typeOrSupplier as ClassType<T>, identity: name };
     }
-    container.on(bean, beanChangeListener);
-    return bean;
+    container.register(provider);
+    bean = container.getBean(provider.type, name);
+    provider.bean = bean;
+    if (bean === undefined) {
+      throw new Error('create bean fail.');
+    }
+    container.on(provider, beanChangeListener);
+    return provider;
   });
 
   useEffect(() => {
-    return () => container.off(bean, beanChangeListener);
-  }, [bean, beanChangeListener, container]);
+    return () => container.off(provider, beanChangeListener);
+  }, [provider, beanChangeListener, container]);
 
-  return bean;
+  return provider.bean as T;
 }

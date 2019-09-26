@@ -12,7 +12,7 @@ class SampleStatedBean {
 describe('useInject test', () => {
   it('useInject get bean from context', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider types={[SampleStatedBean]}>
+      <StatedBeanProvider providers={[SampleStatedBean]}>
         {children}
       </StatedBeanProvider>
     );
@@ -38,7 +38,7 @@ describe('useInject test', () => {
 
   it('useInject get fail when bean not provided', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider types={[]}>{children}</StatedBeanProvider>
+      <StatedBeanProvider providers={[]}>{children}</StatedBeanProvider>
     );
 
     renderHook(

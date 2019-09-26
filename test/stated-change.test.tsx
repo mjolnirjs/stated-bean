@@ -43,9 +43,9 @@ describe('stated value changed test', () => {
     };
 
     const App = () => (
-      <StatedBeanProvider types={[SampleStatedBean]}>
+      <StatedBeanProvider providers={[SampleStatedBean]}>
         <Sample />
-        <StatedBeanProvider types={[SampleStatedBean]}>
+        <StatedBeanProvider providers={[SampleStatedBean]}>
           <Sample />
         </StatedBeanProvider>
       </StatedBeanProvider>
@@ -58,7 +58,7 @@ describe('stated value changed test', () => {
 
   it('useInject and change the stated field', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider types={[SampleStatedBean]}>
+      <StatedBeanProvider providers={[SampleStatedBean]}>
         {children}
       </StatedBeanProvider>
     );
@@ -86,7 +86,7 @@ describe('stated value changed test', () => {
     );
 
     const App = () => (
-      <StatedBeanProvider types={[SampleStatedBean]}>
+      <StatedBeanProvider providers={[SampleStatedBean]}>
         <Sample />
       </StatedBeanProvider>
     );

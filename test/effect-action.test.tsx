@@ -1,8 +1,17 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { Effect, Stated, StatedBean, useBean, useObserveEffect } from '../src';
+import {
+  Effect,
+  Stated,
+  StatedBean,
+  useBean,
+  useObserveEffect,
+  StatedBeanProvider,
+} from '../src';
 
 import { delay } from './utils';
+
+import React from 'react';
 
 @StatedBean()
 class PostProvidedSample {
@@ -18,11 +27,20 @@ class PostProvidedSample {
 
 describe('effect action', () => {
   it('effect action change', async () => {
-    const { result, unmount } = renderHook(() => {
-      const bean = useBean(() => new PostProvidedSample());
-      const action = useObserveEffect(bean, 'add');
-      return { bean, action };
-    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <StatedBeanProvider providers={[PostProvidedSample]}>
+        {children}
+      </StatedBeanProvider>
+    );
+
+    const { result, unmount } = renderHook(
+      () => {
+        const bean = useBean(() => new PostProvidedSample());
+        const action = useObserveEffect(bean, 'add');
+        return { bean, action };
+      },
+      { wrapper },
+    );
     expect(result.current.action.loading).toBe(false);
     const addPromise = act(() => result.current.bean.add());
     expect(result.current.action.loading).toBe(true);

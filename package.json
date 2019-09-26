@@ -9,7 +9,7 @@
   "es2015": "lib/es2015.js",
   "fesm5": "lib/esm.js",
   "unpkg": "lib/umd.min.js",
-  "types": "lib/types",
+  "types": "lib/types/index.d.ts",
   "files": [
     "lib"
   ],
@@ -17,7 +17,7 @@
     "build": "rimraf dist lib && run-p build:**",
     "build:bundle": "r --prod",
     "build:example": "parcel build ./example/index.html",
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -p src",
     "dev": "parcel ./example/index.html --https",
     "lint": "run-p lint:*",
     "lint:es": "cross-env EFF_NO_LINK_RULES=true eslint . --ext js,md,mdx,ts,tsx -f friendly",
@@ -41,7 +41,6 @@
     "@1stg/remark-config": "^0.2.2",
     "@1stg/rollup-config": "^0.10.5",
     "@1stg/tsconfig": "^0.6.0",
-    "@abraham/reflection": "^0.5.1",
     "@babel/core": "^7.6.2",
     "@commitlint/cli": "^8.2.0",
     "@testing-library/react-hooks": "^2.0.1",
@@ -62,6 +61,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-test-renderer": "^16.9.0",
+    "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rollup": "^1.21.4",
     "serve": "^11.1.0",

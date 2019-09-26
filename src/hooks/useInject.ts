@@ -1,6 +1,6 @@
 import { getStatedBeanContext } from '../context';
 import { EffectEvent, EffectEventType } from '../core';
-import { ClassType, StateChanged, StatedBeanType } from '../types';
+import { ClassType, StateChanged } from '../types';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -21,7 +21,7 @@ export interface UseStatedBeanOption<T> {
 export function useInject<T>(
   type: ClassType<T>,
   option: UseStatedBeanOption<T> = {},
-): StatedBeanType<T> {
+): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
@@ -55,7 +55,7 @@ export function useInject<T>(
     }
     const bean = container.getBean<T>(type, option.name);
     if (bean !== undefined) {
-      container.on(bean, beanChangeListener);
+      container.on({ type, bean, identity: option.name }, beanChangeListener);
     }
     return bean;
   });
@@ -66,9 +66,9 @@ export function useInject<T>(
 
   useEffect(() => {
     return () => {
-      container.off(bean, beanChangeListener);
+      container.off({ type, bean, identity: option.name }, beanChangeListener);
     };
-  }, [container, bean, beanChangeListener]);
+  }, [container, bean, beanChangeListener, type, option.name]);
 
   return bean;
 }

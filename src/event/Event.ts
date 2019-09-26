@@ -1,6 +1,4 @@
-import { ClassType } from '../types';
-
-type EventListenFn = (...args: unknown[]) => void;
+export type EventListenFn = (...args: unknown[]) => void;
 
 /**
  * the event emitter for the StatedBean
@@ -10,21 +8,26 @@ type EventListenFn = (...args: unknown[]) => void;
  */
 export class Event {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  events = new WeakMap<InstanceType<ClassType<any>>, EventListenFn[]>();
+  events = new WeakMap<any, EventListenFn[]>();
 
-  on(type: InstanceType<ClassType>, cb: EventListenFn) {
-    this.events.set(type, (this.events.get(type) || []).concat(cb));
+  on<T>(bean: T, cb: EventListenFn) {
+    this.events.set(bean, (this.events.get(bean) || []).concat(cb));
   }
 
-  emit(type: InstanceType<ClassType>, ...data: unknown[]) {
-    if (this.events.has(type)) {
-      this.events.get(type)!.forEach(emit => emit(...data));
+  emit<T>(bean: T, ...data: unknown[]) {
+    if (this.events.has(bean)) {
+      this.events.get(bean)!.forEach(emit => emit(...data));
     }
   }
 
-  off(type: InstanceType<ClassType>, cb: EventListenFn) {
-    if (this.events.has(type)) {
-      this.events.set(type, this.events.get(type)!.filter(c => c !== cb));
+  off<T>(bean: T, cb: EventListenFn) {
+    if (this.events.has(bean)) {
+      this.events.set(bean, this.events.get(bean)!.filter(c => c !== cb));
     }
+  }
+
+  isEmpty<T>(bean: T) {
+    const listeners = this.events.get(bean);
+    return listeners === undefined || listeners.length === 0;
   }
 }

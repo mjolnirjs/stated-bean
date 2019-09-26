@@ -8,10 +8,6 @@ export class CounterModel {
   @Stated()
   count = 0;
 
-  constructor(count: number) {
-    this.count = count;
-  }
-
   @Effect('11')
   increment() {
     this.count++;

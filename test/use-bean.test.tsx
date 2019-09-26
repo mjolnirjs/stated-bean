@@ -1,6 +1,8 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { Stated, StatedBean, useBean } from '../src';
+import { Stated, StatedBean, useBean, StatedBeanProvider } from '../src';
+
+import React from 'react';
 
 @StatedBean()
 class StatedBeanSample {
@@ -10,9 +12,18 @@ class StatedBeanSample {
 
 describe('useBean test', () => {
   it('bean create', () => {
-    const { result } = renderHook(() => {
-      return useBean(() => new StatedBeanSample());
-    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <StatedBeanProvider providers={[StatedBeanSample]}>
+        {children}
+      </StatedBeanProvider>
+    );
+
+    const { result } = renderHook(
+      () => {
+        return useBean(() => new StatedBeanSample());
+      },
+      { wrapper },
+    );
     expect(result.current).not.toBeNull();
   });
 });

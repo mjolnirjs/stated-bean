@@ -113,11 +113,6 @@
   optionalDependencies:
     tslib "^1.10.0"
 
-"@abraham/reflection@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@abraham/reflection/-/reflection-0.5.1.tgz#5223015a3875462dcf2b03edc8e70f1aad7af941"
-  integrity sha512-keHFMZO/2poNeoxxHaXF2FCYAyBrUYFtio1N698BjJNnC14m/uXhbRj2OKKXglfcAsDe1BSuUpJjfo+vx+w4Cg==
-
 "@babel/code-frame@7.0.0", "@babel/code-frame@^7.0.0 <7.4.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0.tgz#06e2ab19bdb535385559aabb5ba59729482800f8"
@@ -8493,6 +8488,11 @@ redent@^2.0.0:
   dependencies:
     indent-string "^3.0.0"
     strip-indent "^2.0.0"
+
+reflect-metadata@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.npm.alibaba-inc.com/reflect-metadata/download/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha1-Z648pXyXKiqhZCsQ/jY/4y1J3Ag=
 
 reflexbox@^4.0.6:
   version "4.0.6"

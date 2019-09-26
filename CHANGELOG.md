@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* deps, fuck [@foreleven](https://github.com/foreleven) ([51f8bb4](https://github.com/mjolnirjs/stated-bean/commit/51f8bb4))
+* deps register ([51f8bb4](https://github.com/mjolnirjs/stated-bean/commit/51f8bb4))
 * lint and types issue ([871a5f6](https://github.com/mjolnirjs/stated-bean/commit/871a5f6))
 
 

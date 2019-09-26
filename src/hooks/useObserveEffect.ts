@@ -3,7 +3,7 @@ import { StatedBeanSymbol, EffectEvent, EffectEventType } from '../core';
 
 import { useState, useEffect, useCallback } from 'react';
 
-export function useObserveEffect<T extends StatedBeanType<unknown>>(
+export function useObserveEffect<T>(
   bean: T,
   effect: string | symbol,
 ): EffectAction {
@@ -26,7 +26,7 @@ export function useObserveEffect<T extends StatedBeanType<unknown>>(
     [effect],
   );
   const [container] = useState(() => {
-    const statedBean = bean as StatedBeanType<unknown>;
+    const statedBean = bean as StatedBeanType<T>;
     const container = statedBean[StatedBeanSymbol].container;
 
     container.on(bean, listener);

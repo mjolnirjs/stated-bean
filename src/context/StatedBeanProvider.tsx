@@ -1,14 +1,14 @@
 import { StatedBeanApplication } from '../core/StatedBeanApplication';
 import { useContainer } from '../hooks/useContainer';
-import { BeanProvider, ClassType, StatedBeanType } from '../types';
+import { BeanProvider, ClassType } from '../types';
 
 import { getStatedBeanContext } from './StatedBeanContext';
 
 import React from 'react';
 
-export interface StatedBeanProviderProps {
-  types?: ClassType[];
-  beans?: Array<StatedBeanType<unknown>>;
+export interface StatedBeanProviderProps<T = unknown> {
+  types?: Array<ClassType<T>>;
+  beans?: T[];
   beanProvider?: BeanProvider;
   application?: StatedBeanApplication;
   children: React.ReactNode | React.ReactNode[] | null;

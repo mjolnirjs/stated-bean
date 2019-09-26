@@ -1,28 +1,19 @@
 import { getStatedBeanContext } from '../context/StatedBeanContext';
 import { StatedBeanApplication } from '../core/StatedBeanApplication';
 import { StatedBeanContainer } from '../core/StatedBeanContainer';
-import { BeanProvider, ClassType, StatedBeanType } from '../types';
+import { BeanProvider, ClassType } from '../types';
 
 import { useContext, useState, useEffect } from 'react';
 
-export interface UseContainerOption {
-  types?: ClassType[];
-  beans?: Array<StatedBeanType<unknown>>;
+export interface UseContainerOption<T = unknown> {
+  types?: Array<ClassType<T>>;
+  beans?: T[];
   beanProvider?: BeanProvider;
   application?: StatedBeanApplication;
 }
 
 /**
  * creates a new `StatedBeanContainer` and registers the `types`, `beans` which given by the `UseContainerOption`.
- *
- * @export
- * @param {UseContainerOption} {
- *   types,
- *   beans,
- *   beanProvider,
- *   application,
- * }
- * @returns
  */
 export function useContainer({
   types,

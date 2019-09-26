@@ -5,9 +5,10 @@ module.exports = {
     node: {
       allowModules: ['stated-bean'],
     },
-    polyfills: ['Object.getOwnPropertySymbols', 'Promise', 'Reflect', 'Symbol'],
   },
   rules: {
-    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-floating-promises': 0,
+    '@typescript-eslint/no-unnecessary-condition': 0,
+    'react/jsx-handler-names': 0,
   },
 };

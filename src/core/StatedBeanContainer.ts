@@ -75,11 +75,15 @@ export class StatedBeanContainer extends Event {
     return bean as StatedBeanType<T>;
   }
 
-  addBean<T>(bean: StatedBeanType<T>) {
-    const { name, container } = bean[StatedBeanSymbol];
+  addBean<T>(bean: T) {
+    const { name, container } = (bean as StatedBeanType<T>)[StatedBeanSymbol];
     // TODO: if need off the listener.
     container.on(bean, e => this.emit(bean, e));
-    this._registry.register(bean.constructor, bean, name);
+    this._registry.register(
+      (bean as StatedBeanType<T>).constructor,
+      bean,
+      name,
+    );
   }
 
   hasBean<T>(type: ClassType<T>, name?: string): boolean {

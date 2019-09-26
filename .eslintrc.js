@@ -1,20 +1,14 @@
-const { overrides } = require('@1stg/eslint-config/overrides');
-
 module.exports = {
-  extends: '@1stg',
-  overrides: [
-    ...overrides,
-    {
-      files: '*.tsx',
-      rules: {
-        'react/jsx-handler-names': 0,
-      },
-    },
-  ],
+  root: true,
+  extends: '@1stg/eslint-config/recommended',
   settings: {
-    node:{
-      allowModules: ['stated-bean']
+    node: {
+      allowModules: ['stated-bean'],
     },
-    polyfills: ['Object.getOwnPropertySymbols', 'Promise', 'Reflect', 'Symbol'],
+  },
+  rules: {
+    '@typescript-eslint/no-floating-promises': 0,
+    '@typescript-eslint/no-unnecessary-condition': 0,
+    'react/jsx-handler-names': 0,
   },
 };

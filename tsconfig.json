@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/@1stg/tsconfig/tsconfig.json",
+  "extends": "@1stg/tsconfig/lib",
   "compilerOptions": {
     "baseUrl": ".",
     "jsx": "react",

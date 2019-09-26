@@ -1,6 +1,6 @@
 import { getStatedBeanContext } from '../context';
-import { EffectEvent, StatedBeanContainer } from '../core';
-import { ClassType, StatedBeanType } from '../types';
+import { EffectEvent } from '../core';
+import { ClassType, BeanProvider } from '../types';
 import { isFunction, isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 export function useBean<T>(
   typeOrSupplier: ClassType<T> | (() => T),
   name?: string | symbol,
-): StatedBeanType<T> {
+): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
@@ -30,35 +30,41 @@ export function useBean<T>(
     setVersion(prev => prev + 1);
   }, []);
 
-  const [container] = useState(() => {
-    const container = new StatedBeanContainer(context.container);
+  const container = context.container;
 
-    return container;
-  });
+  if (container === undefined) {
+    throw new Error('not found stated bean container.');
+  }
 
-  const [bean] = useState<StatedBeanType<T>>(() => {
-    let bean: StatedBeanType<T>;
-    let classType: ClassType<T>;
+  const [provider] = useState<BeanProvider<T>>(() => {
+    let provider: BeanProvider<T>;
+    let bean: T | undefined;
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;
-      bean = supplier() as StatedBeanType<T>;
+      bean = supplier();
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      classType = (bean as any).constructor as ClassType<T>;
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      container.registerBean(classType, bean, { name });
+      const type = (bean as any).constructor as ClassType<T>;
+      if (type.name === 'Object' && (name === undefined || name === null)) {
+        throw new Error('plain object bean must be named.');
+      }
+      provider = { type, bean, identity: name };
     } else {
-      classType = typeOrSupplier as ClassType<T>;
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      container.register(classType, { name });
-      bean = container.getBean(classType)!;
+      provider = { type: typeOrSupplier as ClassType<T>, identity: name };
     }
-    container.on(bean, beanChangeListener);
-    return bean;
+    container.register(provider);
+    bean = container.getBean(provider.type, name);
+    provider.bean = bean;
+    if (bean === undefined) {
+      throw new Error('create bean fail.');
+    }
+    container.on(provider, beanChangeListener);
+    return provider;
   });
 
   useEffect(() => {
-    return () => container.off(bean, beanChangeListener);
-  }, [bean, beanChangeListener, container]);
+    return () => container.off(provider, beanChangeListener);
+  }, [provider, beanChangeListener, container]);
 
-  return bean;
+  return provider.bean as T;
 }

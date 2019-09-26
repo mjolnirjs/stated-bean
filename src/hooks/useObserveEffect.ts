@@ -1,12 +1,23 @@
-import { EffectAction, StatedBeanType } from '../types';
-import { StatedBeanSymbol, EffectEvent, EffectEventType } from '../core';
+import { getStatedBeanContext } from '../context';
+import { EffectEvent, EffectEventType } from '../core';
+import { EffectAction, Provider, ClassType, BeanProvider } from '../types';
+import { isStatedBean, isFunction } from '../utils';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
-export function useObserveEffect<T extends StatedBeanType<unknown>>(
-  bean: T,
-  effect: string | symbol,
+export function useObserveEffect<T>(
+  bean: T | Provider<T>,
+  effect: string | symbol | keyof T,
 ): EffectAction {
+  const StateBeanContext = getStatedBeanContext();
+  const context = useContext(StateBeanContext);
+
+  const container = context.container;
+
+  if (container === undefined) {
+    throw new Error('not found container');
+  }
+
   const [effectState, setEffectState] = useState<EffectAction>(() => {
     return {
       loading: false,
@@ -25,18 +36,29 @@ export function useObserveEffect<T extends StatedBeanType<unknown>>(
     },
     [effect],
   );
-  const [container] = useState(() => {
-    const statedBean = bean as StatedBeanType<unknown>;
-    const container = statedBean[StatedBeanSymbol].container;
 
-    container.on(bean, listener);
-    return container;
+  const [provider] = useState<BeanProvider<T>>(() => {
+    let provider: BeanProvider<T>;
+    if (isStatedBean(bean)) {
+      provider = { type: bean.constructor as ClassType<T>, bean: bean as T };
+    } else if (isFunction(bean)) {
+      const type = bean as ClassType<T>;
+      provider = { type, bean: container.getBean(type) };
+    } else if ('type' in bean) {
+      provider = { ...bean, bean: container.getBean(bean.type, bean.identity) };
+    } else {
+      throw new Error('not expect bean provider');
+    }
+    container.on(provider, listener);
+    return provider;
   });
 
   useEffect(() => {
     return () => {
-      container.off(bean, listener);
+      if (container && provider) {
+        container.off(provider, listener);
+      }
     };
-  }, [container, bean, listener]);
+  }, [container, provider, listener]);
   return effectState;
 }

@@ -1,37 +1,32 @@
-import { Event } from '../event';
+import { Event, EventListenFn } from '../event';
 import { getMetadataStorage } from '../metadata';
 import {
-  BeanRegisterOption,
+  BeanProvider,
   ClassType,
   StateChanged,
   StatedBeanMeta,
-  StatedBeanType,
   StatedFieldMeta,
 } from '../types';
-import { isFunction } from '../utils';
+import { isStatedBean } from '../utils';
 
 import { EffectEvent, EffectEventType } from './EffectEvent';
 import { NoSuchBeanDefinitionError } from './NoSuchBeanDefinitionError';
 import { StatedBeanApplication } from './StatedBeanApplication';
-import { StatedBeanRegistry } from './StatedBeanRegistry';
-import { ForceUpdate, StatedBeanSymbol } from './Symbols';
+import { StatedBeanSymbol } from './Symbols';
 
 /**
  * `StatedBeanContainer` is responsible for registering and managing `bean` and observing its `@Stated()` property changes.
  */
-export class StatedBeanContainer extends Event {
+export class StatedBeanContainer {
   // @internal
   private readonly _parent?: StatedBeanContainer;
 
   // @internal
   private readonly _app!: StatedBeanApplication;
 
-  // @internal
-  private readonly _registry: StatedBeanRegistry = new StatedBeanRegistry();
+  private readonly _event = new Event();
 
   constructor(parent?: StatedBeanContainer, app?: StatedBeanApplication) {
-    super();
-
     if (parent == null && app == null) {
       this._app = new StatedBeanApplication();
     } else if (app != null) {
@@ -44,6 +39,10 @@ export class StatedBeanContainer extends Event {
 
   destroy() {
     // container destroy
+  }
+
+  getBeanFactory() {
+    return this._app.getBeanFactory();
   }
 
   getBeanIdentity<T>(type: ClassType<T>, name?: string | symbol) {
@@ -61,78 +60,57 @@ export class StatedBeanContainer extends Event {
     return storage.getBeanMeta(type);
   }
 
-  getBean<T>(
-    type: ClassType<T>,
-    name?: string | symbol,
-  ): StatedBeanType<T> | undefined {
-    const beanIdentity = this.getBeanIdentity(type, name);
-    let bean = this._registry.getBean(type, beanIdentity);
+  getBean<T>(type: ClassType<T>, name?: string | symbol): T | undefined {
+    const identity = this.getBeanIdentity(type, name);
+    let bean = this.getBeanFactory().get(type, identity);
 
     if (bean == null && this.parent) {
       bean = this.parent.getBean(type, name);
     }
 
-    return bean as StatedBeanType<T>;
+    if (bean !== undefined && !isStatedBean(bean)) {
+      this.enhanceBean(type, bean, identity);
+    }
+
+    return bean as T;
   }
 
-  addBean<T>(bean: StatedBeanType<T>) {
-    const { name, container } = bean[StatedBeanSymbol];
-    // TODO: if need off the listener.
-    container.on(bean, e => this.emit(bean, e));
-    this._registry.register(bean.constructor, bean, name);
-  }
+  // addBean<T>(bean: T) {
+  //   if (isStatedBean(bean)) {
+  //     const { identity, container } = bean[StatedBeanSymbol];
+  //     // TODO: if need off the listener.
+  //     container.on(bean, e => this.emit(bean, e));
+  //     this.getBeanFactory().register({
+  //       type: bean.constructor,
+  //       bean,
+  //       identity,
+  //     });
+  //   }
+  // }
 
   hasBean<T>(type: ClassType<T>, name?: string): boolean {
     return this.getBean(type, name) !== undefined;
   }
 
-  register<T>(type: ClassType<T>, options?: BeanRegisterOption) {
-    const beanFactory = this.application.getBeanFactory();
-    const bean = beanFactory.get(type);
-
-    if (bean === undefined) {
-      throw new Error(
-        `The bean is undefined get from the BeanFactory[${beanFactory.constructor.name}]`,
-      );
+  register<T>(provider: BeanProvider<T>) {
+    const beanFactory = this.getBeanFactory();
+    if (provider !== undefined) {
+      if (beanFactory.get(provider.type, provider.identity) === undefined) {
+        beanFactory.register(provider);
+      }
     }
-    return this.registerBean(type, bean, options);
   }
 
-  async registerBean<T>(
-    type: ClassType<T>,
-    beanOrSupplier: T | (() => T),
-    options: BeanRegisterOption = {},
-  ): Promise<void> {
-    const identity = this.getBeanIdentity(type, options.name);
-    if (this._registry.getBean(type, identity) !== undefined) {
-      return;
-    }
-
-    let bean: T;
-    if (isFunction(beanOrSupplier)) {
-      const supplier = beanOrSupplier as () => T;
-      bean = supplier();
-    } else {
-      bean = beanOrSupplier as T;
-    }
-
-    if (!(bean instanceof type)) {
-      throw new Error(`bean ${bean} mast be an instance of ${type.name}`);
-    }
-
+  async enhanceBean<T>(type: ClassType<T>, bean: T, identity: string | symbol) {
     const beanMeta = this.getBeanMeta(type);
 
     if (beanMeta === undefined) {
       throw new NoSuchBeanDefinitionError(type.name);
     }
-
-    this._registry.register(type, bean, identity);
-
-    this._defineStatedBean(bean, this.getBeanIdentity(type, options.name));
-    this._defineForceUpdate(bean, beanMeta);
+    this._defineStatedBean(bean, identity, beanMeta);
 
     const fields = beanMeta.statedFields || [];
-    const observers = (fields || []).map(field =>
+    const observers = fields.map(field =>
       this._observeBeanField(bean, field, beanMeta),
     );
     await Promise.all(observers);
@@ -146,43 +124,79 @@ export class StatedBeanContainer extends Event {
     }
   }
 
+  // forceUpdate<T>(bean: T, field: keyof T & string) {
+  //   if (bean[field] === undefined) {
+  //     return;
+  //   }
+  //   const fieldMeta = (beanMeta.statedFields || []).find(f => f.name === field);
+  //   if (fieldMeta === undefined) {
+  //     return;
+  //   }
+  //   const effect = new EffectEvent<T, StateChanged<unknown>>(
+  //     bean,
+  //     EffectEventType.StateChanged,
+  //     field,
+  //     {
+  //       newValue: bean[field],
+  //       oldValue: bean[field],
+  //       fieldMeta,
+  //       beanMeta,
+  //     },
+  //   );
+
+  //   self.emit(bean, effect);
+  // }
+
+  on<T>(provider: BeanProvider<T>, cb: EventListenFn) {
+    this._event.on(provider.bean, cb);
+  }
+
+  off<T>(provider: BeanProvider<T>, cb: EventListenFn) {
+    this._event.off(provider.bean, cb);
+    if (this._event.isEmpty(provider)) {
+      this.getBeanFactory().remove(provider.type, provider.identity);
+    }
+  }
+
+  emit<T>(bean: T, ...data: unknown[]) {
+    this._event.emit(bean, ...data);
+  }
+
   // @internal
-  private _defineStatedBean<T>(bean: T, name: string | symbol) {
+  private _defineStatedBean<T>(
+    bean: T,
+    name: string | symbol,
+    beanMeta: StatedBeanMeta,
+  ) {
+    const self = this;
     Object.defineProperty(bean, StatedBeanSymbol, {
       value: {
         name,
         container: this,
-      },
-    });
-  }
+        forceUpdate: function(field: keyof T & string) {
+          if (bean[field] === undefined) {
+            return;
+          }
+          const fieldMeta = (beanMeta.statedFields || []).find(
+            f => f.name === field,
+          );
+          if (fieldMeta === undefined) {
+            return;
+          }
+          const effect = new EffectEvent<T, StateChanged<unknown>>(
+            bean,
+            EffectEventType.StateChanged,
+            field,
+            {
+              newValue: bean[field],
+              oldValue: bean[field],
+              fieldMeta,
+              beanMeta,
+            },
+          );
 
-  // @internal
-  private _defineForceUpdate<T>(bean: T, beanMeta: StatedBeanMeta) {
-    const self = this;
-    Object.defineProperty(bean, ForceUpdate, {
-      value: function(field: keyof T & string) {
-        if (bean[field] === undefined) {
-          return;
-        }
-        const fieldMeta = (beanMeta.statedFields || []).find(
-          f => f.name === field,
-        );
-        if (fieldMeta === undefined) {
-          return;
-        }
-        const effect = new EffectEvent<T, StateChanged<unknown>>(
-          bean,
-          EffectEventType.StateChanged,
-          field,
-          {
-            newValue: bean[field],
-            oldValue: bean[field],
-            fieldMeta,
-            beanMeta,
-          },
-        );
-
-        self.emit(bean, effect);
+          self.emit(bean, effect);
+        },
       },
     });
   }

@@ -1,0 +1,5 @@
+.yarnrc
+coverage
+dist
+lib
+CHANGELOG.md

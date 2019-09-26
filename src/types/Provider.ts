@@ -1,13 +1,12 @@
 import { ClassType } from './ClassType';
 
-export interface BeanRegisterOption {
-  name?: string | symbol;
+export interface BeanProvider<T> {
+  type: ClassType<T>;
+  identity?: string | symbol;
+  bean?: T;
 }
 
-export type Provide = <T>(
-  type: ClassType<T>,
-  bean: T | (() => T),
-  options?: BeanRegisterOption,
-) => {};
+// eslint-disable-next-line @typescript-eslint/no-type-alias
+export type TypedProvider<T> = ClassType<T>;
 
-export type BeanProvider = (provide: Provide) => void;
+export type Provider<T> = TypedProvider<T> | BeanProvider<T>;

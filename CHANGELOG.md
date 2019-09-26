@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/mjolnirjs/stated-bean/compare/v0.3.1-beta.1...v0.4.0) (2019-09-26)
+
+
+### Bug Fixes
+
+* deps, fuck [@foreleven](https://github.com/foreleven) ([51f8bb4](https://github.com/mjolnirjs/stated-bean/commit/51f8bb4))
+* lint and types issue ([871a5f6](https://github.com/mjolnirjs/stated-bean/commit/871a5f6))
+
+
+### Features
+
+* **hooks:** remove temporary container for useBean ([6ba9207](https://github.com/mjolnirjs/stated-bean/commit/6ba9207))
+* bean provider ([d2510f5](https://github.com/mjolnirjs/stated-bean/commit/d2510f5))
+
 ### [0.3.1-beta.1](https://github.com/mjolnirjs/stated-bean/compare/v0.3.1-beta...v0.3.1-beta.1) (2019-09-09)
 
 

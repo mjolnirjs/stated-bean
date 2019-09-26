@@ -1,6 +1,6 @@
 import { getStatedBeanContext } from '../context';
-import { EffectEvent, StatedBeanContainer } from '../core';
-import { ClassType, StatedBeanType } from '../types';
+import { EffectEvent } from '../core';
+import { ClassType } from '../types';
 import { isFunction, isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 export function useBean<T>(
   typeOrSupplier: ClassType<T> | (() => T),
   name?: string | symbol,
-): StatedBeanType<T> {
+): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
@@ -30,25 +30,30 @@ export function useBean<T>(
     setVersion(prev => prev + 1);
   }, []);
 
-  const [container] = useState(() => {
-    const container = new StatedBeanContainer(context.container);
+  const container = context.container;
 
-    return container;
-  });
+  if (container === undefined) {
+    throw new Error('not found stated bean container.');
+  }
 
-  const [bean] = useState<StatedBeanType<T>>(() => {
-    let bean: StatedBeanType<T>;
+  const [bean] = useState<T>(() => {
+    let bean: T;
     let classType: ClassType<T>;
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;
-      bean = supplier() as StatedBeanType<T>;
+      bean = supplier();
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       classType = (bean as any).constructor as ClassType<T>;
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      if (
+        classType.name === 'Object' &&
+        (name === undefined || name === null)
+      ) {
+        throw new Error('plain object bean must be named.');
+      }
       container.registerBean(classType, bean, { name });
     } else {
       classType = typeOrSupplier as ClassType<T>;
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       container.register(classType, { name });
       bean = container.getBean(classType)!;
     }

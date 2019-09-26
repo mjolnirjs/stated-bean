@@ -102,7 +102,7 @@ export class StatedBeanContainer extends Event {
     type: ClassType<T>,
     beanOrSupplier: T | (() => T),
     options: BeanRegisterOption = {},
-  ): Promise<void> {
+  ) {
     const identity = this.getBeanIdentity(type, options.name);
     if (this._registry.getBean(type, identity) !== undefined) {
       return;
@@ -132,7 +132,7 @@ export class StatedBeanContainer extends Event {
     this._defineForceUpdate(bean, beanMeta);
 
     const fields = beanMeta.statedFields || [];
-    const observers = (fields || []).map(field =>
+    const observers = fields.map(field =>
       this._observeBeanField(bean, field, beanMeta),
     );
     await Promise.all(observers);

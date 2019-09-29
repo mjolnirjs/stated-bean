@@ -29,7 +29,8 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "tslib": ">=1.0.0"
+    "tslib": ">=1.0.0",
+    "rxjs": ">=6.0.0"
   },
   "devDependencies": {
     "@1stg/babel-preset": "^0.7.0",

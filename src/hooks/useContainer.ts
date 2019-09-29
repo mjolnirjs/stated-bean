@@ -1,7 +1,7 @@
 import { getStatedBeanContext } from '../context/StatedBeanContext';
 import { StatedBeanApplication } from '../core/StatedBeanApplication';
 import { StatedBeanContainer } from '../core/StatedBeanContainer';
-import { Provider, ClassType } from '../types';
+import { Provider } from '../types';
 import { isFunction } from '../utils';
 
 import { useContext, useEffect, useState } from 'react';
@@ -23,7 +23,7 @@ export function useContainer({ providers, application }: UseContainerOption) {
     (providers || []).forEach(provider => {
       if (isFunction(provider)) {
         container.register({
-          type: provider as ClassType,
+          type: provider,
         });
       } else if ('type' in provider) {
         container.register(provider);

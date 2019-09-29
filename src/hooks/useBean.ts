@@ -1,7 +1,7 @@
 import { getStatedBeanContext } from '../context';
-import { EffectEvent } from '../core';
-import { ClassType, BeanProvider } from '../types';
+import { BeanProvider, ClassType, StateAction } from '../types';
 import { isFunction, isStatedBean } from '../utils';
+import { BeanObserver } from '../core';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -16,7 +16,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
  * @template T
  * @param {(ClassType<T> | (() => T))} typeOrSupplier
  * @param {(string | symbol)} [name]
- * @returns {StatedBeanType<T>}
+ * @returns {T}
  */
 export function useBean<T>(
   typeOrSupplier: ClassType<T> | (() => T),
@@ -26,7 +26,7 @@ export function useBean<T>(
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
 
-  const beanChangeListener = useCallback((_effect: EffectEvent) => {
+  const beanChangeListener = useCallback((_action: StateAction) => {
     setVersion(prev => prev + 1);
   }, []);
 
@@ -36,7 +36,7 @@ export function useBean<T>(
     throw new Error('not found stated bean container.');
   }
 
-  const [provider] = useState<BeanProvider<T>>(() => {
+  const [observer] = useState<BeanObserver<T>>(() => {
     let provider: BeanProvider<T>;
     let bean: T | undefined;
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
@@ -53,18 +53,22 @@ export function useBean<T>(
       provider = { type: typeOrSupplier as ClassType<T>, identity: name };
     }
     container.register(provider);
-    bean = container.getBean(provider.type, name);
-    provider.bean = bean;
-    if (bean === undefined) {
-      throw new Error('create bean fail.');
-    }
-    container.on(provider, beanChangeListener);
-    return provider;
+
+    const observer = container.getBeanObserver(
+      provider.type,
+      provider.identity,
+    );
+
+    return observer;
+  });
+
+  const [subscription] = useState(() => {
+    return observer.state$.subscribe(beanChangeListener);
   });
 
   useEffect(() => {
-    return () => container.off(provider, beanChangeListener);
-  }, [provider, beanChangeListener, container]);
+    return () => subscription.unsubscribe();
+  }, [subscription]);
 
-  return provider.bean as T;
+  return observer.bean;
 }

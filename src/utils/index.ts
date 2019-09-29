@@ -1,7 +1,9 @@
 import { StatedBeanSymbol } from '../core/Symbols';
 import { StatedBeanType } from '../types';
 
-export const isFunction = (func: unknown) => typeof func === 'function';
+export function isFunction(func: unknown): func is Function {
+  return typeof func === 'function';
+}
 
 export function isStatedBean<T>(obj: T): obj is StatedBeanType<T> {
   return Object.hasOwnProperty.call(obj, StatedBeanSymbol);

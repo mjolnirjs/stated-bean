@@ -23,13 +23,14 @@ export class StatedBeanContainer {
   private _beanObservers: WeakMap<any, BeanObserver<any>> = new WeakMap();
 
   constructor(parent?: StatedBeanContainer, app?: StatedBeanApplication) {
-    if (parent == null && app == null) {
-      this._app = new StatedBeanApplication();
-    } else if (app != null) {
+    this._parent = parent;
+
+    if (app != null) {
       this._app = app;
-    } else if (parent != null) {
-      this._parent = parent;
-      this._app = parent.application;
+    } else if (this._parent != null && this._parent.application != null) {
+      this._app = this._parent.application;
+    } else {
+      this._app = new StatedBeanApplication();
     }
   }
 

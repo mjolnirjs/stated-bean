@@ -14,3 +14,8 @@ export interface EffectAction<T = unknown> {
   data: T;
   effect: string | symbol;
 }
+
+export interface LifeCycleAction<T = unknown> {
+  bean: T;
+  action: 'Initialized' | 'Destroyed';
+}

@@ -10,14 +10,14 @@ import {
 } from '../types';
 
 import { CountableSubject } from './CountableSubject';
-import {
-  isBeanContainerAware,
-  isDisposableBean,
-  isInitializingBean,
-} from './LifeCycle';
 import { NoSuchBeanDefinitionError } from './NoSuchBeanDefinitionError';
 import { StatedBeanContainer } from './StatedBeanContainer';
 import { StatedBeanSymbol } from './Symbols';
+import {
+  isDisposableBean,
+  isBeanContainerAware,
+  isInitializingBean,
+} from './LifeCycle';
 
 export class BeanObserver<T> {
   state$: CountableSubject<StateAction<T>> = new CountableSubject();

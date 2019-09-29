@@ -1,7 +1,7 @@
 import { MiddlewareMethod } from '../middleware';
 
-import { IBeanFactory, DefaultBeanFactory } from './StatedBeanFactory';
 import { EffectEvent } from './EffectEvent';
+import { DefaultBeanFactory, IBeanFactory } from './StatedBeanFactory';
 
 /**
  *
@@ -12,6 +12,8 @@ export class StatedBeanApplication {
   private _beanFactory: IBeanFactory = new DefaultBeanFactory();
 
   private readonly _middleware: MiddlewareMethod[] = [];
+
+  private _debug = false;
 
   getBeanFactory(): IBeanFactory {
     return this._beanFactory;
@@ -52,5 +54,13 @@ export class StatedBeanApplication {
     };
 
     return dispatch(0);
+  }
+
+  setDebug(_debug: boolean) {
+    this._debug = _debug;
+  }
+
+  isDebug() {
+    return this._debug;
   }
 }

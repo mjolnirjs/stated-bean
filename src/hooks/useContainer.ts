@@ -22,11 +22,13 @@ export function useContainer({ providers, application }: UseContainerOption) {
     const container = new StatedBeanContainer(context.container, application);
     (providers || []).forEach(provider => {
       if (isFunction(provider)) {
-        container.register({
-          type: provider,
-        });
+        container
+          .registerAndObserve({
+            type: provider,
+          })
+          .state$.subscribe();
       } else if ('type' in provider) {
-        container.register(provider);
+        container.registerAndObserve(provider).state$.subscribe();
       }
     });
     return container;

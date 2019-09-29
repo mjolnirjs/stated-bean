@@ -21,7 +21,6 @@ export const StatedBeanProvider = ({
   const StatedBeanContext = getStatedBeanContext();
   const container = useContainer({ providers, application });
 
-  console.log('render StatedBeanProvider');
   return (
     <StatedBeanContext.Provider value={{ container }}>
       {children}

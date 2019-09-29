@@ -52,14 +52,7 @@ export function useBean<T>(
     } else {
       provider = { type: typeOrSupplier as ClassType<T>, identity: name };
     }
-    container.register(provider);
-
-    const observer = container.getBeanObserver(
-      provider.type,
-      provider.identity,
-    );
-
-    return observer;
+    return container.registerAndObserve(provider);
   });
 
   const [subscription] = useState(() => {

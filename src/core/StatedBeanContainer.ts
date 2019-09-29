@@ -1,5 +1,10 @@
 import { getMetadataStorage } from '../metadata';
-import { BeanProvider, ClassType, StatedBeanMeta } from '../types';
+import {
+  BeanProvider,
+  ClassType,
+  StatedBeanMeta,
+  StrictBeanProvider,
+} from '../types';
 
 import { StatedBeanApplication } from './StatedBeanApplication';
 import { BeanObserver } from './BeanObserver';
@@ -30,8 +35,7 @@ export class StatedBeanContainer {
 
   destroy() {
     // container destroy
-    console.log('container destroy');
-    delete this._beanObservers;
+    this._beanObservers = new WeakMap();
   }
 
   getBeanFactory() {
@@ -64,43 +68,8 @@ export class StatedBeanContainer {
     return bean as T;
   }
 
-  getBeanObserver<T>(
-    type: ClassType<T>,
-    name?: string | symbol,
-  ): BeanObserver<T> {
-    const bean = this.getBean(type, name);
-
-    if (bean === undefined) {
-      throw new Error(`get bean[${type.name}] error`);
-    }
-    if (this._beanObservers.has(bean)) {
-      return this._beanObservers.get(bean) as BeanObserver<T>;
-    }
-
-    const beanObserver = new BeanObserver<T>(this, {
-      type,
-      bean,
-      identity: this.getBeanIdentity(type, name),
-    });
-
-    beanObserver.state$.subscribeCount(count => {
-      if (count === 0) {
-        beanObserver.destroy();
-        if (this._beanObservers) {
-          this._beanObservers.delete(bean);
-        }
-      }
-    });
-    this._beanObservers.set(bean, beanObserver);
-    return beanObserver;
-  }
-
-  getObserverByBean<T>(bean: T) {
+  getBeanObserver<T>(bean: T) {
     return this._beanObservers.get(bean);
-  }
-
-  hasBean<T>(type: ClassType<T>, name?: string | symbol): boolean {
-    return this.getBean(type, name) !== undefined;
   }
 
   register<T>(provider: BeanProvider<T>) {
@@ -112,11 +81,49 @@ export class StatedBeanContainer {
     }
   }
 
+  registerAndObserve<T>(provider: BeanProvider<T>) {
+    this.register(provider);
+    const bean = this.getBean(provider.type, provider.identity);
+
+    if (bean === undefined) {
+      throw new Error('bean is undefined');
+    }
+    return this._observeBean({
+      type: provider.type,
+      bean,
+      identity: this.getBeanIdentity(provider.type, provider.identity),
+    });
+  }
+
+  hasBean<T>(type: ClassType<T>, name?: string | symbol): boolean {
+    return this.getBean(type, name) !== undefined;
+  }
+
   remove<T>(type: ClassType<T>, bean: T, name?: string | symbol) {
     if (this._beanObservers) {
       this._beanObservers.delete(bean);
     }
     this.getBeanFactory().remove(type, name);
+  }
+
+  protected _observeBean<T>(provider: StrictBeanProvider<T>): BeanObserver<T> {
+    const bean = provider.bean;
+    if (this._beanObservers.has(bean)) {
+      return this._beanObservers.get(bean) as BeanObserver<T>;
+    }
+
+    const beanObserver = new BeanObserver<T>(this, provider);
+
+    beanObserver.state$.subscribeCount(count => {
+      if (count === 0) {
+        beanObserver.destroy();
+        if (this._beanObservers) {
+          this._beanObservers.delete(bean);
+        }
+      }
+    });
+    this._beanObservers.set(bean, beanObserver);
+    return beanObserver;
   }
 
   get parent() {

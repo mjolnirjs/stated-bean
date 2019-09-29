@@ -6,7 +6,6 @@ import React from 'react';
 export function Counter() {
   const counter = useBean(CounterModel);
 
-  console.log('counter', counter);
   return (
     <div>
       <button onClick={counter.decrement}>-</button>

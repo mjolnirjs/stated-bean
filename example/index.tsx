@@ -67,25 +67,15 @@ app.use(async (event: EffectEvent, next: NextCaller) => {
 });
 
 const App = () => {
-  const [destroy, setDestroyed] = React.useState(false);
   return (
     <div>
-      <button
-        onClick={() => {
-          setDestroyed(true);
-        }}
-      >
-        Destroy All
-      </button>
-      {!destroy && (
-        <StatedBeanProvider application={app} providers={[TodoModel]}>
-          <Counter />
-          <hr />
-          <Counter />
-          <hr />
-          <TodoApp />
-        </StatedBeanProvider>
-      )}
+      <StatedBeanProvider application={app} providers={[TodoModel]}>
+        <Counter />
+        <hr />
+        <Counter />
+        <hr />
+        <TodoApp />
+      </StatedBeanProvider>
     </div>
   );
 };

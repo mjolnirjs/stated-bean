@@ -46,9 +46,13 @@ export function useInject<T>(
   }
 
   const [observer] = useState(() => {
-    console.log('get observer');
-    return container.getBeanObserver(type, name);
+    const bean = container.getBean(type, name);
+    return container.getBeanObserver(bean);
   });
+
+  if (observer === undefined) {
+    throw new Error(`bean[${type}] observer is undefined`);
+  }
 
   const [subscription] = useState(() => {
     return observer.state$.subscribe(beanChangeListener);

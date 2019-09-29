@@ -35,7 +35,7 @@ export function useObserveEffect<T>(
   );
 
   const [subscription] = useState(() => {
-    const observer = container.getObserverByBean(bean);
+    const observer = container.getBeanObserver(bean);
     if (observer === undefined) {
       throw new Error('bean observer is undefined');
     }

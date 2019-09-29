@@ -6,6 +6,12 @@ export interface BeanProvider<T> {
   bean?: T;
 }
 
+export interface StrictBeanProvider<T> extends BeanProvider<T> {
+  type: ClassType<T>;
+  identity: string | symbol;
+  bean: T;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-type-alias
 export type TypedProvider<T> = ClassType<T>;
 

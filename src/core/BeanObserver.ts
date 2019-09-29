@@ -2,15 +2,19 @@ import { Subject } from 'rxjs';
 
 import { getMetadataStorage } from '../metadata';
 import {
-  BeanProvider,
   EffectAction,
   StateAction,
   StatedBeanMeta,
   StatedFieldMeta,
+  StrictBeanProvider,
 } from '../types';
 
 import { CountableSubject } from './CountableSubject';
-import { isDisposableBean, isInitializingBean } from './LifeCycle';
+import {
+  isBeanContainerAware,
+  isDisposableBean,
+  isInitializingBean,
+} from './LifeCycle';
 import { NoSuchBeanDefinitionError } from './NoSuchBeanDefinitionError';
 import { StatedBeanContainer } from './StatedBeanContainer';
 import { StatedBeanSymbol } from './Symbols';
@@ -23,7 +27,7 @@ export class BeanObserver<T> {
 
   constructor(
     private readonly _container: StatedBeanContainer,
-    private readonly _provider: BeanProvider<T>,
+    private readonly _provider: StrictBeanProvider<T>,
   ) {
     const beanMeta = getMetadataStorage().getBeanMeta(this._provider.type);
     if (beanMeta === undefined) {
@@ -31,15 +35,17 @@ export class BeanObserver<T> {
     }
     this._beanMeta = beanMeta;
 
+    if (isBeanContainerAware(this.bean)) {
+      this.bean.setBeanContainer(this._container);
+    }
     this._observe();
   }
 
   get bean(): T {
-    return this._provider.bean!;
+    return this._provider.bean;
   }
 
   destroy() {
-    console.log('bean destroy');
     this.state$.complete();
     this.effect$.complete();
     if (isDisposableBean(this.bean)) {

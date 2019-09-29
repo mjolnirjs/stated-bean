@@ -22,7 +22,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
     descriptor.value = function<T>(this: T, ...args: unknown[]) {
       if (isStatedBean(this)) {
         const container = this[StatedBeanSymbol].container;
-        const observer = container.getObserverByBean(this);
+        const observer = container.getBeanObserver(this);
         const emitEffectAction = (action: Partial<EffectAction>) => {
           if (observer !== undefined) {
             observer.effect$.next({

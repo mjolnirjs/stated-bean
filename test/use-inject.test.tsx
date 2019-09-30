@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 
 import { useInject, StatedBean, StatedBeanProvider, Stated } from '../src';
 
@@ -7,7 +7,11 @@ import React from 'react';
 @StatedBean()
 class SampleStatedBean {
   @Stated()
-  name = '';
+  test = 0;
+
+  changeName() {
+    this.test = 1;
+  }
 }
 
 describe('useInject test', () => {
@@ -35,19 +39,21 @@ describe('useInject test', () => {
         {children}
       </StatedBeanProvider>
     );
-    const { result, waitForNextUpdate, unmount } = renderHook(
+    const { result, unmount } = renderHook(
       () => {
         return useInject(SampleStatedBean, {
           name: 'SampleStatedBean',
-          fields: ['name'],
+          fields: ['test'],
         });
       },
       { wrapper },
     );
 
     expect(result.current).not.toBeNull();
-    result.current.name = '2';
-    waitForNextUpdate();
+    act(() => {
+      result.current.changeName();
+    });
+    expect(result.current.test).toBe(1);
     unmount();
   });
 

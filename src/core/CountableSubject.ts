@@ -4,13 +4,12 @@ export class CountableSubject<T> extends Subject<T> {
   private readonly _counter$: Subject<number> = new Subject<number>();
 
   _subscribe(subscriber: Subscriber<T>): Subscription {
-    const self = this;
     const observable = new Observable(_subscriber => {
       const _subscription = super._subscribe(_subscriber);
 
       return () => {
         _subscription.unsubscribe();
-        this._counter$.next(self.observers.length);
+        this._counter$.next(this.observers.length);
       };
     });
     const subscription = observable.subscribe(subscriber);

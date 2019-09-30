@@ -1,13 +1,22 @@
 import { getStatedBeanContext } from '../context';
 import { StatedBeanSymbol } from '../core';
-import { EffectAction } from '../types';
+import { EffectAction, FunctionPropertyNames } from '../types';
 import { isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
+/**
+ * Observe the effects in the bean
+ *
+ * @export
+ * @template T
+ * @param {T} bean
+ * @param {FunctionPropertyNames<T>} effect
+ * @returns {EffectAction}
+ */
 export function useObserveEffect<T>(
   bean: T,
-  effect: keyof T & (string | symbol),
+  effect: FunctionPropertyNames<T> | string | symbol,
 ): EffectAction {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
@@ -29,7 +38,7 @@ export function useObserveEffect<T>(
       loading: false,
       error: null,
       data: null,
-      effect,
+      effect: effect as string | symbol,
     };
   });
 

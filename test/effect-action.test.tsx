@@ -67,7 +67,7 @@ describe('effect action', () => {
   it('useObserveEffect without provider container', () => {
     renderHook(() => {
       expect(() => {
-        useObserveEffect({ test: 1 }, 'test');
+        useObserveEffect({ test: () => {} }, 'test');
       }).toThrow();
     });
   });

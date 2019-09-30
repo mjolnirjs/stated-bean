@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/mjolnirjs/stated-bean/compare/v0.4.0...v0.5.0) (2019-09-30)
+
+
+### Features
+
+* be with rxjs ([#66](https://github.com/mjolnirjs/stated-bean/issues/66)) ([9f23933](https://github.com/mjolnirjs/stated-bean/commit/9f23933))
+
 ## [0.4.0](https://github.com/mjolnirjs/stated-bean/compare/v0.3.1-beta.1...v0.4.0) (2019-09-26)
 
 

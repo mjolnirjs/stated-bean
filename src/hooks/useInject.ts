@@ -46,12 +46,11 @@ export function useInject<T>(
   }
 
   const [observer] = useState(() => {
-    const bean = container.getBean(type, name);
-    return container.getBeanObserver(bean);
+    return container.getBeanObserver(type, option.name);
   });
 
   if (observer === undefined) {
-    throw new Error(`bean[${type}] observer is undefined`);
+    throw new Error(`bean[${type.name}] observer is undefined`);
   }
 
   const [subscription] = useState(() => {
@@ -64,5 +63,5 @@ export function useInject<T>(
     };
   }, [subscription]);
 
-  return observer.bean;
+  return observer.proxy;
 }

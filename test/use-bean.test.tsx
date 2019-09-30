@@ -11,6 +11,14 @@ class StatedBeanSample {
 }
 
 describe('useBean test', () => {
+  it('useBean get fail when without context', () => {
+    renderHook(() => {
+      expect(() => {
+        useBean(StatedBeanSample);
+      }).toThrow();
+    });
+  });
+
   it('bean create', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <StatedBeanProvider providers={[StatedBeanSample]}>

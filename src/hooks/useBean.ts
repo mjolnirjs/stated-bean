@@ -1,7 +1,6 @@
 import { getStatedBeanContext } from '../context';
 import { BeanProvider, ClassType, StateAction } from '../types';
 import { isFunction, isStatedBean } from '../utils';
-import { BeanObserver } from '../core';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -36,7 +35,7 @@ export function useBean<T>(
     throw new Error('not found stated bean container.');
   }
 
-  const [observer] = useState<BeanObserver<T>>(() => {
+  const [observer] = useState(() => {
     let provider: BeanProvider<T>;
     let bean: T | undefined;
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
@@ -63,5 +62,5 @@ export function useBean<T>(
     return () => subscription.unsubscribe();
   }, [subscription]);
 
-  return observer.bean;
+  return observer.proxy;
 }

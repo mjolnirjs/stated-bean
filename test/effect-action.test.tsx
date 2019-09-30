@@ -23,6 +23,16 @@ class PostProvidedSample {
     await delay(100);
     this.test += 1;
   }
+
+  @Effect()
+  add2() {
+    this.test = 3;
+  }
+
+  @Effect()
+  add3() {
+    return Promise.reject(new Error());
+  }
 }
 
 describe('effect action', () => {
@@ -37,7 +47,8 @@ describe('effect action', () => {
       () => {
         const bean = useBean(() => new PostProvidedSample());
         const action = useObserveEffect(bean, 'add');
-        return { bean, action };
+        const action3 = useObserveEffect(bean, 'add3');
+        return { bean, action, action3 };
       },
       { wrapper },
     );
@@ -47,6 +58,17 @@ describe('effect action', () => {
     await addPromise;
     expect(result.current.action.loading).toBe(false);
 
+    await act(() => result.current.bean.add3().catch(() => {}));
+    expect(result.current.action3.error).not.toBeNull();
+
     unmount();
+  });
+
+  it('useObserveEffect without provider container', () => {
+    renderHook(() => {
+      expect(() => {
+        useObserveEffect({ test: 1 }, 'test');
+      }).toThrow();
+    });
   });
 });

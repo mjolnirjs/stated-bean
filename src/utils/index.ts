@@ -12,3 +12,9 @@ export function isStatedBean<T>(obj: T): obj is StatedBeanType<T> {
 export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
   return !!value && typeof (value as { then: unknown }).then === 'function';
 }
+
+export function getPropertiesWithoutFunction<T>(obj: T) {
+  return Object.keys(obj).filter(
+    (key: keyof T & string) => typeof obj[key] !== 'function',
+  );
+}

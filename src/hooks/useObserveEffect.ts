@@ -1,5 +1,7 @@
 import { getStatedBeanContext } from '../context';
+import { StatedBeanSymbol } from '../core';
 import { EffectAction } from '../types';
+import { isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -9,11 +11,17 @@ export function useObserveEffect<T>(
 ): EffectAction {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
-
   const container = context.container;
 
   if (container === undefined) {
     throw new Error('not found container');
+  }
+
+  let identity: string | symbol;
+  if (isStatedBean(bean)) {
+    identity = bean[StatedBeanSymbol].identity;
+  } else {
+    throw new Error('bean is not a StatedBean');
   }
 
   const [effectState, setEffectState] = useState<EffectAction>(() => {
@@ -35,7 +43,7 @@ export function useObserveEffect<T>(
   );
 
   const [subscription] = useState(() => {
-    const observer = container.getBeanObserver(bean);
+    const observer = container.getBeanObserver(bean.constructor, identity);
     if (observer === undefined) {
       throw new Error('bean observer is undefined');
     }

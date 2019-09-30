@@ -1,13 +1,8 @@
 import { getMetadataStorage } from '../metadata';
-import {
-  BeanProvider,
-  ClassType,
-  StatedBeanMeta,
-  StrictBeanProvider,
-} from '../types';
+import { BeanProvider, ClassType, StatedBeanMeta } from '../types';
 
 import { StatedBeanApplication } from './StatedBeanApplication';
-import { BeanObserver } from './BeanObserver';
+import { StatedBeanRegistry } from './StatedBeanRegistry';
 
 /**
  * `StatedBeanContainer` is responsible for registering and managing `bean` and observing its `@Stated()` property changes.
@@ -19,8 +14,7 @@ export class StatedBeanContainer {
   // @internal
   private readonly _app!: StatedBeanApplication;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _beanObservers: WeakMap<any, BeanObserver<any>> = new WeakMap();
+  private readonly _registry: StatedBeanRegistry;
 
   constructor(parent?: StatedBeanContainer, app?: StatedBeanApplication) {
     this._parent = parent;
@@ -32,15 +26,16 @@ export class StatedBeanContainer {
     } else {
       this._app = new StatedBeanApplication();
     }
+
+    this._registry = new StatedBeanRegistry(this);
   }
 
   destroy() {
     // container destroy
-    this._beanObservers = new WeakMap();
   }
 
-  getBeanFactory() {
-    return this._app.getBeanFactory();
+  getBeanRegistry() {
+    return this._registry;
   }
 
   getBeanIdentity<T>(type: ClassType<T>, name?: string | symbol) {
@@ -60,71 +55,59 @@ export class StatedBeanContainer {
 
   getBean<T>(type: ClassType<T>, name?: string | symbol): T | undefined {
     const identity = this.getBeanIdentity(type, name);
-    let bean = this.getBeanFactory().get(type, identity);
+    let bean = this.getBeanObserver(type, identity);
 
     if (bean == null && this.parent) {
-      bean = this.parent.getBean(type, name);
+      bean = this.parent.getBeanObserver(type, name);
     }
 
-    return bean as T;
+    if (bean !== undefined) {
+      return bean.proxy;
+    }
+    return undefined;
   }
 
-  getBeanObserver<T>(bean: T) {
-    return this._beanObservers.get(bean);
+  getBeanObserver<T>(type: ClassType<T>, name?: string | symbol) {
+    const identity = this.getBeanIdentity(type, name);
+    return this.getBeanRegistry().get(type, identity);
   }
 
   register<T>(provider: BeanProvider<T>) {
-    const beanFactory = this.getBeanFactory();
+    const beanFactory = this.getBeanRegistry();
     if (provider !== undefined) {
-      if (beanFactory.get(provider.type, provider.identity) === undefined) {
-        beanFactory.register(provider);
-      }
+      beanFactory.register(provider);
     }
   }
 
   registerAndObserve<T>(provider: BeanProvider<T>) {
-    this.register(provider);
-    const bean = this.getBean(provider.type, provider.identity);
+    try {
+      this.register(provider);
+      const bean = this.getBean(provider.type, provider.identity);
 
-    if (bean === undefined) {
-      throw new Error('bean is undefined');
+      if (bean === undefined) {
+        throw new Error('bean is undefined');
+      }
+      const observer = this.getBeanObserver(
+        provider.type,
+        this.getBeanIdentity(provider.type, provider.identity),
+      );
+
+      if (observer === undefined) {
+        throw new Error('observer is undefined');
+      }
+      return observer;
+    } catch (e) {
+      console.error(e);
+      throw e;
     }
-    return this._observeBean({
-      type: provider.type,
-      bean,
-      identity: this.getBeanIdentity(provider.type, provider.identity),
-    });
   }
 
   hasBean<T>(type: ClassType<T>, name?: string | symbol): boolean {
     return this.getBean(type, name) !== undefined;
   }
 
-  remove<T>(type: ClassType<T>, bean: T, name?: string | symbol) {
-    if (this._beanObservers) {
-      this._beanObservers.delete(bean);
-    }
-    this.getBeanFactory().remove(type, name);
-  }
-
-  protected _observeBean<T>(provider: StrictBeanProvider<T>): BeanObserver<T> {
-    const bean = provider.bean;
-    if (this._beanObservers.has(bean)) {
-      return this._beanObservers.get(bean) as BeanObserver<T>;
-    }
-
-    const beanObserver = new BeanObserver<T>(this, provider);
-
-    beanObserver.state$.subscribeCount(count => {
-      if (count === 0) {
-        beanObserver.destroy();
-        if (this._beanObservers) {
-          this._beanObservers.delete(bean);
-        }
-      }
-    });
-    this._beanObservers.set(bean, beanObserver);
-    return beanObserver;
+  remove<T>(type: ClassType<T>, name?: string | symbol) {
+    this.getBeanRegistry().remove(type, name);
   }
 
   get parent() {

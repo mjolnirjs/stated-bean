@@ -21,35 +21,33 @@ export function Effect(name?: string | symbol): MethodDecorator {
     const originalMethod: Function = descriptor.value;
     descriptor.value = function<T>(this: T, ...args: unknown[]) {
       if (isStatedBean(this)) {
-        const container = this[StatedBeanSymbol].container;
-        const observer = container.getBeanObserver(this);
+        const { container, type, identity } = this[StatedBeanSymbol];
         const emitEffectAction = (action: Partial<EffectAction>) => {
+          const observer = container.getBeanObserver(type, identity);
+
           if (observer !== undefined) {
             observer.effect$.next({
-              loading: false,
-              error: null,
-              data: null,
               effect: effectName,
               ...action,
-            });
+            } as EffectAction);
           }
         };
-        emitEffectAction({ loading: true });
+        emitEffectAction({ loading: true, data: null, error: null });
 
         const result = originalMethod.apply(this, args);
 
         if (isPromise(result)) {
-          result
+          return result
             .then((data: unknown) => {
-              emitEffectAction({ data });
+              emitEffectAction({ loading: false, data, error: null });
               return data;
             })
             .catch((e: unknown) => {
-              emitEffectAction({ error: e });
-              return e;
+              emitEffectAction({ loading: false, data: null, error: e });
+              throw e;
             });
         } else {
-          emitEffectAction({ data: result });
+          emitEffectAction({ loading: false, data: result, error: null });
         }
         return result;
       }

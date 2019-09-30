@@ -1,6 +1,4 @@
-import { BeanProvider, ClassType } from '../types';
-
-import { StatedBeanRegistry } from './StatedBeanRegistry';
+import { BeanProvider } from '../types';
 
 /**
  * BeanFactory interface
@@ -10,29 +8,25 @@ import { StatedBeanRegistry } from './StatedBeanRegistry';
  */
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IBeanFactory {
-  get<T>(type: ClassType<T>, identity?: string | symbol): T | undefined;
+  get<T>(provider: BeanProvider<T>): T;
 
-  register<T>(provider: BeanProvider<T>): void;
-
-  remove<T>(type: ClassType<T>, identity?: string | symbol): void;
+  remove<T>(provider: BeanProvider<T>): void;
 }
 
 /**
  * the default `BeanFactory` by the class `new` constructor.
  */
 export class DefaultBeanFactory implements IBeanFactory {
-  // @internal
-  private readonly _registry: StatedBeanRegistry = new StatedBeanRegistry();
-
-  get<T>(type: ClassType<T>, identity?: string | symbol): T | undefined {
-    return this._registry.get(type, identity);
+  get<T>(provider: BeanProvider<T>): T {
+    if (provider.bean !== undefined) {
+      return provider.bean;
+    } else {
+      // eslint-disable-next-line new-cap
+      return new provider.type();
+    }
   }
 
-  register<T>(provider: BeanProvider<T>) {
-    this._registry.register(provider);
-  }
-
-  remove<T>(type: ClassType<T>, identity?: string | symbol) {
-    this._registry.remove(type, identity);
+  remove() {
+    //
   }
 }

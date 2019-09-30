@@ -8,16 +8,13 @@ import { TodoModel } from './src/models/TodoModel';
 import { TodoService } from './src/services/TodoService';
 
 import {
-  EffectEvent,
+  BeanProvider,
   IBeanFactory,
-  NextCaller,
   StatedBeanApplication,
   StatedBeanProvider,
-  ClassType,
-  BeanProvider,
 } from 'stated-bean';
-import React from 'react';
 import ReactDOM from 'react-dom';
+import React from 'react';
 
 const app = new StatedBeanApplication();
 
@@ -26,19 +23,8 @@ class InjectionFactory implements IBeanFactory {
 
   injectors = new Map<string, ReflectiveInjector>();
 
-  get<T>(type: ClassType<T>, identity?: string | symbol): T | undefined {
+  get<T>({ type, identity, bean }: BeanProvider<T>) {
     const provide = String(identity || type.name);
-
-    const injector = this.injectors.get(provide);
-    if (injector !== undefined) {
-      return injector.get(provide);
-    }
-    return undefined;
-  }
-
-  register<T>({ type, identity, bean }: BeanProvider<T>) {
-    const provide = String(identity || type.name);
-    console.log('register', provide);
 
     let provider;
     if (bean) {
@@ -50,31 +36,32 @@ class InjectionFactory implements IBeanFactory {
       [provider],
       this.rootInjector,
     );
+
     this.injectors.set(provide, injector);
+    return injector.get(provide);
   }
 
-  remove<T>(type: ClassType<T>, identity?: string | symbol) {
+  remove<T>({ type, identity }: BeanProvider<T>) {
     const provide = String(identity || type.name);
     this.injectors.delete(provide);
   }
 }
 
 app.setBeanFactory(new InjectionFactory());
-app.use(async (event: EffectEvent, next: NextCaller) => {
-  console.log('1. before change', event.type, event.name);
-  await next();
-  console.log('1. after change', event.type, event.name);
-});
 
 const App = () => {
   return (
-    <StatedBeanProvider application={app} providers={[TodoModel]}>
-      <Counter />
-      <hr />
-      <Counter />
-      <hr />
-      <TodoApp />
-    </StatedBeanProvider>
+    <div>
+      <StatedBeanProvider application={app} providers={[TodoModel]}>
+        <Counter />
+        <hr />
+        <StatedBeanProvider>
+          <Counter />
+        </StatedBeanProvider>
+        <hr />
+        <TodoApp />
+      </StatedBeanProvider>
+    </div>
   );
 };
 

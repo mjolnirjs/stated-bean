@@ -2,11 +2,17 @@ import { Injectable, Inject } from 'injection-js';
 
 import { TodoService, Todo } from '../services/TodoService';
 
-import { StatedBean, Stated, PostProvided, Effect } from 'stated-bean';
+import {
+  StatedBean,
+  Stated,
+  PostProvided,
+  Effect,
+  DisposableBean,
+} from 'stated-bean';
 
 @StatedBean()
 @Injectable()
-export class TodoModel {
+export class TodoModel implements DisposableBean {
   @Stated()
   todoList: Todo[] = [];
 
@@ -14,6 +20,10 @@ export class TodoModel {
   current: Todo = {};
 
   constructor(@Inject(TodoService) private readonly _todo: TodoService) {}
+
+  destroy(): void {
+    console.log('TodoModel destroyed');
+  }
 
   @PostProvided()
   @Effect()

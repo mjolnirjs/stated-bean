@@ -1,6 +1,6 @@
-import { StatedBeanType, EffectAction } from '../types';
-import { StatedBeanSymbol, EffectEvent, EffectEventType } from '../core';
-import { isPromise } from '../utils';
+import { StatedBeanSymbol } from '../core';
+import { EffectAction } from '../types';
+import { isPromise, isStatedBean } from '../utils';
 
 /**
  *
@@ -19,41 +19,40 @@ export function Effect(name?: string | symbol): MethodDecorator {
     }
     const effectName = name || propertyKey;
     const originalMethod: Function = descriptor.value;
-    descriptor.value = function(
-      this: StatedBeanType<unknown>,
-      ...args: unknown[]
-    ) {
-      const container = this[StatedBeanSymbol].container;
+    descriptor.value = function<T>(this: T, ...args: unknown[]) {
+      if (isStatedBean(this)) {
+        const { container, type, identity } = this[StatedBeanSymbol];
+        const emitEffectAction = (action: Partial<EffectAction>) => {
+          const observer = container.getBeanObserver(type, identity);
 
-      const emitEffectAction = (action: EffectAction) => {
-        container.emit(
-          this,
-          new EffectEvent<unknown, EffectAction>(
-            this,
-            EffectEventType.EffectAction,
-            effectName,
-            action,
-          ),
-        );
-      };
+          if (observer !== undefined) {
+            observer.effect$.next({
+              effect: effectName,
+              ...action,
+            } as EffectAction);
+          }
+        };
+        emitEffectAction({ loading: true, data: null, error: null });
 
-      emitEffectAction({ loading: true, error: null });
-      const result = originalMethod.apply(this, args);
+        const result = originalMethod.apply(this, args);
 
-      if (isPromise(result)) {
-        result
-          .then((data: unknown) => {
-            emitEffectAction({ loading: false, error: null });
-            return data;
-          })
-          .catch((e: unknown) => {
-            emitEffectAction({ loading: false, error: e });
-            return e;
-          });
-      } else {
-        emitEffectAction({ loading: false, error: null });
+        if (isPromise(result)) {
+          return result
+            .then((data: unknown) => {
+              emitEffectAction({ loading: false, data, error: null });
+              return data;
+            })
+            .catch((e: unknown) => {
+              emitEffectAction({ loading: false, data: null, error: e });
+              throw e;
+            });
+        } else {
+          emitEffectAction({ loading: false, data: result, error: null });
+        }
+        return result;
       }
-      return result;
+
+      return originalMethod.apply(this, args);
     };
     return descriptor;
   };

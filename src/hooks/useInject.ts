@@ -1,6 +1,5 @@
 import { getStatedBeanContext } from '../context';
-import { EffectEvent, EffectEventType } from '../core';
-import { ClassType, StateChanged } from '../types';
+import { ClassType, StateAction } from '../types';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -16,7 +15,7 @@ export interface UseStatedBeanOption<T> {
  * @template T
  * @param {ClassType<T>} type the `ClassType` of the bean.
  * @param {UseStatedBeanOption<T>} [option={}]
- * @returns {StatedBeanType<T>}
+ * @returns {T}
  */
 export function useInject<T>(
   type: ClassType<T>,
@@ -27,17 +26,14 @@ export function useInject<T>(
   const [, setVersion] = useState(0);
 
   const beanChangeListener = useCallback(
-    (event: EffectEvent<T, StateChanged<unknown>>) => {
-      if (event.type === EffectEventType.StateChanged) {
-        const changedState = event.value;
-        const field = changedState.fieldMeta.name as keyof T;
-        if (
-          option.fields == null ||
-          option.fields.length === 0 ||
-          option.fields.includes(field)
-        ) {
-          setVersion(prev => prev + 1);
-        }
+    (action: StateAction<T>) => {
+      const field = action.fieldMeta.name as keyof T;
+      if (
+        option.fields == null ||
+        option.fields.length === 0 ||
+        option.fields.includes(field)
+      ) {
+        setVersion(prev => prev + 1);
       }
     },
     [option.fields],
@@ -49,26 +45,23 @@ export function useInject<T>(
     throw new Error('not found container');
   }
 
-  const [bean] = useState(() => {
-    if (container === undefined) {
-      return undefined;
-    }
-    const bean = container.getBean<T>(type, option.name);
-    if (bean !== undefined) {
-      container.on({ type, bean, identity: option.name }, beanChangeListener);
-    }
-    return bean;
+  const [observer] = useState(() => {
+    return container.getBeanObserver(type, option.name);
   });
 
-  if (bean === undefined) {
-    throw new Error(`get bean[${type.name}] error`);
+  if (observer === undefined) {
+    throw new Error(`bean[${type.name}] observer is undefined`);
   }
+
+  const [subscription] = useState(() => {
+    return observer.state$.subscribe(beanChangeListener);
+  });
 
   useEffect(() => {
     return () => {
-      container.off({ type, bean, identity: option.name }, beanChangeListener);
+      subscription.unsubscribe();
     };
-  }, [container, bean, beanChangeListener, type, option.name]);
+  }, [subscription]);
 
-  return bean;
+  return observer.proxy;
 }

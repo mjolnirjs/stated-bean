@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/mjolnirjs/stated-bean/compare/v0.5.0...v0.5.1) (2019-10-02)
+
+
+### Features
+
+* export utils ([#73](https://github.com/mjolnirjs/stated-bean/issues/73)) ([ec1085c](https://github.com/mjolnirjs/stated-bean/commit/ec1085c))
+
 ## [0.5.0](https://github.com/mjolnirjs/stated-bean/compare/v0.4.0...v0.5.0) (2019-09-30)
 
 

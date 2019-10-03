@@ -1,6 +1,7 @@
 import { getMetadataStorage } from '../metadata';
 import { BeanProvider, ClassType, StatedBeanMeta } from '../types';
 
+import { BeanObserver } from './BeanObserver';
 import { StatedBeanApplication } from './StatedBeanApplication';
 import { StatedBeanRegistry } from './StatedBeanRegistry';
 
@@ -55,38 +56,38 @@ export class StatedBeanContainer {
 
   getBean<T>(type: ClassType<T>, name?: string | symbol): T | undefined {
     const identity = this.getBeanIdentity(type, name);
-    let bean = this.getBeanObserver(type, identity);
+    const beanObserver = this.getBeanObserver(type, identity);
 
-    if (bean == null && this.parent) {
-      bean = this.parent.getBeanObserver(type, name);
-    }
-
-    if (bean !== undefined) {
-      return bean.proxy;
+    if (beanObserver !== undefined) {
+      return beanObserver.proxy;
     }
     return undefined;
   }
 
-  getBeanObserver<T>(type: ClassType<T>, name?: string | symbol) {
+  getBeanObserver<T>(
+    type: ClassType<T>,
+    name?: string | symbol,
+  ): BeanObserver<T> | undefined {
     const identity = this.getBeanIdentity(type, name);
-    return this.getBeanRegistry().get(type, identity);
+    let beanObserver = this.getBeanRegistry().get(type, identity);
+
+    if (beanObserver == null && this.parent) {
+      beanObserver = this.parent.getBeanObserver(type, name);
+    }
+
+    return beanObserver;
   }
 
   register<T>(provider: BeanProvider<T>) {
-    const beanFactory = this.getBeanRegistry();
-    if (provider !== undefined) {
-      beanFactory.register(provider);
-    }
+    const beanRegistry = this.getBeanRegistry();
+
+    return beanRegistry.register(provider);
   }
 
   registerAndObserve<T>(provider: BeanProvider<T>) {
     try {
       this.register(provider);
-      const bean = this.getBean(provider.type, provider.identity);
 
-      if (bean === undefined) {
-        throw new Error('bean is undefined');
-      }
       const observer = this.getBeanObserver(
         provider.type,
         this.getBeanIdentity(provider.type, provider.identity),

@@ -6,6 +6,7 @@ import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
 import { TodoService } from './src/services/TodoService';
+import { CounterModel } from './src/models/CounterModel';
 
 import {
   BeanProvider,
@@ -52,12 +53,13 @@ app.setBeanFactory(new InjectionFactory());
 const App = () => {
   return (
     <div>
-      <StatedBeanProvider application={app} providers={[TodoModel]}>
+      <StatedBeanProvider
+        application={app}
+        providers={[TodoModel, CounterModel]}
+      >
         <Counter />
         <hr />
-        <StatedBeanProvider>
-          <Counter />
-        </StatedBeanProvider>
+        <Counter />
         <hr />
         <TodoApp />
       </StatedBeanProvider>

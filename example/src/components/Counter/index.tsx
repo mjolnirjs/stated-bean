@@ -1,21 +1,12 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-import { useBean } from 'stated-bean';
+import { CounterModel } from '../../models/CounterModel';
+
 import React from 'react';
+import { useBean } from 'stated-bean';
 
 export function Counter() {
-  const counter = useBean(
-    () => ({
-      count: 1,
-      decrement() {
-        this.count++;
-      },
-      increment() {
-        this.count--;
-      },
-    }),
-    'counter',
-  );
-  console.log('counter', counter);
+  const counter = useBean(CounterModel);
+
   return (
     <div>
       <button onClick={counter.decrement}>-</button>

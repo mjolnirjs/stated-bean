@@ -70,9 +70,7 @@ describe('LifeCycle', () => {
 
   it('Bean life-cycle hooks', async () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[LifeCycleBean]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider>{children}</StatedBeanProvider>
     );
 
     const { result, waitForNextUpdate, unmount } = renderHook(

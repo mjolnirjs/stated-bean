@@ -44,6 +44,10 @@ export class StatedBeanRegistry {
       identity: beanIdentity,
     };
 
+    if (this.get(strictProvider.type, strictProvider.identity) !== undefined) {
+      return this.get(strictProvider.type, strictProvider.identity);
+    }
+
     const beanObserver = new BeanObserver<T>(this._container, strictProvider);
     beanObserver.state$.subscribeCount(count => {
       if (count === 0) {
@@ -63,6 +67,8 @@ export class StatedBeanRegistry {
         unknown
       >);
     }
+
+    return bean;
   }
 
   remove<T>(type: ClassType<T>, identity?: string | symbol) {

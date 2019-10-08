@@ -6,7 +6,6 @@ import { Counter } from './src/components/Counter';
 import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
 import { TodoService } from './src/services/TodoService';
-import { CounterModel } from './src/models/CounterModel';
 
 import {
   BeanProvider,
@@ -51,15 +50,18 @@ class InjectionFactory implements IBeanFactory {
 app.setBeanFactory(new InjectionFactory());
 
 const App = () => {
+  const [counter, setCounter] = React.useState(10);
   return (
     <div>
-      <StatedBeanProvider
-        application={app}
-        providers={[TodoModel, CounterModel]}
-      >
-        <Counter />
-        <hr />
-        <Counter />
+      <StatedBeanProvider application={app} providers={[TodoModel]}>
+        <button
+          onClick={() => {
+            setCounter(counter + 1);
+          }}
+        >
+          Add
+        </button>
+        <Counter value={counter} />
         <hr />
         <TodoApp />
       </StatedBeanProvider>

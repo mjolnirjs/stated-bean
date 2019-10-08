@@ -4,6 +4,7 @@ export interface BeanProvider<T> {
   type: ClassType<T>;
   identity?: string | symbol;
   bean?: T;
+  props?: Record<string, unknown>;
 }
 
 export interface StrictBeanProvider<T> extends BeanProvider<T> {

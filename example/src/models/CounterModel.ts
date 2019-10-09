@@ -1,7 +1,12 @@
-import { StatedBean, PostProvided, Stated } from 'stated-bean';
+import { BehaviorSubject } from 'rxjs';
+
+import { ObservableProps, PostProvided, Stated, StatedBean } from 'stated-bean';
 
 @StatedBean()
 export class CounterModel {
+  @ObservableProps()
+  value$!: BehaviorSubject<number>;
+
   @Stated()
   count = 0;
 
@@ -15,6 +20,8 @@ export class CounterModel {
 
   @PostProvided()
   init() {
-    this.count = 10;
+    this.value$.subscribe(value => {
+      this.count = value;
+    });
   }
 }

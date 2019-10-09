@@ -21,14 +21,12 @@ describe('useBean test', () => {
 
   it('bean create', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[StatedBeanSample]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider>{children}</StatedBeanProvider>
     );
 
     const { result } = renderHook(
       () => {
-        return useBean(() => new StatedBeanSample());
+        return useBean(StatedBeanSample);
       },
       { wrapper },
     );

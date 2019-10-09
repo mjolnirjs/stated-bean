@@ -42,10 +42,15 @@ export class StatedBeanRegistry {
       type: provider.type,
       bean,
       identity: beanIdentity,
+      props: provider.props,
     };
 
     if (this.get(strictProvider.type, strictProvider.identity) !== undefined) {
-      return this.get(strictProvider.type, strictProvider.identity);
+      throw new Error(
+        `repeated bean provide. ${strictProvider.type.name}(${String(
+          strictProvider.identity,
+        )})`,
+      );
     }
 
     const beanObserver = new BeanObserver<T>(this._container, strictProvider);

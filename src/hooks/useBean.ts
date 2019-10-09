@@ -4,6 +4,11 @@ import { isFunction, isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
+export interface UseBeanOptions {
+  name?: string | symbol;
+  props?: Record<string, unknown>;
+}
+
 /**
  * creates a temporary `StatedBeanContainer` and registers the bean to the container.
  *
@@ -19,11 +24,25 @@ import { useCallback, useContext, useEffect, useState } from 'react';
  */
 export function useBean<T>(
   typeOrSupplier: ClassType<T> | (() => T),
-  name?: string | symbol,
+  option?: string | symbol | UseBeanOptions,
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
+
+  let name: string | symbol | undefined;
+  let props: Record<string, unknown> | undefined;
+
+  if (option !== undefined) {
+    if (typeof option === 'object') {
+      name = option.name;
+      props = option.props;
+    } else if (typeof option === 'string' || typeof option === 'symbol') {
+      name = option;
+    } else {
+      throw new Error('invalid UseBeanOptions');
+    }
+  }
 
   const beanChangeListener = useCallback((_action: StateAction) => {
     setVersion(prev => prev + 1);
@@ -47,9 +66,13 @@ export function useBean<T>(
       if (type.name === 'Object' && (name === undefined || name === null)) {
         throw new Error('plain object bean must be named.');
       }
-      provider = { type, bean, identity: name };
+      provider = { type, bean, identity: name, props };
     } else {
-      provider = { type: typeOrSupplier as ClassType<T>, identity: name };
+      provider = {
+        type: typeOrSupplier as ClassType<T>,
+        identity: name,
+        props,
+      };
     }
     return container.registerAndObserve(provider);
   });
@@ -57,6 +80,10 @@ export function useBean<T>(
   const [subscription] = useState(() => {
     return observer.state$.subscribe(beanChangeListener);
   });
+
+  useEffect(() => {
+    observer.props$.next(props);
+  }, [props, observer]);
 
   useEffect(() => {
     return () => subscription.unsubscribe();

@@ -4,9 +4,9 @@ import { CounterModel } from '../../models/CounterModel';
 import React from 'react';
 import { useBean } from 'stated-bean';
 
-export function Counter() {
-  const counter = useBean(CounterModel);
-
+export function Counter(props: { value: number }) {
+  const counter = useBean(CounterModel, { props });
+  console.log('counter', counter.count);
   return (
     <div>
       <button onClick={counter.decrement}>-</button>

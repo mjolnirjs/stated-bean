@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { getMetadataStorage } from '../metadata';
 import {
@@ -7,6 +7,7 @@ import {
   StatedBeanMeta,
   StatedFieldMeta,
   StrictBeanProvider,
+  PropsFieldMeta,
 } from '../types';
 import { getPropertiesWithoutFunction } from '../utils';
 
@@ -22,6 +23,7 @@ import {
 export class BeanObserver<T> {
   state$: CountableSubject<StateAction<T>> = new CountableSubject();
   effect$: Subject<EffectAction> = new Subject();
+  props$: Subject<unknown> = new Subject();
 
   private readonly _beanMeta: StatedBeanMeta;
 
@@ -82,7 +84,6 @@ export class BeanObserver<T> {
   }
 
   private _observe(bean: T): T {
-    const fields = this._beanMeta.statedFields || [];
     // const proxyBean = this._createProxyBean(bean, fields);
     const proxyBean = (new Proxy(
       (bean as unknown) as object,
@@ -91,9 +92,23 @@ export class BeanObserver<T> {
 
     this._defineStatedBean(proxyBean);
 
-    fields.forEach(field => {
+    const statedFields = this._beanMeta.statedFields || [];
+    statedFields.forEach(field => {
       this._observeBeanField(proxyBean, field);
     });
+
+    const propsFields = this._beanMeta.propsFields;
+
+    if (propsFields !== undefined) {
+      propsFields.forEach(field => {
+        this._initPropsField(proxyBean, field, this._provider.props);
+      });
+      this.props$.subscribe((p: Record<string, unknown>) => {
+        propsFields.forEach(field => {
+          this._updatePropsField(bean, field, p);
+        });
+      });
+    }
 
     setTimeout(() => {
       if (
@@ -106,7 +121,6 @@ export class BeanObserver<T> {
         proxyBean.postProvided();
       }
     }, 0);
-
     return proxyBean;
   }
 
@@ -163,6 +177,44 @@ export class BeanObserver<T> {
         return bean[proxyField];
       },
     });
+  }
+
+  private _initPropsField(
+    bean: T,
+    field: PropsFieldMeta,
+    props?: Record<string, unknown>,
+  ) {
+    const propsValue = props === undefined ? undefined : props[field.prop];
+
+    if (field.observable) {
+      Reflect.set(
+        (bean as unknown) as object,
+        field.name,
+        new BehaviorSubject(propsValue),
+      );
+    } else {
+      Reflect.set((bean as unknown) as object, field.name, propsValue);
+    }
+  }
+
+  private _updatePropsField(
+    bean: T,
+    field: PropsFieldMeta,
+    props?: Record<string, unknown>,
+  ) {
+    const newValue = props === undefined ? undefined : props[field.prop];
+    const oldValue = Reflect.get((bean as unknown) as object, field.name);
+    if (field.observable) {
+      const subject = oldValue as BehaviorSubject<unknown>;
+
+      if (!Object.is(subject.getValue(), newValue)) {
+        subject.next(newValue);
+      }
+    } else {
+      if (!Object.is(oldValue, newValue)) {
+        Reflect.set((bean as unknown) as object, field.name, newValue);
+      }
+    }
   }
 
   // private _createProxyBean(bean: T, fields: StatedFieldMeta[]): T {

@@ -4,9 +4,9 @@ import {
   Effect,
   Stated,
   StatedBean,
-  useBean,
-  useObserveEffect,
   StatedBeanProvider,
+  useInject,
+  useObserveEffect,
 } from '../src';
 
 import { delay } from './utils';
@@ -45,7 +45,7 @@ describe('effect action', () => {
 
     const { result, unmount } = renderHook(
       () => {
-        const bean = useBean(() => new PostProvidedSample());
+        const bean = useInject(PostProvidedSample);
         const action = useObserveEffect(bean, 'add');
         const action3 = useObserveEffect(bean, 'add3');
         return { bean, action, action3 };

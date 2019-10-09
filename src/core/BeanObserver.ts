@@ -179,12 +179,11 @@ export class BeanObserver<T> {
     });
   }
 
-  private _initPropsField(
-    bean: T,
-    field: PropsFieldMeta,
-    props?: Record<string, unknown>,
-  ) {
-    const propsValue = props === undefined ? undefined : props[field.prop];
+  private _initPropsField(bean: T, field: PropsFieldMeta, props?: unknown) {
+    const propsValue =
+      props === undefined
+        ? undefined
+        : (props as Record<string, unknown>)[field.prop];
 
     if (field.observable) {
       Reflect.set(

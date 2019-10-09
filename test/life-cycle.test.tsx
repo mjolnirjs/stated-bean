@@ -52,14 +52,12 @@ class LifeCycleBean
 describe('LifeCycle', () => {
   it('PostProvided method hook', async () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[PostProvidedSample]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider>{children}</StatedBeanProvider>
     );
 
     const { result, waitForNextUpdate, unmount } = renderHook(
       () => {
-        return useBean(() => new PostProvidedSample());
+        return useBean(PostProvidedSample);
       },
       { wrapper },
     );

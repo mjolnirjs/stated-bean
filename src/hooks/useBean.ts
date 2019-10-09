@@ -4,9 +4,9 @@ import { isFunction, isStatedBean } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-export interface UseBeanOptions {
+export interface UseBeanOptions<TProps> {
   name?: string | symbol;
-  props?: Record<string, unknown>;
+  props?: TProps;
 }
 
 /**
@@ -22,16 +22,16 @@ export interface UseBeanOptions {
  * @param {(string | symbol)} [name]
  * @returns {T}
  */
-export function useBean<T>(
+export function useBean<T, TProps = Record<string, unknown>>(
   typeOrSupplier: ClassType<T> | (() => T),
-  option?: string | symbol | UseBeanOptions,
+  option?: string | symbol | UseBeanOptions<TProps>,
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
 
   let name: string | symbol | undefined;
-  let props: Record<string, unknown> | undefined;
+  let props: TProps | undefined;
 
   if (option !== undefined) {
     if (typeof option === 'object') {
@@ -55,7 +55,7 @@ export function useBean<T>(
   }
 
   const [observer] = useState(() => {
-    let provider: BeanProvider<T>;
+    let provider: BeanProvider<T, TProps>;
     let bean: T | undefined;
     if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;

@@ -1,10 +1,10 @@
 import { ClassType } from './ClassType';
 
-export interface BeanProvider<T> {
+export interface BeanProvider<T, TProps = unknown> {
   type: ClassType<T>;
   identity?: string | symbol;
   bean?: T;
-  props?: Record<string, unknown>;
+  props?: TProps;
 }
 
 export interface StrictBeanProvider<T> extends BeanProvider<T> {

@@ -4,7 +4,11 @@ import { CounterModel } from '../../models/CounterModel';
 import React from 'react';
 import { useBean } from 'stated-bean';
 
-export function Counter(props: { value: number }) {
+export interface CounterProps {
+  value: number;
+}
+
+export function Counter(props: CounterProps) {
   const counter = useBean(CounterModel, { props });
   console.log('counter', counter.count);
   return (

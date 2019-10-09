@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.1](https://github.com/mjolnirjs/stated-bean/compare/v0.6.0...v0.6.1) (2019-10-09)
+
+
+### Bug Fixes
+
+* 🐛 props type in UseBeanOptions ([#82](https://github.com/mjolnirjs/stated-bean/issues/82)) ([6c46b86](https://github.com/mjolnirjs/stated-bean/commit/6c46b868218d72cc792bbca35e3f5ebff238a8d7))
+
 ### [0.5.1](https://github.com/mjolnirjs/stated-bean/compare/v0.5.0...v0.5.1) (2019-10-02)
 
 

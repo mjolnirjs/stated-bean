@@ -1,29 +1,32 @@
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export function useObservable<T>(observable?: Observable<T>) {
-  const [value, setValue] = useState(() => {
-    if (observable !== undefined && observable instanceof BehaviorSubject) {
+export type ObservableSource<T> =
+  | Observable<T>
+  | (() => Observable<T>)
+  | null
+  | undefined;
+
+export function useObservable<T>(observable?: ObservableSource<T>) {
+  const [value, setValue] = useState<T | null>(() => {
+    if (observable instanceof BehaviorSubject) {
       return observable.getValue();
     }
-    return undefined;
+    return null;
   });
 
-  useEffect(() => {
-    let subscription: Subscription;
-    if (observable !== undefined) {
-      subscription = observable.subscribe(value => {
-        setValue(value);
-      });
-    }
+  const observableRef = useRef(observable);
 
-    return () => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-    };
-  }, [observable]);
+  useEffect(() => {
+    const { current } = observableRef;
+    observableRef.current = typeof current === 'function' ? current() : current;
+    if (!observableRef.current) {
+      return;
+    }
+    const subscription = observableRef.current.subscribe(setValue);
+    return () => subscription.unsubscribe();
+  }, [observableRef]);
 
   return value;
 }

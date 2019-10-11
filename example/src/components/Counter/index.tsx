@@ -2,7 +2,7 @@
 import { CounterModel } from '../../models/CounterModel';
 
 import React from 'react';
-import { useBean } from 'stated-bean';
+import { useBean, useObservable } from 'stated-bean';
 
 export interface CounterProps {
   value: number;
@@ -11,6 +11,10 @@ export interface CounterProps {
 export function Counter(props: CounterProps) {
   const counter = useBean(CounterModel, { props });
   console.log('counter', counter.count);
+
+  const value = useObservable(counter.value$);
+
+  console.log('value', value);
   return (
     <div>
       <button onClick={counter.decrement}>-</button>

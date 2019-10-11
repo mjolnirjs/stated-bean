@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import { map } from 'rxjs/operators';
+
 import { CounterModel } from '../../models/CounterModel';
 
 import React from 'react';
@@ -12,7 +14,7 @@ export function Counter(props: CounterProps) {
   const counter = useBean(CounterModel, { props });
   console.log('counter', counter.count);
 
-  const value = useObservable(counter.value$);
+  const value = useObservable(() => counter.value$.pipe(map(v => v * v)));
 
   console.log('value', value);
   return (

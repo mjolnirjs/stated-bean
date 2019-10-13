@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/mjolnirjs/stated-bean/compare/v0.7.0...v0.8.0) (2019-10-13)
+
+
+### Features
+
+* 🎸 support multiple typed bean and singleton named bean ([#84](https://github.com/mjolnirjs/stated-bean/issues/84)) ([453b2f2](https://github.com/mjolnirjs/stated-bean/commit/453b2f2c33535f5abe7f633e9e5920daed8432dc))
+
 ## [0.7.0](https://github.com/mjolnirjs/stated-bean/compare/v0.6.1...v0.7.0) (2019-10-11)
 
 ### [0.6.1](https://github.com/mjolnirjs/stated-bean/compare/v0.6.0...v0.6.1) (2019-10-09)

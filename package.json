@@ -50,7 +50,7 @@
     "@types/react": "^16.9.3",
     "@types/react-dom": "^16.9.1",
     "@types/react-test-renderer": "^16.9.0",
-    "cross-env": "^6.0.0",
+    "cross-env": "^6.0.3",
     "eslint": "^6.4.0",
     "husky": "^3.0.5",
     "injection-js": "^2.2.2",

@@ -67,13 +67,13 @@
     "@prettier/plugin-pug" "^1.0.3"
     prettier-plugin-toml "^0.3.1"
 
-"@1stg/prettier-config@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@1stg/prettier-config/-/prettier-config-0.3.2.tgz#d010873a5d22cf47be2984f1ad67973dfafa147a"
-  integrity sha512-tP2soD2Un6Ai/kCN9T0Ho5Kzbfht5gB3NqgWP60uprVJxu6lmYzggCx1QfBhX09g4xUg0ANGpdBREzchqEkJ5w==
+"@1stg/prettier-config@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@1stg/prettier-config/-/prettier-config-0.3.4.tgz#fb3c4d60d10eb590f4bf69330a58c903a0b203cc"
+  integrity sha512-A+yGhubIYC/6XbUxFMlMFjudq5HmbjrLB/1W/7PM2FMpqu91HcPcxTwSiFgaqMi++V5g6crnt8GRsKR0VaOqnQ==
   dependencies:
     "@prettier/plugin-pug" "^1.0.3"
-    prettier-plugin-pkg "^0.4.3"
+    prettier-plugin-pkg "^0.4.4"
     prettier-plugin-toml "^0.3.1"
 
 "@1stg/remark-config@^0.2.2":
@@ -8160,7 +8160,7 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier-plugin-pkg@^0.4.3:
+prettier-plugin-pkg@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/prettier-plugin-pkg/-/prettier-plugin-pkg-0.4.4.tgz#e7b20cba16995d04fe22b0aa2fe3974d9dc8a757"
   integrity sha512-3rIuIjGLoe8tNdG6I1ybAybNxy3O5SgpZsqypxTzPN4hkBtYbGAhBey1ROclKsFpH6SBYny9Y2djXq9y1b+adQ==

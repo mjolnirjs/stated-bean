@@ -1,6 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { Stated, StatedBean, useBean, StatedBeanProvider } from '../src';
+import {
+  Stated,
+  StatedBean,
+  useBean,
+  StatedBeanProvider,
+  useInject,
+} from '../src';
 
 import React from 'react';
 
@@ -19,17 +25,22 @@ describe('useBean test', () => {
     });
   });
 
-  it('bean create', () => {
+  it('useBean and inject', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <StatedBeanProvider>{children}</StatedBeanProvider>
     );
 
     const { result } = renderHook(
       () => {
-        return useBean(StatedBeanSample);
+        const bean = useBean(StatedBeanSample, 'namedBean');
+        const bean2 = useInject({ name: 'namedBean' });
+
+        return { bean, bean2 };
       },
       { wrapper },
     );
-    expect(result.current).not.toBeNull();
+    expect(result.current.bean).not.toBeNull();
+    expect(result.current.bean2).not.toBeNull();
+    expect(result.current.bean).toBe(result.current.bean2);
   });
 });

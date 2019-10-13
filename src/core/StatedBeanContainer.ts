@@ -1,6 +1,6 @@
-import { getMetadataStorage } from '../metadata';
-import { BeanProvider, ClassType, StatedBeanMeta } from '../types';
+import { ClassType } from '../types';
 
+import { BeanDefinition } from './BeanDefinition';
 import { BeanObserver } from './BeanObserver';
 import { StatedBeanApplication } from './StatedBeanApplication';
 import { StatedBeanRegistry } from './StatedBeanRegistry';
@@ -39,76 +39,28 @@ export class StatedBeanContainer {
     return this._registry;
   }
 
-  getBeanIdentity<T>(type: ClassType<T>, name?: string | symbol) {
-    return name || this.getBeanMetaName(type) || type.name;
-  }
+  getTypedObserver<T>(type: ClassType<T>): Array<BeanObserver<T>> | undefined {
+    let beanObservers = this.getBeanRegistry().getTypedBean(type);
 
-  getBeanMetaName<T>(type: ClassType<T>): string | symbol | undefined {
-    const beanMeta = this.getBeanMeta(type);
-
-    return beanMeta === undefined ? undefined : beanMeta.name;
-  }
-
-  getBeanMeta<T>(type: ClassType<T>): StatedBeanMeta | undefined {
-    const storage = getMetadataStorage();
-    return storage.getBeanMeta(type);
-  }
-
-  getBean<T>(type: ClassType<T>, name?: string | symbol): T | undefined {
-    const identity = this.getBeanIdentity(type, name);
-    const beanObserver = this.getBeanObserver(type, identity);
-
-    if (beanObserver !== undefined) {
-      return beanObserver.proxy;
+    if (beanObservers == null && this.parent) {
+      beanObservers = this.parent.getTypedObserver(type);
     }
-    return undefined;
+
+    return beanObservers;
   }
 
-  getBeanObserver<T>(
-    type: ClassType<T>,
-    name?: string | symbol,
-  ): BeanObserver<T> | undefined {
-    const identity = this.getBeanIdentity(type, name);
-    let beanObserver = this.getBeanRegistry().get(type, identity);
+  getNamedObserver<T>(name: string | symbol): BeanObserver<T> | undefined {
+    let beanObserver = this.getBeanRegistry().getNamedBean<T>(name);
 
     if (beanObserver == null && this.parent) {
-      beanObserver = this.parent.getBeanObserver(type, name);
+      beanObserver = this.parent.getNamedObserver(name);
     }
 
     return beanObserver;
   }
 
-  register<T>(provider: BeanProvider<T>) {
-    const beanRegistry = this.getBeanRegistry();
-
-    return beanRegistry.register(provider);
-  }
-
-  registerAndObserve<T>(provider: BeanProvider<T>) {
-    try {
-      this.register(provider);
-
-      const observer = this.getBeanObserver(
-        provider.type,
-        this.getBeanIdentity(provider.type, provider.identity),
-      );
-
-      if (observer === undefined) {
-        throw new Error('observer is undefined');
-      }
-      return observer;
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }
-
-  hasBean<T>(type: ClassType<T>, name?: string | symbol): boolean {
-    return this.getBean(type, name) !== undefined;
-  }
-
-  remove<T>(type: ClassType<T>, name?: string | symbol) {
-    this.getBeanRegistry().remove(type, name);
+  register<T>(beanDefinition: BeanDefinition<T>) {
+    return this.getBeanRegistry().register(beanDefinition);
   }
 
   get parent() {

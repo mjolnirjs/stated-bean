@@ -2,15 +2,10 @@ import { ClassType } from './ClassType';
 
 export interface BeanProvider<T, TProps = unknown> {
   type: ClassType<T>;
-  identity?: string | symbol;
-  bean?: T;
+  name?: string | symbol;
+  factory?: (props?: TProps) => T;
   props?: TProps;
-}
-
-export interface StrictBeanProvider<T> extends BeanProvider<T> {
-  type: ClassType<T>;
-  identity: string | symbol;
-  bean: T;
+  singleton?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-type-alias

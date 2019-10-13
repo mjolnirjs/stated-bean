@@ -5,7 +5,7 @@ import { TodoService, Todo } from '../services/TodoService';
 import {
   StatedBean,
   Stated,
-  PostProvided,
+  AfterProvided,
   Effect,
   DisposableBean,
 } from 'stated-bean';
@@ -25,7 +25,7 @@ export class TodoModel implements DisposableBean {
     console.log('TodoModel destroyed');
   }
 
-  @PostProvided()
+  @AfterProvided()
   @Effect()
   async fetchTodo() {
     this.todoList = await this._todo.fetchTodoList();

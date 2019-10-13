@@ -1,9 +1,14 @@
 import { BehaviorSubject } from 'rxjs';
 
-import { ObservableProps, PostProvided, Stated, StatedBean } from 'stated-bean';
+import {
+  InitializingBean,
+  ObservableProps,
+  Stated,
+  StatedBean,
+} from 'stated-bean';
 
-@StatedBean()
-export class CounterModel {
+@StatedBean({ singleton: false })
+export class CounterModel implements InitializingBean {
   @ObservableProps()
   value$!: BehaviorSubject<number>;
 
@@ -18,8 +23,7 @@ export class CounterModel {
     this.count++;
   }
 
-  @PostProvided()
-  init() {
+  afterProvided() {
     this.value$.subscribe(value => {
       this.count = value;
     });

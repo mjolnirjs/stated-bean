@@ -1,4 +1,4 @@
-import { BeanProvider } from '../types';
+import { BeanDefinition } from './BeanDefinition';
 
 /**
  * BeanFactory interface
@@ -8,25 +8,26 @@ import { BeanProvider } from '../types';
  */
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IBeanFactory {
-  get<T>(provider: BeanProvider<T>): T;
+  createBean<T>(beanDefinition: BeanDefinition<T>): T;
 
-  remove<T>(provider: BeanProvider<T>): void;
+  destroyBean<T>(beanDefinition: BeanDefinition<T>, bean: T): void;
 }
 
 /**
  * the default `BeanFactory` by the class `new` constructor.
  */
 export class DefaultBeanFactory implements IBeanFactory {
-  get<T>(provider: BeanProvider<T>): T {
-    if (provider.bean !== undefined) {
-      return provider.bean;
+  createBean<T>(beanDefinition: BeanDefinition<T>): T {
+    if (beanDefinition.isFactoryBean) {
+      const factory = beanDefinition.getFactory();
+      return factory!(beanDefinition.props);
     } else {
       // eslint-disable-next-line new-cap
-      return new provider.type();
+      return new beanDefinition.beanType(beanDefinition.props);
     }
   }
 
-  remove() {
+  destroyBean() {
     //
   }
 }

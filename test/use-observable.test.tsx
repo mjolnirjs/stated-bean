@@ -27,7 +27,7 @@ describe('effect action', () => {
       <StatedBeanProvider>{children}</StatedBeanProvider>
     );
 
-    const { result } = renderHook(
+    const { result, unmount } = renderHook(
       () => {
         const model = useBean(StatedBeanSample);
         const value = useObservable(model.test$);
@@ -41,5 +41,6 @@ describe('effect action', () => {
       result.current.model.add();
     });
     expect(result.current.value).toBe(1);
+    unmount();
   });
 });

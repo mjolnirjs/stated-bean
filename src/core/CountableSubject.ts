@@ -22,4 +22,9 @@ export class CountableSubject<T> extends Subject<T> {
   subscribeCount(next: (value: number) => void) {
     this._counter$.subscribe(next);
   }
+
+  complete() {
+    super.complete();
+    this._counter$.complete();
+  }
 }

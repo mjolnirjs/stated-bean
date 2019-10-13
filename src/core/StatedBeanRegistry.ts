@@ -1,5 +1,7 @@
-import { BeanProvider, ClassType } from '../types';
+import { ClassType } from '../types';
+import { getBeanWrapper } from '../utils';
 
+import { BeanDefinition } from './BeanDefinition';
 import { BeanObserver } from './BeanObserver';
 import { StatedBeanContainer } from './StatedBeanContainer';
 
@@ -11,10 +13,9 @@ import { StatedBeanContainer } from './StatedBeanContainer';
  */
 export class StatedBeanRegistry {
   // @internal
-  private readonly _beans = new Map<
-    string | symbol,
-    WeakMap<ClassType, BeanObserver<unknown>>
-  >();
+  private readonly _typedBeans = new WeakMap<ClassType, [BeanObserver]>();
+
+  private readonly _namedBeans = new Map<string | symbol, BeanObserver>();
 
   constructor(private readonly _container: StatedBeanContainer) {}
 
@@ -22,64 +23,84 @@ export class StatedBeanRegistry {
     return this._container.application.getBeanFactory();
   }
 
-  get<T>(
-    type: ClassType<T>,
-    identity?: string | symbol,
-  ): BeanObserver<T> | undefined {
-    const typedBeans = this._beans.get(identity || type.name);
+  getTypedBean<T>(type: ClassType<T>): Array<BeanObserver<T>> | undefined {
+    return this._typedBeans.get(type) as Array<BeanObserver<T>>;
+  }
 
-    if (typedBeans === undefined) {
-      return undefined;
+  getNamedBean<T>(beanName: string | symbol): BeanObserver<T> | undefined {
+    return this._namedBeans.get(beanName) as BeanObserver<T>;
+  }
+
+  register<T = unknown>(beanDefinition: BeanDefinition<T>): BeanObserver<T> {
+    if (beanDefinition.isNamedBean) {
+      return this.registerNamedBean(beanDefinition);
+    }
+    const beanObserver = this.createBeanObserver(beanDefinition);
+    this._addTypedBean(beanDefinition.beanType, beanObserver as BeanObserver);
+    return beanObserver;
+  }
+
+  registerNamedBean<T>(beanDefinition: BeanDefinition<T>): BeanObserver<T> {
+    const namedBean = this.getNamedBean(beanDefinition.beanName);
+
+    if (namedBean !== undefined) {
+      return namedBean as BeanObserver<T>;
     } else {
-      return typedBeans.get(type) as BeanObserver<T>;
+      const beanObserver = this.createBeanObserver(beanDefinition);
+      this._namedBeans.set(
+        beanDefinition.beanName,
+        beanObserver as BeanObserver,
+      );
+      this._addTypedBean(beanDefinition.beanType, beanObserver as BeanObserver);
+      return beanObserver;
     }
   }
 
-  register<T = unknown>(provider: BeanProvider<T>) {
-    const bean = this.beanFactory.get(provider);
-    const beanIdentity = provider.identity || provider.type.name;
-    const strictProvider = {
-      type: provider.type,
+  createBeanObserver<T>(beanDefinition: BeanDefinition<T>) {
+    const bean = this.beanFactory.createBean(beanDefinition);
+    beanDefinition.setTarget(bean);
+
+    const beanObserver = new BeanObserver<T>(
       bean,
-      identity: beanIdentity,
-      props: provider.props,
-    };
-
-    if (this.get(strictProvider.type, strictProvider.identity) !== undefined) {
-      throw new Error(
-        `repeated bean provide. ${strictProvider.type.name}(${String(
-          strictProvider.identity,
-        )})`,
-      );
-    }
-
-    const beanObserver = new BeanObserver<T>(this._container, strictProvider);
+      this._container,
+      beanDefinition,
+    );
     beanObserver.state$.subscribeCount(count => {
       if (count === 0) {
+        this.remove(beanObserver);
         beanObserver.destroy();
-        this.remove(strictProvider.type, strictProvider.identity);
       }
     });
-    const typedBeans = this._beans.get(beanIdentity);
-
-    if (typedBeans === undefined) {
-      this._beans.set(
-        beanIdentity,
-        new WeakMap().set(provider.type, beanObserver),
-      );
-    } else {
-      typedBeans.set(provider.type, (beanObserver as unknown) as BeanObserver<
-        unknown
-      >);
+    const beanWrapper = getBeanWrapper(bean);
+    if (beanWrapper !== undefined) {
+      beanWrapper.state$.subscribeCount(count => {
+        if (count === 0) {
+          this.beanFactory.destroyBean(beanDefinition, bean);
+          beanWrapper.state$.complete();
+        }
+      });
     }
-
-    return bean;
+    return beanObserver;
   }
 
-  remove<T>(type: ClassType<T>, identity?: string | symbol) {
-    const typedBeans = this._beans.get(identity || type.name);
+  remove<T>(beanObserver: BeanObserver<T>) {
+    const beanDefinition = beanObserver.beanDefinition;
+    this._namedBeans.delete(beanDefinition.beanName);
+    const typedBeans = this._typedBeans.get(beanDefinition.beanType);
+
     if (typedBeans !== undefined) {
-      typedBeans.delete(type);
+      const index = typedBeans.indexOf(beanObserver as BeanObserver);
+      typedBeans.splice(index, 1);
+    }
+  }
+
+  _addTypedBean(type: ClassType, beanObserver: BeanObserver) {
+    const beans = this._typedBeans.get(type);
+
+    if (beans === undefined) {
+      this._typedBeans.set(type, [beanObserver]);
+    } else {
+      beans.unshift(beanObserver);
     }
   }
 }

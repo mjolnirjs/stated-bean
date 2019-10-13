@@ -1,16 +1,16 @@
-import { IBeanFactory, StatedBeanApplication, BeanProvider } from '../src';
+import { BeanDefinition, IBeanFactory, StatedBeanApplication } from '../src';
 
 describe('StatedBeanApplication', () => {
   it('application bean factory test', () => {
     const application = new StatedBeanApplication();
 
     class CustomBeanFactory implements IBeanFactory {
-      get<T>({ type }: BeanProvider<T>): T {
+      createBean<T>(beanDefinition: BeanDefinition<T>): T {
         // eslint-disable-next-line new-cap
-        return new type();
+        return new beanDefinition.beanType();
       }
 
-      remove() {
+      destroyBean() {
         //
       }
     }

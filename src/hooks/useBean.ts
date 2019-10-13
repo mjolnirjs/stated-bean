@@ -1,13 +1,17 @@
 import { getStatedBeanContext } from '../context';
+import { BeanDefinition } from '../core';
 import { BeanProvider, ClassType, StateAction } from '../types';
-import { isFunction, isStatedBean } from '../utils';
+import { isFunction, isStatedBeanClass } from '../utils';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-export interface UseBeanOptions<TProps> {
-  name?: string | symbol;
-  props?: TProps;
-}
+export type UseBeanOptions<TProps> =
+  | string
+  | symbol
+  | {
+      name?: string | symbol;
+      props?: TProps;
+    };
 
 /**
  * creates a temporary `StatedBeanContainer` and registers the bean to the container.
@@ -23,8 +27,8 @@ export interface UseBeanOptions<TProps> {
  * @returns {T}
  */
 export function useBean<T, TProps = Record<string, unknown>>(
-  typeOrSupplier: ClassType<T> | (() => T),
-  option?: string | symbol | UseBeanOptions<TProps>,
+  typeOrSupplier: ClassType<T> | ((props?: TProps) => T),
+  option?: UseBeanOptions<TProps>,
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
@@ -56,25 +60,18 @@ export function useBean<T, TProps = Record<string, unknown>>(
 
   const [observer] = useState(() => {
     let provider: BeanProvider<T, TProps>;
-    let bean: T | undefined;
-    if (isFunction(typeOrSupplier) && !isStatedBean(typeOrSupplier)) {
+    if (isFunction(typeOrSupplier) && !isStatedBeanClass(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;
-      bean = supplier();
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const type = (bean as any).constructor as ClassType<T>;
-      if (type.name === 'Object' && (name === undefined || name === null)) {
-        throw new Error('plain object bean must be named.');
-      }
-      provider = { type, bean, identity: name, props };
+      const type = supplier.constructor as ClassType<T>;
+      provider = { type, factory: supplier, name, props };
     } else {
       provider = {
         type: typeOrSupplier as ClassType<T>,
-        identity: name,
+        name,
         props,
       };
     }
-    return container.registerAndObserve(provider);
+    return container.register(new BeanDefinition(provider));
   });
 
   const [subscription] = useState(() => {

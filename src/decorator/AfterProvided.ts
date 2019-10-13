@@ -1,12 +1,12 @@
 import { getMetadataStorage } from '../metadata';
 
 /**
- * The `PostProvided` decorator is used on a method that needs to be executed after the StatedBean be instanced to perform any initialization.
+ * The `AfterProvided` decorator is used on a method that needs to be executed after the StatedBean be instanced to perform any initialization.
  *
  * @export
  * @returns {MethodDecorator}
  */
-export function PostProvided(): MethodDecorator {
+export function AfterProvided(): MethodDecorator {
   return (
     prototype,
     propertyKey,

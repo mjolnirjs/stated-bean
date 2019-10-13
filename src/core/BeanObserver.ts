@@ -1,67 +1,64 @@
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
-import { getMetadataStorage } from '../metadata';
 import {
   EffectAction,
-  StateAction,
-  StatedBeanMeta,
-  StatedFieldMeta,
-  StrictBeanProvider,
   PropsFieldMeta,
+  StateAction,
+  StatedFieldMeta,
 } from '../types';
-import { getPropertiesWithoutFunction } from '../utils';
+import { getBeanWrapper } from '../utils';
 
+import { BeanDefinition } from './BeanDefinition';
+import { BeanWrapper } from './BeanWrapper';
 import { CountableSubject } from './CountableSubject';
-import { StatedBeanContainer } from './StatedBeanContainer';
-import { StatedBeanSymbol } from './Symbols';
 import {
-  isDisposableBean,
   isBeanContainerAware,
+  isDisposableBean,
   isInitializingBean,
 } from './LifeCycle';
+import { StatedBeanContainer } from './StatedBeanContainer';
+import { StatedBeanWrapper } from './Symbols';
 
-export class BeanObserver<T> {
+export class BeanObserver<T = unknown> {
   state$: CountableSubject<StateAction<T>> = new CountableSubject();
   effect$: Subject<EffectAction> = new Subject();
   props$: Subject<unknown> = new Subject();
 
-  private readonly _beanMeta: StatedBeanMeta;
-
   private readonly _proxyBean: T;
+  private readonly _stateSubscription: Subscription | undefined;
 
   constructor(
+    private readonly _bean: T,
     private readonly _container: StatedBeanContainer,
-    private readonly _provider: StrictBeanProvider<T>,
+    private readonly _beanDefinition: BeanDefinition<T>,
   ) {
-    const beanMeta = getMetadataStorage().getBeanMeta(this._provider.type);
-    if (beanMeta === undefined) {
-      this._beanMeta = {
-        name: this._provider.identity,
-        target: this._provider.type,
-        statedFields: getPropertiesWithoutFunction(this._provider.bean).map(
-          key => ({
-            name: key,
-            target: this._provider.type,
-          }),
-        ),
-      };
-      this._proxyBean = this._observePlainObject(this._provider.bean);
-    } else {
-      this._beanMeta = beanMeta;
-      this._proxyBean = this._observe(this._provider.bean);
-    }
+    this._proxyBean = (new Proxy(
+      (this.origin as unknown) as object,
+      {},
+    ) as unknown) as T;
+    const wrapper = this._observe();
+
+    this._stateSubscription = wrapper.state$.subscribe(this.state$);
 
     if (isBeanContainerAware(this.proxy)) {
       this.proxy.setBeanContainer(this._container);
     }
   }
 
+  get beanDefinition() {
+    return this._beanDefinition;
+  }
+
   get proxy(): T {
     return this._proxyBean;
   }
 
-  get bean(): T {
-    return this._provider.bean;
+  get origin(): T {
+    return this._bean;
+  }
+
+  get beanMeta() {
+    return this.beanDefinition.beanMeta;
   }
 
   destroy() {
@@ -70,96 +67,78 @@ export class BeanObserver<T> {
     if (isDisposableBean(this.proxy)) {
       this.proxy.destroy();
     }
+
+    if (this._stateSubscription !== undefined) {
+      this._stateSubscription.unsubscribe();
+    }
   }
 
   publishStateAction(fieldMeta: StatedFieldMeta, value: T[keyof T]) {
     const action: StateAction<T> = {
-      bean: this.bean,
+      bean: this.proxy,
       nextValue: value,
-      prevValue: this.bean[fieldMeta.name as keyof T],
+      prevValue: this.proxy[fieldMeta.name as keyof T],
       fieldMeta,
-      beanMeta: this._beanMeta,
     };
     this.state$.next(action);
   }
 
-  private _observe(bean: T): T {
+  private _observe() {
     // const proxyBean = this._createProxyBean(bean, fields);
-    const proxyBean = (new Proxy(
-      (bean as unknown) as object,
-      {},
-    ) as unknown) as T;
-
-    this._defineStatedBean(proxyBean);
-
-    const statedFields = this._beanMeta.statedFields || [];
-    statedFields.forEach(field => {
-      this._observeBeanField(proxyBean, field);
-    });
-
-    const propsFields = this._beanMeta.propsFields;
+    const wrapper = this._defineStatedBean(this.proxy);
+    const propsFields = this.beanMeta.propsFields;
 
     if (propsFields !== undefined) {
       propsFields.forEach(field => {
-        this._initPropsField(proxyBean, field, this._provider.props);
+        this._initPropsField(this.proxy, field, this.beanDefinition.props);
       });
       this.props$.subscribe((p: Record<string, unknown>) => {
         propsFields.forEach(field => {
-          this._updatePropsField(bean, field, p);
+          this._updatePropsField(this.proxy, field, p);
         });
       });
     }
 
     setTimeout(() => {
       if (
-        this._beanMeta.postMethod != null &&
-        this._beanMeta.postMethod.descriptor !== undefined
+        this.beanMeta.postMethod != null &&
+        this.beanMeta.postMethod.descriptor !== undefined
       ) {
-        const f = this._beanMeta.postMethod.descriptor.value;
-        f!.apply(proxyBean);
-      } else if (isInitializingBean(proxyBean)) {
-        proxyBean.postProvided();
+        const f = this.beanMeta.postMethod.descriptor.value;
+        f!.apply(this.proxy);
+      } else if (isInitializingBean(this.proxy)) {
+        this.proxy.afterProvided();
       }
     }, 0);
-    return proxyBean;
-  }
 
-  private _observePlainObject(bean: T): T {
-    const proxyBean = this._observe(bean);
-
-    Object.keys(proxyBean).forEach((key: keyof T & string) => {
-      if (typeof proxyBean[key] === 'function') {
-        Object.defineProperty(proxyBean, key, {
-          value: ((proxyBean[key] as unknown) as Function).bind(proxyBean),
-        });
-      }
-    });
-    return proxyBean;
+    return wrapper;
   }
 
   // @internal
-  private _defineStatedBean(bean: T) {
-    const self = this;
-    Object.defineProperty(bean, StatedBeanSymbol, {
-      value: {
-        identity: self._provider.identity,
-        type: self._provider.type,
-        container: self._container,
-        forceUpdate: function(field: keyof T & string) {
-          const fieldMeta = (self._beanMeta.statedFields || []).find(
-            f => f.name === field,
-          );
-          if (fieldMeta === undefined) {
-            return;
-          }
-          self.publishStateAction(fieldMeta, self.bean[field]);
-        },
-      },
-    });
+  private _defineStatedBean(bean: T): BeanWrapper<T> {
+    let wrapper = getBeanWrapper(bean);
+
+    if (wrapper === undefined) {
+      wrapper = new BeanWrapper(this);
+      Object.defineProperty(bean, StatedBeanWrapper, {
+        value: wrapper,
+      });
+
+      const statedFields = this.beanMeta.statedFields || [];
+      statedFields.forEach(field => {
+        this._observeBeanField(wrapper!, bean, field);
+      });
+    }
+
+    return wrapper;
   }
 
   // @internal
-  private _observeBeanField(bean: T, fieldMeta: StatedFieldMeta) {
+  private _observeBeanField(
+    wrapper: BeanWrapper<T>,
+    bean: T,
+    fieldMeta: StatedFieldMeta,
+  ) {
     const proxyField = Symbol(fieldMeta.name.toString() + '_v') as keyof T;
 
     Object.defineProperty(bean, proxyField, {
@@ -167,11 +146,16 @@ export class BeanObserver<T> {
       value: bean[fieldMeta.name as keyof T],
     });
 
-    const self = this;
     Object.defineProperty(bean, fieldMeta.name.toString(), {
       set(value: T[keyof T]) {
         bean[proxyField] = value;
-        self.publishStateAction(fieldMeta, value);
+        const action = {
+          bean,
+          nextValue: value,
+          prevValue: bean[fieldMeta.name as keyof T],
+          fieldMeta,
+        };
+        wrapper.state$.next(action);
       },
       get() {
         return bean[proxyField];

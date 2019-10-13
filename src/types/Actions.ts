@@ -1,11 +1,10 @@
-import { StatedFieldMeta, StatedBeanMeta } from './StatedMetadata';
+import { StatedFieldMeta } from './StatedMetadata';
 
 export interface StateAction<T = unknown> {
   bean: T;
   nextValue: unknown;
   prevValue: unknown;
   fieldMeta: StatedFieldMeta;
-  beanMeta: StatedBeanMeta;
 }
 
 export interface EffectAction<T = unknown> {

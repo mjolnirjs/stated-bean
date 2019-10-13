@@ -1,6 +1,7 @@
 export interface StatedBeanMeta {
-  name: string | symbol;
+  name?: string | symbol;
   target: Function;
+  singleton?: boolean;
   statedFields?: StatedFieldMeta[];
   propsFields?: PropsFieldMeta[];
   postMethod?: PostMethodMeta;

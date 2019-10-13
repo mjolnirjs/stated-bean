@@ -1,6 +1,5 @@
-import { StatedBeanSymbol } from '../core';
 import { EffectAction } from '../types';
-import { isPromise, isStatedBean } from '../utils';
+import { getBeanWrapper, isPromise } from '../utils';
 
 /**
  *
@@ -20,10 +19,10 @@ export function Effect(name?: string | symbol): MethodDecorator {
     const effectName = name || propertyKey;
     const originalMethod: Function = descriptor.value;
     descriptor.value = function<T>(this: T, ...args: unknown[]) {
-      if (isStatedBean(this)) {
-        const { container, type, identity } = this[StatedBeanSymbol];
+      const beanWrapper = getBeanWrapper(this);
+      if (beanWrapper !== undefined) {
         const emitEffectAction = (action: Partial<EffectAction>) => {
-          const observer = container.getBeanObserver(type, identity);
+          const observer = beanWrapper.beanObserver;
 
           if (observer !== undefined) {
             observer.effect$.next({

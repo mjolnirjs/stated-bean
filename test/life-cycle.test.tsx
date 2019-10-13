@@ -1,15 +1,15 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 
 import {
-  PostProvided,
-  Stated,
-  StatedBean,
-  useBean,
-  StatedBeanProvider,
+  BeanContainerAware,
   DisposableBean,
   InitializingBean,
-  BeanContainerAware,
+  AfterProvided,
+  Stated,
+  StatedBean,
   StatedBeanContainer,
+  StatedBeanProvider,
+  useBean,
 } from '../src';
 
 import { delay } from './utils';
@@ -21,7 +21,7 @@ class PostProvidedSample {
   @Stated()
   test = 0;
 
-  @PostProvided()
+  @AfterProvided()
   async postMethod() {
     await delay(100);
     this.test = 1;
@@ -40,7 +40,7 @@ class LifeCycleBean
     this.test = 0;
   }
 
-  postProvided() {
+  afterProvided() {
     this.test = 1;
   }
 
@@ -73,15 +73,15 @@ describe('LifeCycle', () => {
 
     const { result, waitForNextUpdate, unmount } = renderHook(
       () => {
-        return useBean(() => new LifeCycleBean());
+        return useBean(LifeCycleBean);
       },
       { wrapper },
     );
+    act(() => {});
     await waitForNextUpdate();
     expect(result.current.test).toEqual(1);
     expect(result.current.container).not.toBeNull();
     unmount();
-
     expect(result.current.test).toEqual(0);
   });
 });

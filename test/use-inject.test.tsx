@@ -41,9 +41,9 @@ describe('useInject test', () => {
     );
     const { result, unmount } = renderHook(
       () => {
-        return useInject(SampleStatedBean, {
-          name: 'SampleStatedBean',
-          fields: ['test'],
+        return useInject({
+          type: SampleStatedBean,
+          observedFields: ['test'],
         });
       },
       { wrapper },

@@ -18,8 +18,6 @@ export const TodoApp = () => {
   const todo = useInject(TodoModel);
   const { loading } = useObserveEffect(todo, 'fetchTodo');
 
-  console.log(loading);
-
   return (
     <div>
       <h3>TODO</h3>

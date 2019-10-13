@@ -1,7 +1,7 @@
 import { StatedBeanContainer } from './StatedBeanContainer';
 
 export interface InitializingBean {
-  postProvided(): void;
+  afterProvided(): void;
 }
 
 export interface DisposableBean {
@@ -23,7 +23,7 @@ export function getProperty<T, K extends keyof T>(
 }
 
 export function isInitializingBean(bean: unknown): bean is InitializingBean {
-  const property = getProperty(bean, 'postProvided');
+  const property = getProperty(bean, 'afterProvided');
   return property !== undefined && typeof property === 'function';
 }
 

@@ -7,50 +7,47 @@ import { TodoApp } from './src/components/Todo';
 import { TodoModel } from './src/models/TodoModel';
 import { TodoService } from './src/services/TodoService';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {
-  BeanProvider,
+  BeanDefinition,
   IBeanFactory,
   StatedBeanApplication,
   StatedBeanProvider,
 } from 'stated-bean';
-import ReactDOM from 'react-dom';
-import React from 'react';
 
 const app = new StatedBeanApplication();
 
 class InjectionFactory implements IBeanFactory {
   rootInjector = ReflectiveInjector.resolveAndCreate([TodoService]);
 
-  injectors = new Map<string, ReflectiveInjector>();
-
-  get<T>({ type, identity, bean }: BeanProvider<T>) {
-    const provide = String(identity || type.name);
-
+  createBean<T>(beanDefinition: BeanDefinition<T>) {
+    let provide;
     let provider;
-    if (bean) {
-      provider = { provide: provide, useValue: bean };
+    if (beanDefinition.isFactoryBean) {
+      provide = beanDefinition.getFactoryBeanType();
+      provider = { provide: provide, useFactory: beanDefinition.getFactory()! };
     } else {
-      provider = { provide: provide, useClass: type };
+      provide = beanDefinition.beanType;
+      provider = { provide: provide, useClass: beanDefinition.beanType };
     }
     const injector = ReflectiveInjector.resolveAndCreate(
       [provider],
       this.rootInjector,
     );
 
-    this.injectors.set(provide, injector);
     return injector.get(provide);
   }
 
-  remove<T>({ type, identity }: BeanProvider<T>) {
-    const provide = String(identity || type.name);
-    this.injectors.delete(provide);
+  destroyBean<T>(beanDefinition: BeanDefinition<T>) {
+    console.info('destroyed', beanDefinition);
   }
 }
 
 app.setBeanFactory(new InjectionFactory());
 
 const App = () => {
-  const [counter, setCounter] = React.useState(10);
+  const [counter, setCounter] = React.useState(5);
   return (
     <div>
       <StatedBeanProvider application={app} providers={[TodoModel]}>
@@ -61,7 +58,10 @@ const App = () => {
         >
           Add
         </button>
-        <Counter value={counter} />
+        <hr />
+        {counter < 20 && <Counter value={counter} />}
+        <hr />
+        {counter < 10 && <Counter value={counter} />}
         <hr />
         <TodoApp />
       </StatedBeanProvider>

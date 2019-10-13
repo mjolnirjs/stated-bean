@@ -3,9 +3,10 @@ import { ClassType, StateAction } from '../types';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-export interface UseStatedBeanOption<T> {
+export interface BeanInjectOption<T> {
+  type?: ClassType<T>;
   name?: string | symbol;
-  fields?: Array<keyof T>;
+  observedFields?: Array<keyof T>;
 }
 
 /**
@@ -13,30 +14,30 @@ export interface UseStatedBeanOption<T> {
  *
  * @export
  * @template T
- * @param {ClassType<T>} type the `ClassType` of the bean.
- * @param {UseStatedBeanOption<T>} [option={}]
+ * @param {ClassType<T> | BeanInjectOption<T>} option
  * @returns {T}
  */
-export function useInject<T>(
-  type: ClassType<T>,
-  option: UseStatedBeanOption<T> = {},
-): T {
+export function useInject<T>(option: ClassType<T> | BeanInjectOption<T>): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const [, setVersion] = useState(0);
+
+  const type = typeof option === 'object' ? option.type : option;
+  const { name, observedFields } =
+    typeof option === 'object' ? option : ({} as BeanInjectOption<T>);
 
   const beanChangeListener = useCallback(
     (action: StateAction<T>) => {
       const field = action.fieldMeta.name as keyof T;
       if (
-        option.fields == null ||
-        option.fields.length === 0 ||
-        option.fields.includes(field)
+        observedFields == null ||
+        observedFields.length === 0 ||
+        observedFields.includes(field)
       ) {
         setVersion(prev => prev + 1);
       }
     },
-    [option.fields],
+    [observedFields],
   );
 
   const container = context.container;
@@ -46,11 +47,25 @@ export function useInject<T>(
   }
 
   const [observer] = useState(() => {
-    return container.getBeanObserver(type, option.name);
+    let observer;
+    if (name !== undefined) {
+      observer = container.getNamedObserver<T>(name);
+    } else if (type !== undefined) {
+      const observers = container.getTypedObserver(type);
+      if (observers !== undefined) {
+        if (observers.length <= 1) {
+          observer = observers[0];
+        } else {
+          throw new Error(`Multiple bean [${type.name}] found.`);
+        }
+      }
+    }
+
+    return observer;
   });
 
   if (observer === undefined) {
-    throw new Error(`bean[${type.name}] observer is undefined`);
+    throw new Error(`bean observer is undefined.`);
   }
 
   const [subscription] = useState(() => {

@@ -1,16 +1,8 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import {
-  Stated,
-  StatedBean,
-  StatedBeanConsumer,
-  StatedBeanContextValue,
-  StatedBeanProvider,
-  useInject,
-} from '../src';
+import { Stated, StatedBean, StatedBeanProvider, useInject } from '../src';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import renderer from 'react-test-renderer';
 
 @StatedBean()
@@ -72,27 +64,5 @@ describe('stated value changed test', () => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => result.current.addStatedField());
     expect(result.current.statedField).toEqual(1);
-  });
-
-  it('StatedBeanConsumer', () => {
-    const Sample = () => (
-      <StatedBeanConsumer>
-        {(context: StatedBeanContextValue) => {
-          expect(context).not.toBeNull();
-          expect(context.container).not.toBeNull();
-          return null;
-        }}
-      </StatedBeanConsumer>
-    );
-
-    const App = () => (
-      <StatedBeanProvider providers={[SampleStatedBean]}>
-        <Sample />
-      </StatedBeanProvider>
-    );
-
-    const div = document.createElement('div');
-    ReactDOM.render(<App />, div);
-    ReactDOM.unmountComponentAtNode(div);
   });
 });

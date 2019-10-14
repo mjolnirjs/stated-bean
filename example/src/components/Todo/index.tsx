@@ -16,8 +16,9 @@ function TodoList(props: { items: Todo[] }) {
 
 export const TodoApp = () => {
   const todo = useInject(TodoModel);
-  const { loading } = useObserveEffect(todo, 'fetchTodo');
+  const { loading, error } = useObserveEffect(todo, 'fetchTodo');
 
+  console.log(loading, error, todo.todoList);
   return (
     <div>
       <h3>TODO</h3>

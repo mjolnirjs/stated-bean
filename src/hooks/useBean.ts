@@ -43,8 +43,6 @@ export function useBean<T, TProps = Record<string, unknown>>(
       props = option.props;
     } else if (typeof option === 'string' || typeof option === 'symbol') {
       name = option;
-    } else {
-      throw new Error('invalid UseBeanOptions');
     }
   }
 

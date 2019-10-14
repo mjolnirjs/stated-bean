@@ -9,8 +9,8 @@ export interface StateAction<T = unknown> {
 
 export interface EffectAction<T = unknown> {
   loading: boolean;
-  error: unknown;
   data: T;
+  error: unknown;
   effect: string | symbol;
 }
 

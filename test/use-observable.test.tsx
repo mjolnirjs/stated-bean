@@ -14,15 +14,21 @@ import React from 'react';
 @StatedBean()
 class StatedBeanSample {
   @Stated()
-  test$ = new BehaviorSubject(0);
+  test$: BehaviorSubject<number> | undefined = undefined;
+
+  init() {
+    this.test$ = new BehaviorSubject(0);
+  }
 
   add() {
-    this.test$.next(1);
+    if (this.test$) {
+      this.test$.next(1);
+    }
   }
 }
 
-describe('effect action', () => {
-  it('bean create', () => {
+describe('use observable test', () => {
+  it('observable state field test', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <StatedBeanProvider>{children}</StatedBeanProvider>
     );
@@ -36,6 +42,10 @@ describe('effect action', () => {
       },
       { wrapper },
     );
+    expect(result.current.value).toBe(null);
+    act(() => {
+      result.current.model.init();
+    });
     expect(result.current.value).toBe(0);
     act(() => {
       result.current.model.add();

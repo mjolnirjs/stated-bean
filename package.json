@@ -42,7 +42,7 @@
     "@1stg/remark-config": "^0.2.2",
     "@1stg/rollup-config": "^0.10.5",
     "@1stg/tsconfig": "^0.6.0",
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.6.4",
     "@commitlint/cli": "^8.2.0",
     "@testing-library/react-hooks": "^2.0.1",
     "@types/jest": "^24.0.18",

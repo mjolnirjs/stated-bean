@@ -4,7 +4,7 @@ import { useInject, StatedBean, StatedBeanProvider, Stated } from '../src';
 
 import React from 'react';
 
-@StatedBean()
+@StatedBean('SampleStatedBean')
 class SampleStatedBean {
   @Stated()
   test = 0;
@@ -30,6 +30,28 @@ describe('useInject test', () => {
 
     expect(result.current).not.toBeNull();
 
+    unmount();
+  });
+
+  it('useInject a bean from parent test', () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <StatedBeanProvider providers={[SampleStatedBean]}>
+        <StatedBeanProvider>{children}</StatedBeanProvider>
+      </StatedBeanProvider>
+    );
+    const { result, unmount } = renderHook(
+      () => {
+        const bean1 = useInject(SampleStatedBean);
+        const bean2 = useInject({ name: 'SampleStatedBean' });
+
+        return { bean1, bean2 };
+      },
+      { wrapper },
+    );
+
+    expect(result.current.bean1).not.toBeNull();
+    expect(result.current.bean2).not.toBeNull();
+    expect(result.current.bean1).toBe(result.current.bean2);
     unmount();
   });
 

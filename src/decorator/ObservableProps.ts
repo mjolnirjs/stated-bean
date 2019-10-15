@@ -6,7 +6,6 @@ export function ObservableProps(name?: string): PropertyDecorator {
 
     if (prop === undefined) {
       prop = String(propertyKey);
-
       if (prop.endsWith('$')) {
         prop = prop.substring(0, prop.length - 1);
       }

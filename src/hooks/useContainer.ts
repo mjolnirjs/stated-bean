@@ -37,7 +37,8 @@ export function useContainer({ providers, application }: UseContainerOption) {
       } else {
         beanProvider = provider;
       }
-      return container.register(new BeanDefinition(beanProvider));
+      // Subscribing to the bean makes it not destroyed
+      container.register(new BeanDefinition(beanProvider)).state$.subscribe();
     });
     return container;
   });

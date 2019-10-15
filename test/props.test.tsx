@@ -15,14 +15,17 @@ import React from 'react';
 @StatedBean()
 class StatedBeanSample {
   @Stated()
-  @Props()
-  value = 0;
+  @Props('value')
+  value3 = 0;
 
   @ObservableProps()
   value$!: BehaviorSubject<number>;
 
   @ObservableProps('value')
-  value2!: BehaviorSubject<number>;
+  value2$!: BehaviorSubject<number>;
+
+  @ObservableProps()
+  value!: BehaviorSubject<number>;
 }
 
 describe('props observer test', () => {
@@ -37,14 +40,16 @@ describe('props observer test', () => {
       },
       { wrapper, initialProps: { value: 10 } },
     );
-    expect(result.current.value).toBe(10);
+    expect(result.current.value3).toBe(10);
+    expect(result.current.value.getValue()).toBe(10);
     expect(result.current.value$.getValue()).toBe(10);
-    expect(result.current.value2.getValue()).toBe(10);
+    expect(result.current.value2$.getValue()).toBe(10);
 
     rerender({ value: 20 });
 
-    expect(result.current.value).toBe(20);
+    expect(result.current.value3).toBe(20);
+    expect(result.current.value.getValue()).toBe(20);
     expect(result.current.value$.getValue()).toBe(20);
-    expect(result.current.value2.getValue()).toBe(20);
+    expect(result.current.value2$.getValue()).toBe(20);
   });
 });

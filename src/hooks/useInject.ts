@@ -28,11 +28,10 @@ export function useInject<T>(option: ClassType<T> | BeanInjectOption<T>): T {
 
   const beanChangeListener = useCallback(
     (action: StateAction<T>) => {
-      const field = action.fieldMeta.name as keyof T;
       if (
         observedFields == null ||
         observedFields.length === 0 ||
-        observedFields.includes(field)
+        observedFields.includes(action.fieldMeta.name as keyof T)
       ) {
         setVersion(prev => prev + 1);
       }

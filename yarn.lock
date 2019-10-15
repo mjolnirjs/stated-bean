@@ -87,16 +87,17 @@
     remark-preset-lint-recommended "^3.0.3"
     remark-preset-prettier "^0.2.2"
 
-"@1stg/rollup-config@^0.10.5":
-  version "0.10.5"
-  resolved "https://registry.yarnpkg.com/@1stg/rollup-config/-/rollup-config-0.10.5.tgz#2a6de2caa0534b2fc21b97cd3e0268949768d0e8"
-  integrity sha512-AeeNuY/Wmka2anaOk7RpE4MV84eY4syzA8Hp+pIVb1yumwsDxJUO3QKdZoxmKXJUGZ/+NVQpgDzWneeHQN5PPQ==
+"@1stg/rollup-config@^0.10.6":
+  version "0.10.6"
+  resolved "https://registry.yarnpkg.com/@1stg/rollup-config/-/rollup-config-0.10.6.tgz#405ad90217e01116b9b76665873a4a6d42b8b15b"
+  integrity sha512-gCl3FXMGSk72JsMwsE1Xe2hC9D4QdUhQRfkEULW51idpC7Fl+JSwdzT+naPNlXaFrcns1ZhZLw42Usg1hY1xDA==
   dependencies:
     "@babel/preset-env" "^7.6.2"
     "@pkgr/named-exports" "^0.2.1"
     "@pkgr/umd-globals" "^0.2.2"
     builtin-modules "^3.1.0"
     commander "^3.0.1"
+    debug "^4.1.1"
     lodash "^4.17.15"
     rollup-plugin-babel "^4.3.3"
     rollup-plugin-commonjs "^10.1.0"

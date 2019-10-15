@@ -32,33 +32,22 @@ export class StatedBeanRegistry {
   }
 
   register<T = unknown>(beanDefinition: BeanDefinition<T>): BeanObserver<T> {
-    if (beanDefinition.isNamedBean) {
-      return this.registerNamedBean(beanDefinition);
+    const namedBean = this.getNamedBean(beanDefinition.beanName);
+    if (namedBean !== undefined) {
+      return namedBean as BeanObserver<T>;
     }
     const beanObserver = this.createBeanObserver(beanDefinition);
+    this._namedBeans.set(beanDefinition.beanName, beanObserver as BeanObserver);
     this._addTypedBean(beanDefinition.beanType, beanObserver as BeanObserver);
     return beanObserver;
   }
 
-  registerNamedBean<T>(beanDefinition: BeanDefinition<T>): BeanObserver<T> {
-    const namedBean = this.getNamedBean(beanDefinition.beanName);
-
-    if (namedBean !== undefined) {
-      return namedBean as BeanObserver<T>;
-    } else {
-      const beanObserver = this.createBeanObserver(beanDefinition);
-      this._namedBeans.set(
-        beanDefinition.beanName,
-        beanObserver as BeanObserver,
-      );
-      this._addTypedBean(beanDefinition.beanType, beanObserver as BeanObserver);
-      return beanObserver;
-    }
-  }
-
   createBeanObserver<T>(beanDefinition: BeanDefinition<T>) {
     const bean = this.beanFactory.createBean(beanDefinition);
-    beanDefinition.setTarget(bean);
+
+    if (beanDefinition.isFactoryBean) {
+      beanDefinition.extractFactoryBeanInfo(bean);
+    }
 
     const beanObserver = new BeanObserver<T>(
       bean,

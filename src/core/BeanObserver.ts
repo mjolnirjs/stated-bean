@@ -5,6 +5,7 @@ import {
   PropsFieldMeta,
   StateAction,
   StatedFieldMeta,
+  StatedBeanMeta,
 } from '../types';
 import { getBeanWrapper } from '../utils';
 
@@ -25,6 +26,7 @@ export class BeanObserver<T = unknown> {
   props$: Subject<unknown> = new Subject();
 
   private readonly _proxyBean: T;
+  private readonly _beanMeta: StatedBeanMeta;
   private readonly _stateSubscription: Subscription | undefined;
 
   constructor(
@@ -32,6 +34,7 @@ export class BeanObserver<T = unknown> {
     private readonly _container: StatedBeanContainer,
     private readonly _beanDefinition: BeanDefinition<T>,
   ) {
+    this._beanMeta = this.beanDefinition.beanMeta;
     this._proxyBean = (new Proxy(
       (this.origin as unknown) as object,
       {},
@@ -58,7 +61,7 @@ export class BeanObserver<T = unknown> {
   }
 
   get beanMeta() {
-    return this.beanDefinition.beanMeta;
+    return this._beanMeta;
   }
 
   destroy() {
@@ -119,7 +122,7 @@ export class BeanObserver<T = unknown> {
     let wrapper = getBeanWrapper(bean);
 
     if (wrapper === undefined) {
-      wrapper = new BeanWrapper(this);
+      wrapper = new BeanWrapper(this._container, this.beanDefinition.beanName);
       Object.defineProperty(bean, StatedBeanWrapper, {
         value: wrapper,
       });

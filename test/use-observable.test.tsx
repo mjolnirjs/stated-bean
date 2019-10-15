@@ -1,4 +1,3 @@
-import { renderHook, act } from '@testing-library/react-hooks';
 import { BehaviorSubject } from 'rxjs';
 
 import {
@@ -9,6 +8,7 @@ import {
   useObservable,
 } from '../src';
 
+import { renderHook, act } from '@testing-library/react-hooks';
 import React from 'react';
 
 @StatedBean()

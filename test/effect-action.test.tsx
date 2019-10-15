@@ -1,5 +1,3 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-
 import {
   Effect,
   Stated,
@@ -11,6 +9,7 @@ import {
 
 import { delay } from './utils';
 
+import { act, renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 @StatedBean()

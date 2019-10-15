@@ -1,7 +1,6 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-
 import { Stated, StatedBean, StatedBeanProvider, useInject } from '../src';
 
+import { act, renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 import renderer from 'react-test-renderer';
 

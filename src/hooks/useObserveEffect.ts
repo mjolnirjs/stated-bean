@@ -47,7 +47,7 @@ export function useObserveEffect<T>(
     if (beanWrapper === undefined) {
       throw new Error('bean observer is undefined');
     }
-    return beanWrapper.beanObserver.effect$.subscribe(listener);
+    return beanWrapper.beanObserver!.effect$.subscribe(listener);
   });
 
   useEffect(() => {

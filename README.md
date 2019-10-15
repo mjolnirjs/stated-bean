@@ -14,8 +14,9 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![codechecks.io](https://raw.githubusercontent.com/codechecks/docs/master/images/badges/badge-default.svg?sanitize=true)](https://codechecks.io)
 
-> A light but scalable state management library with react hooks, inspired by [unstated-next](https://github.com/jamiebuilds/unstated-next).
-> It allows you to manage the state data of multiple views together. Make cross-component data transfer simple.
+> A light but scalable state management library with react hooks.
+>
+> It is the **ViewModel** in the MVVM.
 
 ## TOC <!-- omit in TOC -->
 
@@ -26,7 +27,7 @@
   - [Decorators](#decorators)
     - [`StatedBean`](#statedbean)
     - [`Stated`](#stated)
-    - [`PostProvided`](#postprovided)
+    - [`AfterProvided`](#afterprovided)
     - [`Effect`](#effect)
   - [use Hooks](#use-hooks)
     - [`useBean`](#usebean)
@@ -60,13 +61,43 @@ npm i stated-bean
 
 ## Usage
 
+### Plain object StatedBean
+
 ```ts
-import { StatedBean, Stated, useBean } from 'stated-bean';
+import { useBean } from 'stated-bean';
+
+const CounterModel = {
+  count: 0,
+  decrement() {
+    this.count--;
+  },
+  increment() {
+    this.count++;
+  },
+};
+
+function CounterDisplay() {
+  const counter = useBean(() => CounterModel);
+
+  return (
+    <div>
+      <button onClick={counter.decrement}>-</button>
+      <span>{counter.count}</span>
+      <button onClick={counter.increment}>+</button>
+    </div>
+  );
+}
+```
+
+### Class StatedBean
+
+```ts
+import { StatedBean, Stated useBean } from 'stated-bean';
 
 @StatedBean()
-export class Counter {
+class CounterModel {
   @Stated()
-  count: number = 0;
+  count = 0;
 
   increment() {
     this.count++;
@@ -78,14 +109,10 @@ export class Counter {
 }
 
 function CounterDisplay() {
-  const counter = useBean(Counter);
+  const counter = useBean(CounterModel);
 
   return (
-    <div>
-      <button onClick={counter.decrement}>-</button>
-      <span>{counter.count}</span>
-      <button onClick={counter.increment}>+</button>
-    </div>
+    // ...
   );
 }
 ```
@@ -106,11 +133,11 @@ _Signature_: `@Stated(): PropertyDecorator`
 
 Indicates that an annotated property is `Stated`. Its reassignment will be observed and notified to the container.
 
-#### `PostProvided`
+#### `AfterProvided`
 
-_Signature_: `@PostProvided(): MethodDecorator`
+_Signature_: `@AfterProvided(): MethodDecorator`
 
-The `PostProvided` decorator is used on a method that needs to be executed after the `StatedBean` be instanced to perform any initialization.
+The `AfterProvided` decorator is used on a method that needs to be executed after the `StatedBean` be instanced to perform any initialization.
 
 #### `Effect`
 
@@ -131,34 +158,6 @@ The `useBean` will create an instance of the stated bean with a new `StatedBeanC
 _Signature_: `useInject<T>(type: ClassType<T>, option: UseStatedBeanOption<T> = {}): T`
 
 The `useInject` will get the instance of the stated bean from the `StatedBeanContainer` in the context and listen for its data changes to trigger the re-rendering of the current component.
-
-##### Get the instance from the container in the `React Context`
-
-```tsx
-function SampleComponent() {
-  const model = useInject(UserModel);
-  // ...
-}
-
-function App() {
-  return (
-    <StatedBeanProvider types={[UserModel]}>
-      <SampleComponent />
-    </StatedBeanProvider>
-  );
-}
-```
-
-##### Create the temporary instance for current `Component`
-
-```tsx
-function SampleComponent() {
-  const model = useBean(() => new UserModel());
-
-  // pass the model to its children
-  return <ChildComponent model={model} />;
-}
-```
 
 ##### `UseStatedBeanOption`
 

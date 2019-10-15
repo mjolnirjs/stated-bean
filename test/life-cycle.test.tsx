@@ -1,5 +1,3 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-
 import {
   BeanContainerAware,
   DisposableBean,
@@ -14,6 +12,7 @@ import {
 
 import { delay } from './utils';
 
+import { renderHook, act } from '@testing-library/react-hooks';
 import React from 'react';
 
 @StatedBean()

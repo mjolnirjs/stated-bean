@@ -25,7 +25,7 @@ class InjectionFactory implements IBeanFactory {
     let provide;
     let provider;
     if (beanDefinition.isFactoryBean) {
-      provide = beanDefinition.getFactoryBeanType();
+      provide = beanDefinition.factoryBeanType;
       provider = { provide: provide, useFactory: beanDefinition.getFactory()! };
     } else {
       provide = beanDefinition.beanType;

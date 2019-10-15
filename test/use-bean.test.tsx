@@ -1,5 +1,3 @@
-import { renderHook } from '@testing-library/react-hooks';
-
 import {
   Stated,
   StatedBean,
@@ -8,6 +6,7 @@ import {
   useInject,
 } from '../src';
 
+import { renderHook } from '@testing-library/react-hooks';
 import React from 'react';
 
 const SymbolNamedBean = Symbol('stated-bean');

@@ -10,24 +10,29 @@ import { isFunction, getPropertiesWithoutFunction } from '../utils';
 export const UN_NAMED_BEAN = Symbol('UN_NAMED_BEAN');
 
 export class BeanDefinition<T> {
-  private _target: T | undefined;
+  private readonly _beanName: symbol;
 
-  constructor(private readonly _beanProvider: BeanProvider<T>) {}
+  private readonly _beanMeta: StatedBeanMeta | undefined;
+  private _factoryBeanType: ClassType<T> | undefined = undefined;
+  private _factoryBeanMeta: StatedBeanMeta | undefined = undefined;
 
-  getFactory() {
-    return this._beanProvider.factory;
+  constructor(private readonly _beanProvider: BeanProvider<T>) {
+    this._beanName = Symbol(`${Date.now()}`);
+
+    if (!this.isFactoryBean) {
+      const beanMeta = getMetadataStorage().getBeanMeta(this.beanType);
+
+      if (beanMeta === undefined) {
+        throw new Error('bean metadata is undefined.');
+      }
+      this._beanMeta = beanMeta;
+    }
   }
 
-  getFactoryBeanType() {
-    return this.target !== undefined
-      ? (((this.target as unknown) as object).constructor as ClassType<T>)
-      : this.beanType;
-  }
+  extractFactoryBeanInfo(bean: T) {
+    this._factoryBeanType = ((bean as unknown) as object)
+      .constructor as ClassType<T>;
 
-  setTarget(bean: T) {
-    this._target = bean;
-
-    // plain object method binding
     if (this.isPlainObject) {
       Object.keys(bean).forEach((key: keyof T & string) => {
         if (typeof bean[key] === 'function') {
@@ -37,10 +42,29 @@ export class BeanDefinition<T> {
         }
       });
     }
+
+    if (this.isPlainObject) {
+      this._factoryBeanMeta = {
+        target: this._factoryBeanType,
+        name: this._beanProvider.name,
+        statedFields: (getPropertiesWithoutFunction(bean) || []).map(
+          property => {
+            return {
+              name: property,
+              target: this._factoryBeanType,
+            } as StatedFieldMeta;
+          },
+        ),
+      } as StatedFieldMeta;
+    }
   }
 
-  protected get target() {
-    return this._target;
+  getFactory() {
+    return this._beanProvider.factory;
+  }
+
+  get factoryBeanType() {
+    return this._factoryBeanType;
   }
 
   get beanType() {
@@ -55,36 +79,22 @@ export class BeanDefinition<T> {
   }
 
   get beanName(): string | symbol {
-    const beanName = this._beanProvider.name || this.beanMeta.name;
+    const beanName =
+      this._beanProvider.name ||
+      (this.beanMeta ? this.beanMeta.name : undefined);
     if (this.isSingleton) {
       return beanName || this.beanType.name;
     } else {
-      return beanName || UN_NAMED_BEAN;
+      return beanName || this._beanName;
     }
   }
 
   get beanMeta(): StatedBeanMeta {
-    const storage = getMetadataStorage();
-    const beanType = this.isFactoryBean
-      ? this.getFactoryBeanType()
-      : this.beanType;
-    const beanMeta = storage.getBeanMeta(beanType);
-
-    if (beanMeta === undefined) {
-      return {
-        target: beanType,
-        name: this._beanProvider.name,
-        statedFields: (getPropertiesWithoutFunction(this.target) || []).map(
-          property => {
-            return {
-              name: property,
-              target: beanType,
-            } as StatedFieldMeta;
-          },
-        ),
-      };
+    if (this.isFactoryBean) {
+      return this._factoryBeanMeta!;
+    } else {
+      return this._beanMeta!;
     }
-    return beanMeta;
   }
 
   get isNamedBean() {
@@ -96,8 +106,8 @@ export class BeanDefinition<T> {
   }
 
   get isPlainObject() {
-    if (this.isFactoryBean) {
-      return this.getFactoryBeanType().name === 'Object';
+    if (this.isFactoryBean && this.factoryBeanType) {
+      return this.factoryBeanType.name === 'Object';
     } else {
       return this.beanType.name === 'Object';
     }

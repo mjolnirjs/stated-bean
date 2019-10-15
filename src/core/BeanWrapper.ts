@@ -1,12 +1,15 @@
 import { StateAction } from '../types';
 
-import { BeanObserver } from './BeanObserver';
 import { CountableSubject } from './CountableSubject';
+import { StatedBeanContainer } from './StatedBeanContainer';
 
 export class BeanWrapper<T> {
   state$: CountableSubject<StateAction<T>> = new CountableSubject();
 
-  constructor(private readonly _beanObserver: BeanObserver<T>) {
+  constructor(
+    private readonly _container: StatedBeanContainer,
+    private readonly _beanName: string | symbol,
+  ) {
     // this.state$.subscribeCount(count => {
     //   console.log('bean wrapper sub count', count);
     //   if (count === 0) {
@@ -16,11 +19,11 @@ export class BeanWrapper<T> {
   }
 
   get beanObserver() {
-    return this._beanObserver;
+    return this._container.getNamedObserver<T>(this._beanName);
   }
 
   get beanDefinition() {
-    return this.beanObserver.beanDefinition;
+    return this.beanObserver!.beanDefinition;
   }
 
   get beanMeta() {
@@ -32,9 +35,9 @@ export class BeanWrapper<T> {
       f => f.name === field,
     );
     if (fieldMeta !== undefined) {
-      this.beanObserver.publishStateAction(
+      this.beanObserver!.publishStateAction(
         fieldMeta,
-        this.beanObserver.proxy[field],
+        this.beanObserver!.proxy[field],
       );
     }
   }

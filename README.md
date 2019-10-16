@@ -14,26 +14,32 @@
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 [![codechecks.io](https://raw.githubusercontent.com/codechecks/docs/master/images/badges/badge-default.svg?sanitize=true)](https://codechecks.io)
 
-> A light but scalable state management library with react hooks.
->
-> It is the **ViewModel** in the MVVM.
+> A light but scalable `view-model` library with react hooks.
 
 ## TOC <!-- omit in TOC -->
 
 - [Features](#features)
 - [Online Demo](#online-demo)
 - [Usage](#usage)
+  - [Define a StatedBean](#define-a-statedbean)
+    - [Plain object StatedBean](#plain-object-statedbean)
+    - [Class StatedBean](#class-statedbean)
+  - [Singleton and Named StatedBean](#singleton-and-named-statedbean)
+    - [Define a named bean](#define-a-named-bean)
+    - [Declare as a named bean when `useBean`](#declare-as-a-named-bean-when-usebean)
+  - [Provider container and inject the singleton bean](#provider-container-and-inject-the-singleton-bean)
+  - [Auto inject and watch the props](#auto-inject-and-watch-the-props)
+  - [Effect action state and observer](#effect-action-state-and-observer)
 - [API](#api)
   - [Decorators](#decorators)
     - [`StatedBean`](#statedbean)
     - [`Stated`](#stated)
     - [`AfterProvided`](#afterprovided)
     - [`Effect`](#effect)
+    - [`Props` and `ObservableProps`](#props-and-observableprops)
   - [use Hooks](#use-hooks)
     - [`useBean`](#usebean)
     - [`useInject`](#useinject)
-      - [Get the instance from the container in the `React Context`](#get-the-instance-from-the-container-in-the-react-context)
-      - [Create the temporary instance for current `Component`](#create-the-temporary-instance-for-current-component)
       - [`UseStatedBeanOption`](#usestatedbeanoption)
     - [`useObserveEffect`](#useobserveeffect)
   - [Provider](#provider)
@@ -61,9 +67,11 @@ npm i stated-bean
 
 ## Usage
 
-### Plain object StatedBean
+### Define a StatedBean
 
-```ts
+#### Plain object StatedBean
+
+```tsx
 import { useBean } from 'stated-bean';
 
 const CounterModel = {
@@ -87,9 +95,17 @@ function CounterDisplay() {
     </div>
   );
 }
+
+function App() {
+  return (
+    <StatedBeanProvider>
+      <CounterDisplay />
+    </StatedBeanProvider>
+  );
+}
 ```
 
-### Class StatedBean
+#### Class StatedBean
 
 ```ts
 import { StatedBean, Stated useBean } from 'stated-bean';
@@ -113,6 +129,106 @@ function CounterDisplay() {
 
   return (
     // ...
+  );
+}
+```
+
+### Singleton and Named StatedBean
+
+The named bean singleton bean can be resolved via `useInject` with the special name.
+
+#### Define a named bean
+
+```ts
+@StatedBean('SpecialName')
+class NamedBean {}
+
+@StatedBean({ singleton: true })
+class SingletonBean {}
+```
+
+#### Declare as a named bean when `useBean`
+
+```ts
+const model = useBean(CounterModel, { name: 'SpecialName' });
+```
+
+### Provider container and inject the singleton bean
+
+The beans was stored in the `StatedBeanContainer` witch be created by the `StatedBeanProvider` and bind to the React context.
+`useInject` will find the named bean from the container or it's parent container.
+
+```tsx
+@StatedBean({ singleton: true })
+class UserModel {
+  @Stated()
+  user = { name: 'jack' };
+}
+
+function App() {
+  return (
+    <StatedBeanProvider providers={[UserModel]}>
+      <UserDisplay />
+    </StatedBeanProvider>
+  );
+}
+
+function UserDisplay() {
+  const model = useInject(UserModel);
+
+  return model.user.name;
+}
+```
+
+### Auto inject and watch the props
+
+```tsx
+@StatedBean()
+class InputModel implements InitializingBean {
+  @Props('initialValue')
+  @Stated()
+  value: number;
+
+  @ObservableProps()
+  value$: BehaviorSubject<number>;
+
+  afterProvided() {
+    this.value$.subscribe(v => {
+      this.value = v;
+    });
+  }
+}
+
+function Input(props: InputProps) {
+  const model = useBean(InputModel, { props });
+
+  return (
+    // input component
+  );
+}
+```
+
+### Effect action state and observer
+
+```tsx
+@StatedBean()
+class SearchModel {
+
+  @Effect()
+  search() {
+    return fetchUsers();
+  }
+}
+
+const UserTable() {
+  const model = useBean(SearchModel);
+  const { loading, error } = useObserveEffect(model, "search");
+
+  if (loading) {
+    return <Loading />;
+  }
+  return (
+    // ...user table
   );
 }
 ```
@@ -145,6 +261,13 @@ _Signature_: `@Effect(name?: string | symbol): MethodDecorator`
 
 The `Effect` decorator is used on a method that can get the execution state by `useObserveEffect`.
 
+#### `Props` and `ObservableProps`
+
+_Signature_: `@Props(name?: string): PropertyDecorator` `@ObservableProps(name?: string): PropertyDecorator`
+
+The `Props` decorator is used on a property that can sync the value from props.
+The `ObservableProps` decorator is used on a `BehaviorSubject` property. You can subscribe the next new props value.
+
 ### use Hooks
 
 #### `useBean`
@@ -173,22 +296,6 @@ option = {
 _Signature_: `useObserveEffect(bean: StatedBeanType, name: string | symbol): EffectAction`
 
 observe the execution state of the method which with `@Effect`.
-
-```ts
-@StatedBean
-class UserModel {
-  @Effect()
-  fetchUser() {
-    // ...
-  }
-}
-
-const UserInfo = () => {
-  const model = useBean(() => new UserModel());
-  const { loading, error } = useObserveEffect(model, 'fetchUser');
-  // ...
-};
-```
 
 ### Provider
 

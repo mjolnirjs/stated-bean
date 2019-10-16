@@ -147,7 +147,7 @@ class NamedBean {}
 class SingletonBean {}
 ```
 
-#### Declare as a named bean when `useBean`
+#### Declare as a named bean by `useBean`
 
 ```ts
 const model = useBean(CounterModel, { name: 'SpecialName' });

@@ -16,6 +16,7 @@ before_install:
 install: yarn --frozen-lockfile
 
 before_script:
+  - export PARSER_NO_WATCH=true
   - export TRAVIS_REPO_OWNER=${TRAVIS_REPO_SLUG%/*}
   - export TRAVIS_REPO_NAME=${TRAVIS_REPO_SLUG#*/}
 

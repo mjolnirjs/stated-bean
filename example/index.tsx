@@ -2,9 +2,7 @@ import 'reflect-metadata';
 
 import { ReflectiveInjector } from 'injection-js';
 
-import { Counter } from './src/components/Counter';
-import { TodoApp } from './src/components/Todo';
-import { TodoModel } from './src/models/TodoModel';
+import { App } from './src/App';
 import { TodoService } from './src/services/TodoService';
 
 import React from 'react';
@@ -13,7 +11,6 @@ import {
   BeanDefinition,
   IBeanFactory,
   StatedBeanApplication,
-  StatedBeanProvider,
 } from 'stated-bean';
 
 const app = new StatedBeanApplication();
@@ -45,28 +42,5 @@ class InjectionFactory implements IBeanFactory {
 }
 
 app.setBeanFactory(new InjectionFactory());
-
-const App = () => {
-  const [counter, setCounter] = React.useState(5);
-  return (
-    <div>
-      <StatedBeanProvider application={app} providers={[TodoModel]}>
-        <button
-          onClick={() => {
-            setCounter(counter + 1);
-          }}
-        >
-          Add
-        </button>
-        <hr />
-        {counter < 20 && <Counter value={counter} />}
-        <hr />
-        {counter < 10 && <Counter value={counter} />}
-        <hr />
-        <TodoApp />
-      </StatedBeanProvider>
-    </div>
-  );
-};
 
 ReactDOM.render(<App />, document.getElementById('root'));

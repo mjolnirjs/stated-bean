@@ -65,13 +65,15 @@
   resolved "https://registry.npm.taobao.org/@1stg/husky-config/download/@1stg/husky-config-0.3.1.tgz#15dce8efcbedb8f7237098c1a55a7f465260476f"
   integrity sha1-Fdzo78vtuPcjcJjBpVp/RlJgR28=
 
-"@1stg/lint-staged@^0.8.0":
-  version "0.8.6"
-  resolved "https://registry.npm.taobao.org/@1stg/lint-staged/download/@1stg/lint-staged-0.8.6.tgz#d836667e149af90d803963f13e25cfb8a44909cb"
-  integrity sha1-2DZmfhSa+Q2AOWPxPiXPuKRJCcs=
+"@1stg/lint-staged@^0.8.12":
+  version "0.8.12"
+  resolved "https://registry.yarnpkg.com/@1stg/lint-staged/-/lint-staged-0.8.12.tgz#e455a835830729eec0cdf5ce1ae2eeb5dac5d8b6"
+  integrity sha512-pybdQmVoBgB/xS+wVUk4SS//4mE3eEykJ8eTELvrBlskKa51AcPaOi8FRRzqPr0Ab5iML2O30yRTsagxIg8ISw==
   dependencies:
-    "@prettier/plugin-pug" "^1.0.4"
-    prettier-plugin-sh "^0.2.0"
+    "@pkgr/utils" "^0.1.2"
+    "@prettier/plugin-pug" "^1.0.5"
+    cross-env "^6.0.3"
+    prettier-plugin-sh "^0.2.1"
     prettier-plugin-toml "^0.3.1"
 
 "@1stg/prettier-config@^0.3.2":
@@ -1568,10 +1570,28 @@
   resolved "https://registry.npm.taobao.org/@pkgr/umd-globals/download/@pkgr/umd-globals-0.2.2.tgz#3ef9803bdcfde67806d3b06b20edae0b9f272ab3"
   integrity sha1-PvmAO9z95ngG07BrIO2uC58nKrM=
 
-"@prettier/plugin-pug@^1.0.3", "@prettier/plugin-pug@^1.0.4":
+"@pkgr/utils@^0.1.2":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@pkgr/utils/-/utils-0.1.4.tgz#6391f367a2811d842d98a175d9b77fbc27445ca0"
+  integrity sha512-VGjovf2JHPpv6NY+zZmLRnLxfqFChZ5StuidjWWRott6+9sNu2aId9/kiiL0nqcd1G9XZVIKLAdNHvNXC5vWrg==
+  dependencies:
+    chalk "^2.4.2"
+    cross-spawn "^7.0.1"
+    open "^7.0.0"
+    tslib "^1.10.0"
+
+"@prettier/plugin-pug@^1.0.3":
   version "1.0.4"
   resolved "https://registry.npm.taobao.org/@prettier/plugin-pug/download/@prettier/plugin-pug-1.0.4.tgz#13adc5aab2d99db42b68ac43f678c8803916ee95"
   integrity sha1-E63FqrLZnbQraKxD9njIgDkW7pU=
+  dependencies:
+    prettier "~1.18.2"
+    pug-lexer "~4.1.0"
+
+"@prettier/plugin-pug@^1.0.5":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@prettier/plugin-pug/-/plugin-pug-1.0.6.tgz#bd56f0bae19e701201820aa85c1c8f2bda31840d"
+  integrity sha512-05luwc79Bk399HNt4k5gZgsL6nA+80OOFX0Z5liGx/W0ifN00Mzs27qWbgerD/Yr2EkE2tOsnXEOdS8XocUrgg==
   dependencies:
     prettier "~1.18.2"
     pug-lexer "~4.1.0"
@@ -3329,10 +3349,10 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-env@^6.0.0:
+cross-env@^6.0.0, cross-env@^6.0.3:
   version "6.0.3"
-  resolved "https://registry.npm.taobao.org/cross-env/download/cross-env-6.0.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcross-env%2Fdownload%2Fcross-env-6.0.3.tgz#4256b71e49b3a40637a0ce70768a6ef5c72ae941"
-  integrity sha1-Qla3HkmzpAY3oM5wdopu9ccq6UE=
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-6.0.3.tgz#4256b71e49b3a40637a0ce70768a6ef5c72ae941"
+  integrity sha512-+KqxF6LCvfhWvADcDPqo64yVIB31gv/jQulX2NGzKS/g3GEVz6/pt4wjHFtFWsHMddebWD/sDthJemzM4MaAag==
   dependencies:
     cross-spawn "^7.0.0"
 
@@ -3356,10 +3376,10 @@ cross-spawn@^6.0.0, cross-spawn@^6.0.4, cross-spawn@^6.0.5:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-cross-spawn@^7.0.0:
+cross-spawn@^7.0.0, cross-spawn@^7.0.1:
   version "7.0.1"
-  resolved "https://registry.npm.taobao.org/cross-spawn/download/cross-spawn-7.0.1.tgz?cache=0&sync_timestamp=1570439926300&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcross-spawn%2Fdownload%2Fcross-spawn-7.0.1.tgz#0ab56286e0f7c24e153d04cc2aa027e43a9a5d14"
-  integrity sha1-CrVihuD3wk4VPQTMKqAn5DqaXRQ=
+  resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.1.tgz#0ab56286e0f7c24e153d04cc2aa027e43a9a5d14"
+  integrity sha512-u7v4o84SwFpD32Z8IIcPZ6z1/ie24O6RU3RbtL5Y316l3KuHVPx9ItBgWQ6VlfAFnRnTtMUrsQ9MUUTuEZjogg==
   dependencies:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
@@ -5652,6 +5672,11 @@ is-wsl@^1.1.0:
   resolved "https://registry.npm.taobao.org/is-wsl/download/is-wsl-1.1.0.tgz?cache=0&sync_timestamp=1569219566107&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fis-wsl%2Fdownload%2Fis-wsl-1.1.0.tgz#1f16e4aa22b04d1336b66188a66af3c600c3a66d"
   integrity sha1-HxbkqiKwTRM2tmGIpmrzxgDDpm0=
 
+is-wsl@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/is-wsl/-/is-wsl-2.1.1.tgz#4a1c152d429df3d441669498e2486d3596ebaf1d"
+  integrity sha512-umZHcSrwlDHo2TGMXv0DZ8dIUGunZ2Iv68YZnrmCiBPkZ4aaOhtv7pXJKeki9k3qJ3RJr0cDyitcl5wEH3AYog==
+
 isarray@0.0.1:
   version "0.0.1"
   resolved "https://registry.npm.taobao.org/isarray/download/isarray-0.0.1.tgz?cache=0&sync_timestamp=1562592096220&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fisarray%2Fdownload%2Fisarray-0.0.1.tgz#8a18acfca9a8f4177e09abfc6038939b05d1eedf"
@@ -7250,6 +7275,13 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
+open@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/open/-/open-7.0.0.tgz#7e52999b14eb73f90f0f0807fe93897c4ae73ec9"
+  integrity sha512-K6EKzYqnwQzk+/dzJAQSBORub3xlBTxMz+ntpZpH/LyCa1o6KjXhuN+2npAaI9jaSmU3R1Q8NWf4KUWcyytGsQ==
+  dependencies:
+    is-wsl "^2.1.0"
+
 opencollective-postinstall@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npm.taobao.org/opencollective-postinstall/download/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
@@ -8090,10 +8122,10 @@ prettier-plugin-pkg@^0.4.4:
   resolved "https://registry.npm.taobao.org/prettier-plugin-pkg/download/prettier-plugin-pkg-0.4.4.tgz#e7b20cba16995d04fe22b0aa2fe3974d9dc8a757"
   integrity sha1-57IMuhaZXQT+IrCqL+OXTZ3Ip1c=
 
-prettier-plugin-sh@^0.2.0:
-  version "0.2.1"
-  resolved "https://registry.npm.taobao.org/prettier-plugin-sh/download/prettier-plugin-sh-0.2.1.tgz#9729452c216cb43a045d16b40b9881924350c1ac"
-  integrity sha1-lylFLCFstDoEXRa0C5iBkkNQwaw=
+prettier-plugin-sh@^0.2.1:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.2.2.tgz#26714b34324f17884a7d74fee043ff25b462cc1c"
+  integrity sha512-yL7Mdm+GZ7I7OwISZM2Y4NiaZsg1vKMd2JF5ixfa8BwdQCWUltr8gHW5buiaG9KXEvrBhIvoyFm4MsbtzpWtHQ==
   dependencies:
     mvdan-sh "^0.4.0"
 

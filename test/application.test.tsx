@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 import {
   BeanDefinition,
   IBeanFactory,
@@ -6,9 +9,6 @@ import {
   StatedBeanConsumer,
   StatedBeanContextValue,
 } from '../src';
-
-import React from 'react';
-import ReactDOM from 'react-dom';
 
 describe('StatedBeanApplication', () => {
   it('application bean factory test', () => {

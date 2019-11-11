@@ -1,8 +1,9 @@
+import React from 'react';
+
 import { TodoModel } from '../../models/TodoModel';
 import { Todo } from '../../services/TodoService';
 
 import { useInject, useObserveEffect } from 'stated-bean';
-import React from 'react';
 
 function TodoList(props: { items: Todo[] }) {
   return (

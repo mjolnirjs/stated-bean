@@ -1,10 +1,10 @@
+import React from 'react';
+
 import { StatedBeanApplication } from '../core/StatedBeanApplication';
 import { useContainer } from '../hooks/useContainer';
 import { Provider } from '../types';
 
 import { getStatedBeanContext } from './StatedBeanContext';
-
-import React from 'react';
 
 export interface StatedBeanProviderProps<T = unknown> {
   providers?: Array<Provider<T>>;

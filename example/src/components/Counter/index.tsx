@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/unbound-method */
+import React from 'react';
+
 import { CounterModel } from '../../models/CounterModel';
 
-import React from 'react';
 import { useBean } from 'stated-bean';
 
 export interface CounterProps {

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   BeanContainerAware,
   DisposableBean,
@@ -13,7 +15,6 @@ import {
 import { delay } from './utils';
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import React from 'react';
 
 @StatedBean()
 class PostProvidedSample {

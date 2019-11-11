@@ -1,7 +1,7 @@
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import { getStatedBeanContext } from '../context';
 import { ClassType, StateAction } from '../types';
-
-import { useCallback, useContext, useEffect, useState } from 'react';
 
 export interface BeanInjectOption<T> {
   type?: ClassType<T>;
@@ -17,6 +17,7 @@ export interface BeanInjectOption<T> {
  * @param {ClassType<T> | BeanInjectOption<T>} option
  * @returns {T}
  */
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function useInject<T>(option: ClassType<T> | BeanInjectOption<T>): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);

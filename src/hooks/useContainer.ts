@@ -1,11 +1,11 @@
+import { useContext, useEffect, useState } from 'react';
+
 import { getStatedBeanContext } from '../context/StatedBeanContext';
 import { StatedBeanApplication } from '../core/StatedBeanApplication';
 import { StatedBeanContainer } from '../core/StatedBeanContainer';
 import { Provider, BeanProvider, ClassType } from '../types';
 import { isFunction, isStatedBeanClass } from '../utils';
 import { BeanDefinition } from '../core';
-
-import { useContext, useEffect, useState } from 'react';
 
 export interface UseContainerOption<T = unknown> {
   providers?: Array<Provider<T>>;

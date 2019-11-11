@@ -1,8 +1,8 @@
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import { getStatedBeanContext } from '../context';
 import { EffectAction, FunctionPropertyNames } from '../types';
 import { getBeanWrapper } from '../utils';
-
-import { useCallback, useContext, useEffect, useState } from 'react';
 
 /**
  * Observe the effects in the bean

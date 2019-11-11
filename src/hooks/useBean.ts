@@ -1,9 +1,9 @@
+import { useCallback, useContext, useEffect, useState } from 'react';
+
 import { getStatedBeanContext } from '../context';
 import { BeanDefinition } from '../core';
 import { BeanProvider, ClassType, StateAction } from '../types';
 import { isFunction, isStatedBeanClass } from '../utils';
-
-import { useCallback, useContext, useEffect, useState } from 'react';
 
 export type UseBeanOptions<TProps> =
   | string

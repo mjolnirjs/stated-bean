@@ -1,8 +1,7 @@
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { useEffect, useState } from 'react';
 
 import { isFunction } from '../utils';
-
-import { useEffect, useState } from 'react';
 
 export type ObservableSource<T> =
   | Observable<T>

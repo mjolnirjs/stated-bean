@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { StatedBeanProvider, useBean } from '../src';
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import React from 'react';
 
 const PlanObjectBean = {
   count: 0,

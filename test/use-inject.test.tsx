@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { useInject, StatedBean, StatedBeanProvider, Stated } from '../src';
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import React from 'react';
 
 @StatedBean('SampleStatedBean')
 class SampleStatedBean {
@@ -55,6 +56,7 @@ describe('useInject test', () => {
   });
 
   it('useInject with name and observe spec fields', () => {
+    // eslint-disable-next-line sonarjs/no-identical-functions
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <StatedBeanProvider providers={[SampleStatedBean]}>
         {children}
@@ -92,6 +94,7 @@ describe('useInject test', () => {
     );
 
     renderHook(
+      // eslint-disable-next-line sonarjs/no-identical-functions
       () => {
         expect(() => {
           useInject(SampleStatedBean);

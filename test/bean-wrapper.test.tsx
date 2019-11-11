@@ -1,4 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
+import React from 'react';
 
 import {
   ObservableProps,
@@ -11,7 +12,6 @@ import {
 } from '../src';
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import React from 'react';
 
 @StatedBean()
 class StatedBeanSample {
@@ -47,6 +47,7 @@ describe('bean wrapper test', () => {
     expect(beanWrapper!.state$).not.toBeUndefined();
   });
 
+  // eslint-disable-next-line jest/expect-expect
   it('bean wrapper forceUpdate test', async () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <StatedBeanProvider>{children}</StatedBeanProvider>

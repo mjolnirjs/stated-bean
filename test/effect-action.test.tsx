@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   Effect,
   Stated,
@@ -10,7 +12,6 @@ import {
 import { delay } from './utils';
 
 import { act, renderHook } from '@testing-library/react-hooks';
-import React from 'react';
 
 @StatedBean()
 class PostProvidedSample {
@@ -65,6 +66,7 @@ describe('effect action test', () => {
   });
 
   it('no-promise effect action test', () => {
+    // eslint-disable-next-line sonarjs/no-identical-functions
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <StatedBeanProvider providers={[PostProvidedSample]}>
         {children}

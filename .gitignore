@@ -1,6 +1,6 @@
 *.log
 *.tsbuildinfo
-.cache
+.*cache
 .DS_Store
 .history
 coverage

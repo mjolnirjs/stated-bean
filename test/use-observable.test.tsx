@@ -1,4 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
+import React from 'react';
 
 import {
   Stated,
@@ -9,7 +10,6 @@ import {
 } from '../src';
 
 import { renderHook, act } from '@testing-library/react-hooks';
-import React from 'react';
 
 @StatedBean()
 class StatedBeanSample {

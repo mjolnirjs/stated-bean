@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
 import { ReflectiveInjector } from 'injection-js';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import { App } from './src/App';
 import { TodoService } from './src/services/TodoService';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
 import {
   BeanDefinition,
   IBeanFactory,

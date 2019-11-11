@@ -74,10 +74,10 @@
     prettier-plugin-sh "^0.2.0"
     prettier-plugin-toml "^0.3.1"
 
-"@1stg/prettier-config@^0.3.2":
+"@1stg/prettier-config@^0.3.4":
   version "0.3.4"
-  resolved "https://registry.npm.taobao.org/@1stg/prettier-config/download/@1stg/prettier-config-0.3.4.tgz#fb3c4d60d10eb590f4bf69330a58c903a0b203cc"
-  integrity sha1-+zxNYNEOtZD0v2kzCljJA6CyA8w=
+  resolved "https://registry.yarnpkg.com/@1stg/prettier-config/-/prettier-config-0.3.4.tgz#fb3c4d60d10eb590f4bf69330a58c903a0b203cc"
+  integrity sha512-A+yGhubIYC/6XbUxFMlMFjudq5HmbjrLB/1W/7PM2FMpqu91HcPcxTwSiFgaqMi++V5g6crnt8GRsKR0VaOqnQ==
   dependencies:
     "@prettier/plugin-pug" "^1.0.3"
     prettier-plugin-pkg "^0.4.4"

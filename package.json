@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A light but scalable state management library with react hooks",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",

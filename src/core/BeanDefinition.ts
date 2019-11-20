@@ -56,6 +56,10 @@ export class BeanDefinition<T> {
           },
         ),
       } as StatedFieldMeta;
+    } else {
+      this._factoryBeanMeta = getMetadataStorage().getBeanMeta(
+        this._factoryBeanType,
+      );
     }
   }
 

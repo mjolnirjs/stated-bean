@@ -1,9 +1,4 @@
-import {
-  StatedBeanMeta,
-  StatedFieldMeta,
-  PostMethodMeta,
-  PropsFieldMeta,
-} from '../types';
+import { StatedBeanMeta, StatedFieldMeta, PostMethodMeta, PropsFieldMeta } from '../types';
 
 export class StatedBeanMetaStorage {
   // @internal
@@ -21,6 +16,7 @@ export class StatedBeanMetaStorage {
   collectStatedBean(bean: StatedBeanMeta) {
     const type = bean.target;
     const fields = this._statedFields.get(type);
+
     bean.statedFields = fields;
     bean.propsFields = this._propsFields.get(type);
     bean.postMethod = this._postMethod.get(type);
@@ -34,6 +30,7 @@ export class StatedBeanMetaStorage {
   collectStatedField(field: StatedFieldMeta) {
     const type = field.target;
     const fields = this._statedFields.get(type);
+
     if (fields) {
       fields.push(field);
     } else {
@@ -44,6 +41,7 @@ export class StatedBeanMetaStorage {
   collectPropsField(field: PropsFieldMeta) {
     const type = field.target;
     const fields = this._propsFields.get(type);
+
     if (fields) {
       fields.push(field);
     } else {

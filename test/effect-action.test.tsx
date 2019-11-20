@@ -1,13 +1,6 @@
 import React from 'react';
 
-import {
-  Effect,
-  Stated,
-  StatedBean,
-  StatedBeanProvider,
-  useInject,
-  useObserveEffect,
-} from '../src';
+import { Effect, Stated, StatedBean, StatedBeanProvider, useInject, useObserveEffect } from '../src';
 
 import { delay } from './utils';
 
@@ -38,9 +31,7 @@ class PostProvidedSample {
 describe('effect action test', () => {
   it('promise effect action test', async () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[PostProvidedSample]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider providers={[PostProvidedSample]}>{children}</StatedBeanProvider>
     );
 
     const { result, unmount } = renderHook(
@@ -48,12 +39,15 @@ describe('effect action test', () => {
         const bean = useInject(PostProvidedSample);
         const action = useObserveEffect(bean, 'add');
         const action3 = useObserveEffect(bean, 'add3');
+
         return { bean, action, action3 };
       },
       { wrapper }
     );
+
     expect(result.current.action.loading).toBe(false);
     const addPromise = act(() => result.current.bean.add());
+
     expect(result.current.action.loading).toBe(true);
     await addPromise;
     expect(result.current.action.loading).toBe(false);
@@ -68,19 +62,19 @@ describe('effect action test', () => {
   it('no-promise effect action test', () => {
     // eslint-disable-next-line sonarjs/no-identical-functions
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[PostProvidedSample]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider providers={[PostProvidedSample]}>{children}</StatedBeanProvider>
     );
 
     const { result, unmount } = renderHook(
       () => {
         const bean = useInject(PostProvidedSample);
         const action = useObserveEffect(bean, 'add2');
+
         return { bean, action };
       },
       { wrapper }
     );
+
     expect(result.current.action.loading).toBe(false);
     act(() => result.current.bean.add2());
     expect(result.current.action.loading).toBe(false);

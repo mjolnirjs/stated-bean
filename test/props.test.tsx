@@ -1,14 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import React from 'react';
 
-import {
-  ObservableProps,
-  Props,
-  Stated,
-  StatedBean,
-  StatedBeanProvider,
-  useBean,
-} from '../src';
+import { ObservableProps, Props, Stated, StatedBean, StatedBeanProvider, useBean } from '../src';
 
 import { renderHook } from '@testing-library/react-hooks';
 
@@ -30,9 +23,7 @@ class StatedBeanSample {
 
 describe('props observer test', () => {
   it('Props init value test', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result, rerender } = renderHook(
       props => {
@@ -40,6 +31,7 @@ describe('props observer test', () => {
       },
       { wrapper, initialProps: { value: 10 } }
     );
+
     expect(result.current.value3).toBe(10);
     expect(result.current.value.getValue()).toBe(10);
     expect(result.current.value$.getValue()).toBe(10);

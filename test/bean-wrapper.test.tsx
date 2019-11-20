@@ -1,15 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import React from 'react';
 
-import {
-  ObservableProps,
-  Props,
-  Stated,
-  StatedBean,
-  StatedBeanProvider,
-  useBean,
-  getBeanWrapper,
-} from '../src';
+import { ObservableProps, Props, Stated, StatedBean, StatedBeanProvider, useBean, getBeanWrapper } from '../src';
 
 import { renderHook, act } from '@testing-library/react-hooks';
 
@@ -28,9 +20,7 @@ class StatedBeanSample {
 
 describe('bean wrapper test', () => {
   it('bean wrapper init test', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result } = renderHook(
       () => {
@@ -40,6 +30,7 @@ describe('bean wrapper test', () => {
     );
     const bean = result.current;
     const beanWrapper = getBeanWrapper(bean);
+
     expect(beanWrapper).not.toBeUndefined();
     expect(beanWrapper!.beanDefinition).not.toBeUndefined();
     expect(beanWrapper!.beanMeta).not.toBeUndefined();
@@ -49,9 +40,7 @@ describe('bean wrapper test', () => {
 
   // eslint-disable-next-line jest/expect-expect
   it('bean wrapper forceUpdate test', async () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result, waitForNextUpdate } = renderHook(
       () => {

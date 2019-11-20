@@ -13,9 +13,7 @@ const PlanObjectBean = {
 
 describe('props observer test', () => {
   it('Props init value test', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result } = renderHook(
       () => {
@@ -23,6 +21,7 @@ describe('props observer test', () => {
       },
       { wrapper }
     );
+
     expect(result.current.count).toBe(0);
     act(() => {
       result.current.add();

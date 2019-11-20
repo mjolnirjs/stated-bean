@@ -24,16 +24,11 @@ export function useInject<T>(option: ClassType<T> | BeanInjectOption<T>): T {
   const [, setVersion] = useState(0);
 
   const type = typeof option === 'object' ? option.type : option;
-  const { name, observedFields } =
-    typeof option === 'object' ? option : ({} as BeanInjectOption<T>);
+  const { name, observedFields } = typeof option === 'object' ? option : ({} as BeanInjectOption<T>);
 
   const beanChangeListener = useCallback(
     (action: StateAction<T>) => {
-      if (
-        observedFields == null ||
-        observedFields.length === 0 ||
-        observedFields.includes(action.fieldMeta.name as keyof T)
-      ) {
+      if (observedFields == null || observedFields.length === 0 || observedFields.includes(action.fieldMeta.name as keyof T)) {
         setVersion(prev => prev + 1);
       }
     },
@@ -48,10 +43,12 @@ export function useInject<T>(option: ClassType<T> | BeanInjectOption<T>): T {
 
   const [observer] = useState(() => {
     let observer;
+
     if (name !== undefined) {
       observer = container.getNamedObserver<T>(name);
     } else if (type !== undefined) {
       const observers = container.getTypedObserver(type);
+
       if (observers !== undefined) {
         if (observers.length <= 1) {
           observer = observers[0];

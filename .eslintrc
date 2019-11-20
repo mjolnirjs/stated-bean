@@ -12,6 +12,10 @@
     "@typescript-eslint/no-floating-promises": 0,
     "@typescript-eslint/no-unnecessary-condition": 0,
     "@typescript-eslint/require-await": 0,
-    "react/jsx-handler-names": 0
+    "react/jsx-handler-names": 0,
+    "newline-after-var": [
+      "warn",
+      "always"
+    ]
   }
 }

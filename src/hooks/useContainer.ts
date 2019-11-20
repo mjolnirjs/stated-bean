@@ -21,8 +21,10 @@ export function useContainer({ providers, application }: UseContainerOption) {
 
   const [container] = useState(() => {
     const container = new StatedBeanContainer(context.container, application);
+
     (providers || []).forEach(provider => {
       let beanProvider: BeanProvider<unknown>;
+
       if (isFunction(provider)) {
         if (!isStatedBeanClass(provider)) {
           beanProvider = {

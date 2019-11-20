@@ -1,22 +1,12 @@
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
-import {
-  EffectAction,
-  PropsFieldMeta,
-  StateAction,
-  StatedFieldMeta,
-  StatedBeanMeta,
-} from '../types';
+import { EffectAction, PropsFieldMeta, StateAction, StatedFieldMeta, StatedBeanMeta } from '../types';
 import { getBeanWrapper } from '../utils';
 
 import { BeanDefinition } from './BeanDefinition';
 import { BeanWrapper } from './BeanWrapper';
 import { CountableSubject } from './CountableSubject';
-import {
-  isBeanContainerAware,
-  isDisposableBean,
-  isInitializingBean,
-} from './LifeCycle';
+import { isBeanContainerAware, isDisposableBean, isInitializingBean } from './LifeCycle';
 import { StatedBeanContainer } from './StatedBeanContainer';
 import { StatedBeanWrapper } from './Symbols';
 
@@ -29,16 +19,9 @@ export class BeanObserver<T = unknown> {
   private readonly _beanMeta: StatedBeanMeta;
   private readonly _stateSubscription: Subscription | undefined;
 
-  constructor(
-    private readonly _bean: T,
-    private readonly _container: StatedBeanContainer,
-    private readonly _beanDefinition: BeanDefinition<T>
-  ) {
+  constructor(private readonly _bean: T, private readonly _container: StatedBeanContainer, private readonly _beanDefinition: BeanDefinition<T>) {
     this._beanMeta = this.beanDefinition.beanMeta;
-    this._proxyBean = (new Proxy(
-      (this.origin as unknown) as object,
-      {}
-    ) as unknown) as T;
+    this._proxyBean = (new Proxy((this.origin as unknown) as object, {}) as unknown) as T;
     const wrapper = this._observe();
 
     this._stateSubscription = wrapper.state$.subscribe(this.state$);
@@ -83,6 +66,7 @@ export class BeanObserver<T = unknown> {
       prevValue: this.proxy[fieldMeta.name as keyof T],
       fieldMeta,
     };
+
     this.state$.next(action);
   }
 
@@ -103,11 +87,9 @@ export class BeanObserver<T = unknown> {
     }
 
     setTimeout(() => {
-      if (
-        this.beanMeta.postMethod != null &&
-        this.beanMeta.postMethod.descriptor !== undefined
-      ) {
+      if (this.beanMeta.postMethod != null && this.beanMeta.postMethod.descriptor !== undefined) {
         const f = this.beanMeta.postMethod.descriptor.value;
+
         f!.apply(this.proxy);
       } else if (isInitializingBean(this.proxy)) {
         this.proxy.afterProvided();
@@ -128,6 +110,7 @@ export class BeanObserver<T = unknown> {
       });
 
       const statedFields = this.beanMeta.statedFields || [];
+
       statedFields.forEach(field => {
         this._observeBeanField(wrapper!, bean, field);
       });
@@ -137,11 +120,7 @@ export class BeanObserver<T = unknown> {
   }
 
   // @internal
-  private _observeBeanField(
-    wrapper: BeanWrapper<T>,
-    bean: T,
-    fieldMeta: StatedFieldMeta
-  ) {
+  private _observeBeanField(wrapper: BeanWrapper<T>, bean: T, fieldMeta: StatedFieldMeta) {
     const proxyField = Symbol(fieldMeta.name.toString() + '_v') as keyof T;
 
     Object.defineProperty(bean, proxyField, {
@@ -158,6 +137,7 @@ export class BeanObserver<T = unknown> {
           prevValue: bean[fieldMeta.name as keyof T],
           fieldMeta,
         };
+
         wrapper.state$.next(action);
       },
       get() {
@@ -167,29 +147,19 @@ export class BeanObserver<T = unknown> {
   }
 
   private _initPropsField(bean: T, field: PropsFieldMeta, props?: unknown) {
-    const propsValue =
-      props === undefined
-        ? undefined
-        : (props as Record<string, unknown>)[field.prop];
+    const propsValue = props === undefined ? undefined : (props as Record<string, unknown>)[field.prop];
 
     if (field.observable) {
-      Reflect.set(
-        (bean as unknown) as object,
-        field.name,
-        new BehaviorSubject(propsValue)
-      );
+      Reflect.set((bean as unknown) as object, field.name, new BehaviorSubject(propsValue));
     } else {
       Reflect.set((bean as unknown) as object, field.name, propsValue);
     }
   }
 
-  private _updatePropsField(
-    bean: T,
-    field: PropsFieldMeta,
-    props?: Record<string, unknown>
-  ) {
+  private _updatePropsField(bean: T, field: PropsFieldMeta, props?: Record<string, unknown>) {
     const newValue = props === undefined ? undefined : props[field.prop];
     const oldValue = Reflect.get((bean as unknown) as object, field.name);
+
     if (field.observable) {
       const subject = oldValue as BehaviorSubject<unknown>;
 

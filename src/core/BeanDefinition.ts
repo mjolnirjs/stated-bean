@@ -1,10 +1,5 @@
 import { getMetadataStorage } from '../metadata';
-import {
-  BeanProvider,
-  StatedBeanMeta,
-  ClassType,
-  StatedFieldMeta,
-} from '../types';
+import { BeanProvider, StatedBeanMeta, ClassType, StatedFieldMeta } from '../types';
 import { isFunction, getPropertiesWithoutFunction } from '../utils';
 
 export const UN_NAMED_BEAN = Symbol('UN_NAMED_BEAN');
@@ -30,8 +25,7 @@ export class BeanDefinition<T> {
   }
 
   extractFactoryBeanInfo(bean: T) {
-    this._factoryBeanType = ((bean as unknown) as object)
-      .constructor as ClassType<T>;
+    this._factoryBeanType = ((bean as unknown) as object).constructor as ClassType<T>;
 
     if (this.isPlainObject) {
       Object.keys(bean).forEach((key: keyof T & string) => {
@@ -47,19 +41,15 @@ export class BeanDefinition<T> {
       this._factoryBeanMeta = {
         target: this._factoryBeanType,
         name: this._beanProvider.name,
-        statedFields: (getPropertiesWithoutFunction(bean) || []).map(
-          property => {
-            return {
-              name: property,
-              target: this._factoryBeanType,
-            } as StatedFieldMeta;
-          }
-        ),
+        statedFields: (getPropertiesWithoutFunction(bean) || []).map(property => {
+          return {
+            name: property,
+            target: this._factoryBeanType,
+          } as StatedFieldMeta;
+        }),
       } as StatedFieldMeta;
     } else {
-      this._factoryBeanMeta = getMetadataStorage().getBeanMeta(
-        this._factoryBeanType
-      );
+      this._factoryBeanMeta = getMetadataStorage().getBeanMeta(this._factoryBeanType);
     }
   }
 
@@ -76,16 +66,12 @@ export class BeanDefinition<T> {
   }
 
   get isSingleton(): boolean {
-    return !!(
-      this._beanProvider.singleton ||
-      (this.beanMeta ? this.beanMeta.singleton : false)
-    );
+    return !!(this._beanProvider.singleton || (this.beanMeta ? this.beanMeta.singleton : false));
   }
 
   get beanName(): string | symbol {
-    const beanName =
-      this._beanProvider.name ||
-      (this.beanMeta ? this.beanMeta.name : undefined);
+    const beanName = this._beanProvider.name || (this.beanMeta ? this.beanMeta.name : undefined);
+
     if (this.isSingleton) {
       return beanName || this.beanType.name;
     } else {

@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  Stated,
-  StatedBean,
-  useBean,
-  StatedBeanProvider,
-  useInject,
-} from '../src';
+import { Stated, StatedBean, useBean, StatedBeanProvider, useInject } from '../src';
 
 import { renderHook } from '@testing-library/react-hooks';
 
@@ -34,9 +28,7 @@ describe('useBean test', () => {
   });
 
   it('useBean and inject', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result } = renderHook(
       () => {
@@ -50,6 +42,7 @@ describe('useBean test', () => {
       },
       { wrapper }
     );
+
     expect(result.current.bean).not.toBeNull();
     expect(result.current.bean2).not.toBeNull();
     expect(result.current.bean).toBe(result.current.bean2);
@@ -60,15 +53,14 @@ describe('useBean test', () => {
   });
 
   it('singleton bean test', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result } = renderHook(
       () => {
         const bean = useBean(SingletonBean);
         const bean2 = useBean(SingletonBean);
         const bean3 = useBean(SingletonBean, { name: 'anotherName' });
+
         return { bean, bean2, bean3 };
       },
       { wrapper }

@@ -17,9 +17,7 @@ class SampleStatedBean {
 describe('useInject test', () => {
   it('useInject get bean from context', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[SampleStatedBean]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider providers={[SampleStatedBean]}>{children}</StatedBeanProvider>
     );
     const { result, unmount } = renderHook(
       () => {
@@ -58,9 +56,7 @@ describe('useInject test', () => {
   it('useInject with name and observe spec fields', () => {
     // eslint-disable-next-line sonarjs/no-identical-functions
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[SampleStatedBean]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider providers={[SampleStatedBean]}>{children}</StatedBeanProvider>
     );
     const { result, unmount } = renderHook(
       () => {
@@ -89,9 +85,7 @@ describe('useInject test', () => {
   });
 
   it('useInject get fail when bean not provided', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[]}>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider providers={[]}>{children}</StatedBeanProvider>;
 
     renderHook(
       // eslint-disable-next-line sonarjs/no-identical-functions

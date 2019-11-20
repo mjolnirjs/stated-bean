@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { isFunction } from '../utils';
 
-export type ObservableSource<T> =
-  | Observable<T>
-  | (() => Observable<T>)
-  | null
-  | undefined;
+export type ObservableSource<T> = Observable<T> | (() => Observable<T>) | null | undefined;
 
 export function useObservable<T>(observable?: ObservableSource<T>) {
   const [value, setValue] = useState<T | null>(() => {
@@ -27,6 +23,7 @@ export function useObservable<T>(observable?: ObservableSource<T>) {
 
   useEffect(() => {
     let subscription: Subscription;
+
     if (observer instanceof Observable) {
       subscription = observer.subscribe(setValue);
     }

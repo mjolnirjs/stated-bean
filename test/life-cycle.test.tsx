@@ -29,8 +29,7 @@ class PostProvidedSample {
 }
 
 @StatedBean()
-class LifeCycleBean
-  implements DisposableBean, InitializingBean, BeanContainerAware {
+class LifeCycleBean implements DisposableBean, InitializingBean, BeanContainerAware {
   @Stated()
   test = 0;
 
@@ -51,9 +50,7 @@ class LifeCycleBean
 
 describe('LifeCycle', () => {
   it('PostProvided method hook', async () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result, waitForNextUpdate, unmount } = renderHook(
       () => {
@@ -61,15 +58,14 @@ describe('LifeCycle', () => {
       },
       { wrapper }
     );
+
     await waitForNextUpdate();
     expect(result.current.test).toEqual(1);
     unmount();
   });
 
   it('Bean life-cycle hooks', async () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result, waitForNextUpdate, unmount } = renderHook(
       () => {
@@ -77,6 +73,7 @@ describe('LifeCycle', () => {
       },
       { wrapper }
     );
+
     act(() => {});
     await waitForNextUpdate();
     expect(result.current.test).toEqual(1);

@@ -18,8 +18,10 @@ export function Effect(name?: string | symbol): MethodDecorator {
     }
     const effectName = name || propertyKey;
     const originalMethod: Function = descriptor.value;
+
     descriptor.value = function<T>(this: T, ...args: unknown[]) {
       const beanWrapper = getBeanWrapper(this);
+
       if (beanWrapper !== undefined) {
         const emitEffectAction = (action: Partial<EffectAction<T>>) => {
           const observer = beanWrapper.beanObserver;
@@ -31,6 +33,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
             } as EffectAction<T>);
           }
         };
+
         emitEffectAction({ loading: true, error: null });
 
         const result = originalMethod.apply(this, args);

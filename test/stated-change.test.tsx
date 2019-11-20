@@ -45,14 +45,13 @@ describe('stated value changed test', () => {
 
     const app = renderer.create(<App />);
     const tree = app.toJSON();
+
     expect(tree).toMatchSnapshot();
   });
 
   it('useInject and change the stated field', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider providers={[SampleStatedBean]}>
-        {children}
-      </StatedBeanProvider>
+      <StatedBeanProvider providers={[SampleStatedBean]}>{children}</StatedBeanProvider>
     );
     const { result } = renderHook(
       () => {

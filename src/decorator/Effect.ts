@@ -11,7 +11,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
     prototype,
     propertyKey,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    descriptor?: TypedPropertyDescriptor<any>,
+    descriptor?: TypedPropertyDescriptor<any>
   ) => {
     if (descriptor === undefined) {
       descriptor = Object.getOwnPropertyDescriptor(prototype, propertyKey)!;

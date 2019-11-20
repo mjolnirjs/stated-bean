@@ -28,7 +28,7 @@ export type UseBeanOptions<TProps> =
  */
 export function useBean<T, TProps = Record<string, unknown>>(
   typeOrSupplier: ClassType<T> | ((props?: TProps) => T),
-  option?: UseBeanOptions<TProps>,
+  option?: UseBeanOptions<TProps>
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);

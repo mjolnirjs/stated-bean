@@ -50,7 +50,7 @@ describe('effect action test', () => {
         const action3 = useObserveEffect(bean, 'add3');
         return { bean, action, action3 };
       },
-      { wrapper },
+      { wrapper }
     );
     expect(result.current.action.loading).toBe(false);
     const addPromise = act(() => result.current.bean.add());
@@ -79,7 +79,7 @@ describe('effect action test', () => {
         const action = useObserveEffect(bean, 'add2');
         return { bean, action };
       },
-      { wrapper },
+      { wrapper }
     );
     expect(result.current.action.loading).toBe(false);
     act(() => result.current.bean.add2());

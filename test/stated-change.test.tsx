@@ -58,7 +58,7 @@ describe('stated value changed test', () => {
       () => {
         return useInject(SampleStatedBean);
       },
-      { wrapper },
+      { wrapper }
     );
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises

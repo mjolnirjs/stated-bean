@@ -48,7 +48,7 @@ describe('useBean test', () => {
 
         return { bean, bean2, bean3, bean4 };
       },
-      { wrapper },
+      { wrapper }
     );
     expect(result.current.bean).not.toBeNull();
     expect(result.current.bean2).not.toBeNull();
@@ -71,7 +71,7 @@ describe('useBean test', () => {
         const bean3 = useBean(SingletonBean, { name: 'anotherName' });
         return { bean, bean2, bean3 };
       },
-      { wrapper },
+      { wrapper }
     );
 
     expect(result.current.bean).not.toBeNull();

@@ -21,7 +21,7 @@ describe('props observer test', () => {
       () => {
         return useBean(() => PlanObjectBean);
       },
-      { wrapper },
+      { wrapper }
     );
     expect(result.current.count).toBe(0);
     act(() => {

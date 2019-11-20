@@ -52,7 +52,7 @@ export class StatedBeanRegistry {
     const beanObserver = new BeanObserver<T>(
       bean,
       this._container,
-      beanDefinition,
+      beanDefinition
     );
     beanObserver.state$.subscribeCount(count => {
       if (count === 0) {

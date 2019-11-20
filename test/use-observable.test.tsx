@@ -40,7 +40,7 @@ describe('use observable test', () => {
 
         return { model, value };
       },
-      { wrapper },
+      { wrapper }
     );
     expect(result.current.value).toBe(null);
     act(() => {

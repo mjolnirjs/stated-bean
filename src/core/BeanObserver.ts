@@ -32,12 +32,12 @@ export class BeanObserver<T = unknown> {
   constructor(
     private readonly _bean: T,
     private readonly _container: StatedBeanContainer,
-    private readonly _beanDefinition: BeanDefinition<T>,
+    private readonly _beanDefinition: BeanDefinition<T>
   ) {
     this._beanMeta = this.beanDefinition.beanMeta;
     this._proxyBean = (new Proxy(
       (this.origin as unknown) as object,
-      {},
+      {}
     ) as unknown) as T;
     const wrapper = this._observe();
 
@@ -140,7 +140,7 @@ export class BeanObserver<T = unknown> {
   private _observeBeanField(
     wrapper: BeanWrapper<T>,
     bean: T,
-    fieldMeta: StatedFieldMeta,
+    fieldMeta: StatedFieldMeta
   ) {
     const proxyField = Symbol(fieldMeta.name.toString() + '_v') as keyof T;
 
@@ -176,7 +176,7 @@ export class BeanObserver<T = unknown> {
       Reflect.set(
         (bean as unknown) as object,
         field.name,
-        new BehaviorSubject(propsValue),
+        new BehaviorSubject(propsValue)
       );
     } else {
       Reflect.set((bean as unknown) as object, field.name, propsValue);
@@ -186,7 +186,7 @@ export class BeanObserver<T = unknown> {
   private _updatePropsField(
     bean: T,
     field: PropsFieldMeta,
-    props?: Record<string, unknown>,
+    props?: Record<string, unknown>
   ) {
     const newValue = props === undefined ? undefined : props[field.prop];
     const oldValue = Reflect.get((bean as unknown) as object, field.name);

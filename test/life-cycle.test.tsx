@@ -59,7 +59,7 @@ describe('LifeCycle', () => {
       () => {
         return useBean(PostProvidedSample);
       },
-      { wrapper },
+      { wrapper }
     );
     await waitForNextUpdate();
     expect(result.current.test).toEqual(1);
@@ -75,7 +75,7 @@ describe('LifeCycle', () => {
       () => {
         return useBean(LifeCycleBean);
       },
-      { wrapper },
+      { wrapper }
     );
     act(() => {});
     await waitForNextUpdate();

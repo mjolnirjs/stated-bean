@@ -36,7 +36,7 @@ describe('bean wrapper test', () => {
       () => {
         return useBean(StatedBeanSample);
       },
-      { wrapper },
+      { wrapper }
     );
     const bean = result.current;
     const beanWrapper = getBeanWrapper(bean);
@@ -57,7 +57,7 @@ describe('bean wrapper test', () => {
       () => {
         return useBean(StatedBeanSample);
       },
-      { wrapper },
+      { wrapper }
     );
 
     const bean = result.current;

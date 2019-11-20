@@ -8,7 +8,7 @@ export class BeanWrapper<T> {
 
   constructor(
     private readonly _container: StatedBeanContainer,
-    private readonly _beanName: string | symbol,
+    private readonly _beanName: string | symbol
   ) {
     // this.state$.subscribeCount(count => {
     //   console.log('bean wrapper sub count', count);
@@ -32,12 +32,12 @@ export class BeanWrapper<T> {
 
   forceUpdate(field: keyof T & string) {
     const fieldMeta = (this.beanMeta.statedFields || []).find(
-      f => f.name === field,
+      f => f.name === field
     );
     if (fieldMeta !== undefined) {
       this.beanObserver!.publishStateAction(
         fieldMeta,
-        this.beanObserver!.proxy[field],
+        this.beanObserver!.proxy[field]
       );
     }
   }

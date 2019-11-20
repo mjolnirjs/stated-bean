@@ -15,7 +15,7 @@ import { getBeanWrapper } from '../utils';
  */
 export function useObserveEffect<T>(
   bean: T,
-  effect: FunctionPropertyNames<T> | string | symbol,
+  effect: FunctionPropertyNames<T> | string | symbol
 ): EffectAction {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
@@ -39,7 +39,7 @@ export function useObserveEffect<T>(
         setEffectState(action);
       }
     },
-    [effect],
+    [effect]
   );
 
   const [subscription] = useState(() => {

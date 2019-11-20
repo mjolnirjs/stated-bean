@@ -38,7 +38,7 @@ describe('props observer test', () => {
       props => {
         return useBean(StatedBeanSample, { props });
       },
-      { wrapper, initialProps: { value: 10 } },
+      { wrapper, initialProps: { value: 10 } }
     );
     expect(result.current.value3).toBe(10);
     expect(result.current.value.getValue()).toBe(10);

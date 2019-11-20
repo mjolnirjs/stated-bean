@@ -53,12 +53,12 @@ export class BeanDefinition<T> {
               name: property,
               target: this._factoryBeanType,
             } as StatedFieldMeta;
-          },
+          }
         ),
       } as StatedFieldMeta;
     } else {
       this._factoryBeanMeta = getMetadataStorage().getBeanMeta(
-        this._factoryBeanType,
+        this._factoryBeanType
       );
     }
   }

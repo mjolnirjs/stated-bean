@@ -25,7 +25,7 @@ describe('useInject test', () => {
       () => {
         return useInject(SampleStatedBean);
       },
-      { wrapper },
+      { wrapper }
     );
 
     expect(result.current).not.toBeNull();
@@ -46,7 +46,7 @@ describe('useInject test', () => {
 
         return { bean1, bean2 };
       },
-      { wrapper },
+      { wrapper }
     );
 
     expect(result.current.bean1).not.toBeNull();
@@ -69,7 +69,7 @@ describe('useInject test', () => {
           observedFields: ['test'],
         });
       },
-      { wrapper },
+      { wrapper }
     );
 
     expect(result.current).not.toBeNull();
@@ -100,7 +100,7 @@ describe('useInject test', () => {
           useInject(SampleStatedBean);
         }).toThrow();
       },
-      { wrapper },
+      { wrapper }
     );
   });
 });

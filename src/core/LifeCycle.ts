@@ -14,7 +14,7 @@ export interface BeanContainerAware {
 
 export function getProperty<T, K extends keyof T>(
   obj: T,
-  key: string,
+  key: string
 ): T[K] | undefined {
   if (key in obj) {
     return obj[key as K];
@@ -33,7 +33,7 @@ export function isDisposableBean(bean: unknown): bean is DisposableBean {
 }
 
 export function isBeanContainerAware(
-  bean: unknown,
+  bean: unknown
 ): bean is BeanContainerAware {
   const property = getProperty(bean, 'setBeanContainer');
   return property !== undefined && typeof property === 'function';

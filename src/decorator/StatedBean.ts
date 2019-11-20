@@ -14,7 +14,7 @@ export interface StatedBeanOptions {
  * @returns {ClassDecorator}
  */
 export function StatedBean(
-  options?: string | symbol | StatedBeanOptions,
+  options?: string | symbol | StatedBeanOptions
 ): ClassDecorator {
   return (target: Function) => {
     const name = typeof options === 'object' ? options.name : options;

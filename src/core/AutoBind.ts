@@ -1,13 +1,13 @@
 export function boundMethod(
   target: Function,
   key: string | number | symbol,
-  descriptor: PropertyDescriptor,
+  descriptor: PropertyDescriptor
 ) {
   let fn: unknown = descriptor.value;
 
   if (typeof fn !== 'function') {
     throw new TypeError(
-      `@boundMethod decorator can only be applied to methods not: ${typeof fn}`,
+      `@boundMethod decorator can only be applied to methods not: ${typeof fn}`
     );
   }
 
@@ -76,7 +76,7 @@ export function boundClass(target: Function) {
       Object.defineProperty(
         target.prototype,
         key,
-        boundMethod(target, key, descriptor),
+        boundMethod(target, key, descriptor)
       );
     }
   });

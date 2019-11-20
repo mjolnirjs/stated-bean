@@ -37,7 +37,7 @@ export function useInject<T>(option: ClassType<T> | BeanInjectOption<T>): T {
         setVersion(prev => prev + 1);
       }
     },
-    [observedFields],
+    [observedFields]
   );
 
   const container = context.container;

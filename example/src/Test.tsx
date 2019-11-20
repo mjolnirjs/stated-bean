@@ -1,7 +1,8 @@
+import React from 'react';
+
 import { Counter } from './components/Counter';
 
 import { StatedBeanApplication, StatedBeanProvider } from 'stated-bean';
-import React from 'react';
 
 const app = new StatedBeanApplication();
 

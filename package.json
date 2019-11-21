@@ -28,7 +28,7 @@
     "type-coverage": "type-coverage --detail --ignore-catch --ignore-files 'lib/**/*' --strict"
   },
   "peerDependencies": {
-    "react": ">=16.8.0",
+    "react": ">=16.12.0",
     "rxjs": ">=6.0.0",
     "tslib": ">=1.0.0"
   },
@@ -44,9 +44,9 @@
     "less": "^3.10.3",
     "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.12.3",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "react-test-renderer": "^16.11.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-test-renderer": "^16.12.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",

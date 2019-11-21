@@ -6,10 +6,7 @@ import { StatedBeanContainer } from './StatedBeanContainer';
 export class BeanWrapper<T> {
   state$: CountableSubject<StateAction<T>> = new CountableSubject();
 
-  constructor(
-    private readonly _container: StatedBeanContainer,
-    private readonly _beanName: string | symbol,
-  ) {
+  constructor(private readonly _container: StatedBeanContainer, private readonly _beanName: string | symbol) {
     // this.state$.subscribeCount(count => {
     //   console.log('bean wrapper sub count', count);
     //   if (count === 0) {
@@ -31,14 +28,10 @@ export class BeanWrapper<T> {
   }
 
   forceUpdate(field: keyof T & string) {
-    const fieldMeta = (this.beanMeta.statedFields || []).find(
-      f => f.name === field,
-    );
+    const fieldMeta = (this.beanMeta.statedFields || []).find(f => f.name === field);
+
     if (fieldMeta !== undefined) {
-      this.beanObserver!.publishStateAction(
-        fieldMeta,
-        this.beanObserver!.proxy[field],
-      );
+      this.beanObserver!.publishStateAction(fieldMeta, this.beanObserver!.proxy[field]);
     }
   }
 }

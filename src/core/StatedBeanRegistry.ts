@@ -33,10 +33,12 @@ export class StatedBeanRegistry {
 
   register<T = unknown>(beanDefinition: BeanDefinition<T>): BeanObserver<T> {
     const namedBean = this.getNamedBean(beanDefinition.beanName);
+
     if (namedBean !== undefined) {
       return namedBean as BeanObserver<T>;
     }
     const beanObserver = this.createBeanObserver(beanDefinition);
+
     this._namedBeans.set(beanDefinition.beanName, beanObserver as BeanObserver);
     this._addTypedBean(beanDefinition.beanType, beanObserver as BeanObserver);
     return beanObserver;
@@ -49,11 +51,8 @@ export class StatedBeanRegistry {
       beanDefinition.extractFactoryBeanInfo(bean);
     }
 
-    const beanObserver = new BeanObserver<T>(
-      bean,
-      this._container,
-      beanDefinition,
-    );
+    const beanObserver = new BeanObserver<T>(bean, this._container, beanDefinition);
+
     beanObserver.state$.subscribeCount(count => {
       if (count === 0) {
         this.remove(beanObserver);
@@ -61,6 +60,7 @@ export class StatedBeanRegistry {
       }
     });
     const beanWrapper = getBeanWrapper(bean);
+
     if (beanWrapper !== undefined) {
       beanWrapper.state$.subscribeCount(count => {
         if (count === 0) {
@@ -74,11 +74,13 @@ export class StatedBeanRegistry {
 
   remove<T>(beanObserver: BeanObserver<T>) {
     const beanDefinition = beanObserver.beanDefinition;
+
     this._namedBeans.delete(beanDefinition.beanName);
     const typedBeans = this._typedBeans.get(beanDefinition.beanType);
 
     if (typedBeans !== undefined) {
       const index = typedBeans.indexOf(beanObserver as BeanObserver);
+
       typedBeans.splice(index, 1);
     }
   }

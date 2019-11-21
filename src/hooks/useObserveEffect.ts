@@ -13,10 +13,7 @@ import { getBeanWrapper } from '../utils';
  * @param {FunctionPropertyNames<T>} effect
  * @returns {EffectAction}
  */
-export function useObserveEffect<T>(
-  bean: T,
-  effect: FunctionPropertyNames<T> | string | symbol,
-): EffectAction {
+export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | string | symbol): EffectAction {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const container = context.container;
@@ -39,11 +36,12 @@ export function useObserveEffect<T>(
         setEffectState(action);
       }
     },
-    [effect],
+    [effect]
   );
 
   const [subscription] = useState(() => {
     const beanWrapper = getBeanWrapper(bean);
+
     if (beanWrapper === undefined) {
       throw new Error('bean observer is undefined');
     }

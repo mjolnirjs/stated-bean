@@ -1,13 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import React from 'react';
 
-import {
-  Stated,
-  StatedBean,
-  StatedBeanProvider,
-  useBean,
-  useObservable,
-} from '../src';
+import { Stated, StatedBean, StatedBeanProvider, useBean, useObservable } from '../src';
 
 import { renderHook, act } from '@testing-library/react-hooks';
 
@@ -29,9 +23,7 @@ class StatedBeanSample {
 
 describe('use observable test', () => {
   it('observable state field test', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <StatedBeanProvider>{children}</StatedBeanProvider>
-    );
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
 
     const { result, unmount } = renderHook(
       () => {
@@ -40,8 +32,9 @@ describe('use observable test', () => {
 
         return { model, value };
       },
-      { wrapper },
+      { wrapper }
     );
+
     expect(result.current.value).toBe(null);
     act(() => {
       result.current.model.init();

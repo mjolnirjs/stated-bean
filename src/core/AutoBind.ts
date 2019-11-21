@@ -1,14 +1,8 @@
-export function boundMethod(
-  target: Function,
-  key: string | number | symbol,
-  descriptor: PropertyDescriptor,
-) {
+export function boundMethod(target: Function, key: string | number | symbol, descriptor: PropertyDescriptor) {
   let fn: unknown = descriptor.value;
 
   if (typeof fn !== 'function') {
-    throw new TypeError(
-      `@boundMethod decorator can only be applied to methods not: ${typeof fn}`,
-    );
+    throw new TypeError(`@boundMethod decorator can only be applied to methods not: ${typeof fn}`);
   }
 
   // In IE11 calling Object.defineProperty has a side-effect of evaluating the
@@ -19,16 +13,12 @@ export function boundMethod(
   return {
     configurable: true,
     get() {
-      if (
-        definingProperty ||
-        this === target.prototype ||
-        Object.hasOwnProperty.call(this, key) ||
-        typeof fn !== 'function'
-      ) {
+      if (definingProperty || this === target.prototype || Object.hasOwnProperty.call(this, key) || typeof fn !== 'function') {
         return fn;
       }
 
       const boundFn = fn.bind(this);
+
       definingProperty = true;
       Object.defineProperty(this, key, {
         configurable: true,
@@ -53,6 +43,7 @@ export function boundClass(target: Function) {
   // (Using reflect to get all keys including symbols)
   let keys: Array<string | symbol | number>;
   // Use Reflect if exists
+
   if (typeof Reflect !== 'undefined' && typeof Reflect.ownKeys === 'function') {
     keys = Reflect.ownKeys(target.prototype);
   } else {
@@ -73,11 +64,7 @@ export function boundClass(target: Function) {
 
     // Only methods need binding
     if (descriptor !== undefined && typeof descriptor.value === 'function') {
-      Object.defineProperty(
-        target.prototype,
-        key,
-        boundMethod(target, key, descriptor),
-      );
+      Object.defineProperty(target.prototype, key, boundMethod(target, key, descriptor));
     }
   });
   return target;

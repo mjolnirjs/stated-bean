@@ -1,11 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 
-import {
-  InitializingBean,
-  ObservableProps,
-  Stated,
-  StatedBean,
-} from 'stated-bean';
+import { InitializingBean, ObservableProps, Stated, StatedBean } from 'stated-bean';
 
 @StatedBean({ singleton: false })
 export class CounterModel implements InitializingBean {

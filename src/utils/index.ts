@@ -24,7 +24,5 @@ export function getPropertiesWithoutFunction<T>(obj: T) {
   if (!obj) {
     return undefined;
   }
-  return Object.keys(obj).filter(
-    (key: keyof T & string) => typeof obj[key] !== 'function',
-  );
+  return Object.keys(obj).filter((key: keyof T & string) => typeof obj[key] !== 'function');
 }

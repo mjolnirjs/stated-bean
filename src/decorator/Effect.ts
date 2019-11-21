@@ -11,15 +11,17 @@ export function Effect(name?: string | symbol): MethodDecorator {
     prototype,
     propertyKey,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    descriptor?: TypedPropertyDescriptor<any>,
+    descriptor?: TypedPropertyDescriptor<any>
   ) => {
     if (descriptor === undefined) {
       descriptor = Object.getOwnPropertyDescriptor(prototype, propertyKey)!;
     }
     const effectName = name || propertyKey;
     const originalMethod: Function = descriptor.value;
+
     descriptor.value = function<T>(this: T, ...args: unknown[]) {
       const beanWrapper = getBeanWrapper(this);
+
       if (beanWrapper !== undefined) {
         const emitEffectAction = (action: Partial<EffectAction<T>>) => {
           const observer = beanWrapper.beanObserver;
@@ -31,6 +33,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
             } as EffectAction<T>);
           }
         };
+
         emitEffectAction({ loading: true, error: null });
 
         const result = originalMethod.apply(this, args);

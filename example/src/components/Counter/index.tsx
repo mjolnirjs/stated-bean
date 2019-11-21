@@ -20,7 +20,7 @@ export interface CounterProps {
 // };
 
 export function Counter(props: CounterProps) {
-  const counter = useBean(CounterModel, { props });
+  const counter = useBean(() => new CounterModel(), { props });
 
   return (
     <div>

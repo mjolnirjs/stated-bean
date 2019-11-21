@@ -26,6 +26,7 @@ describe('metadata', () => {
 
   it('get metadata storage from window', () => {
     const storage = getMetadataStorage();
+
     expect(storage).not.toBeNull();
   });
 
@@ -39,6 +40,7 @@ describe('metadata', () => {
 
     if (beanMeta != null && beanMeta.statedFields != null) {
       const field1 = beanMeta.statedFields[0];
+
       expect(field1.name).toEqual('statedField');
     }
   });

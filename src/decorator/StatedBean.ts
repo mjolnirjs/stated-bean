@@ -13,12 +13,11 @@ export interface StatedBeanOptions {
  * @export
  * @returns {ClassDecorator}
  */
-export function StatedBean(
-  options?: string | symbol | StatedBeanOptions,
-): ClassDecorator {
+export function StatedBean(options?: string | symbol | StatedBeanOptions): ClassDecorator {
   return (target: Function) => {
     const name = typeof options === 'object' ? options.name : options;
     const singleton = typeof options === 'object' ? options.singleton : false;
+
     boundClass(target);
     Object.defineProperty(target, StatedBeanClass, {
       writable: false,

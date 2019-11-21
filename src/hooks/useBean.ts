@@ -28,7 +28,7 @@ export type UseBeanOptions<TProps> =
  */
 export function useBean<T, TProps = Record<string, unknown>>(
   typeOrSupplier: ClassType<T> | ((props?: TProps) => T),
-  option?: UseBeanOptions<TProps>,
+  option?: UseBeanOptions<TProps>
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
@@ -58,16 +58,14 @@ export function useBean<T, TProps = Record<string, unknown>>(
 
   const [observer] = useState(() => {
     let provider: BeanProvider<T, TProps>;
+
     if (isFunction(typeOrSupplier) && !isStatedBeanClass(typeOrSupplier)) {
       const supplier = typeOrSupplier as () => T;
       const type = supplier.constructor as ClassType<T>;
+
       provider = { type, factory: supplier, name, props };
     } else {
-      provider = {
-        type: typeOrSupplier as ClassType<T>,
-        name,
-        props,
-      };
+      provider = { type: typeOrSupplier as ClassType<T>, name, props };
     }
     return container.register(new BeanDefinition(provider));
   });

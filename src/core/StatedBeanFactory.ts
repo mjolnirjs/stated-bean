@@ -20,6 +20,7 @@ export class DefaultBeanFactory implements IBeanFactory {
   createBean<T>(beanDefinition: BeanDefinition<T>): T {
     if (beanDefinition.isFactoryBean) {
       const factory = beanDefinition.getFactory();
+
       return factory!(beanDefinition.props);
     } else {
       // eslint-disable-next-line new-cap

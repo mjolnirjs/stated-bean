@@ -12,18 +12,10 @@ export interface StatedBeanProviderProps<T = unknown> {
   children: React.ReactNode | React.ReactNode[] | null;
 }
 
-export const StatedBeanProvider = ({
-  providers,
-  application,
-  children,
-}: StatedBeanProviderProps) => {
+export const StatedBeanProvider = ({ providers, application, children }: StatedBeanProviderProps) => {
   // TODO: update container
   const StatedBeanContext = getStatedBeanContext();
   const container = useContainer({ providers, application });
 
-  return (
-    <StatedBeanContext.Provider value={{ container }}>
-      {children}
-    </StatedBeanContext.Provider>
-  );
+  return <StatedBeanContext.Provider value={{ container }}>{children}</StatedBeanContext.Provider>;
 };

@@ -1,14 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {
-  BeanDefinition,
-  IBeanFactory,
-  StatedBeanApplication,
-  StatedBeanProvider,
-  StatedBeanConsumer,
-  StatedBeanContextValue,
-} from '../src';
+import { BeanDefinition, IBeanFactory, StatedBeanApplication, StatedBeanProvider, StatedBeanConsumer, StatedBeanContextValue } from '../src';
 
 describe('StatedBeanApplication', () => {
   it('application bean factory test', () => {
@@ -26,6 +19,7 @@ describe('StatedBeanApplication', () => {
     }
 
     const beanFactory = new CustomBeanFactory();
+
     application.setBeanFactory(beanFactory);
 
     expect(application.getBeanFactory() === beanFactory).toEqual(true);
@@ -51,6 +45,7 @@ describe('StatedBeanApplication', () => {
     );
 
     const div = document.createElement('div');
+
     ReactDOM.render(<App />, div);
     ReactDOM.unmountComponentAtNode(div);
   });

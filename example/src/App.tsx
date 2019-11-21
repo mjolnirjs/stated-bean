@@ -12,32 +12,16 @@ export const App = () => {
         </p>
       </div>
       <div className="badges">
-        <a
-          href="https://codecov.io/gh/mjolnirjs/stated-bean"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://codecov.io/gh/mjolnirjs/stated-bean" target="_blank" rel="noopener noreferrer">
           <img src="https://img.shields.io/codecov/c/gh/mjolnirjs/stated-bean" />
         </a>
-        <a
-          href="https://github.com/plantain-00/type-coverage"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/plantain-00/type-coverage" target="_blank" rel="noopener noreferrer">
           <img src="https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fmjolnirjs%2Fstated-bean%2Fmaster%2Fpackage.json" />
         </a>
-        <a
-          href="https://www.npmjs.com/package/stated-bean"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://www.npmjs.com/package/stated-bean" target="_blank" rel="noopener noreferrer">
           <img src="https://img.shields.io/npm/v/stated-bean.svg" />
         </a>
-        <a
-          href="https://github.com/mjolnirjs/stated-bean"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="https://github.com/mjolnirjs/stated-bean" target="_blank" rel="noopener noreferrer">
           <img src="https://img.shields.io/bundlephobia/minzip/stated-bean" />
         </a>
       </div>

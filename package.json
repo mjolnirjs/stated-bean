@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A light but scalable state management library with react hooks",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "build:ts": "tsc -p src",
     "dev": "parcel ./example/index.html --https",
     "lint": "run-p lint:*",
-    "lint:es": "cross-env EFF_NO_LINK_RULES=true eslint . --cache --ext js,md,mdx,ts,tsx -f friendly",
+    "lint:es": "cross-env EFF_NO_LINK_RULES=true eslint . --cache --ext js,md,mdx,ts,tsx -f friendly --fix",
     "lint:tsc": "tsc --noEmit",
     "serve": "serve dist",
     "start": "yarn dev",

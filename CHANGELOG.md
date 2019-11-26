@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.4](https://github.com/mjolnirjs/stated-bean/compare/v0.8.3...v0.8.4) (2019-11-26)
+
+
+### Bug Fixes
+
+* 🐛 ts type check fail when class has constructor with param ([#132](https://github.com/mjolnirjs/stated-bean/issues/132)) ([94faaef](https://github.com/mjolnirjs/stated-bean/commit/94faaefa0a2ba37acd20bbe19562c92d334e03b9))
+
 ### [0.8.3](https://github.com/mjolnirjs/stated-bean/compare/v0.8.2...v0.8.3) (2019-11-21)
 
 ### [0.8.2](https://github.com/mjolnirjs/stated-bean/compare/v0.8.1...v0.8.2) (2019-10-16)

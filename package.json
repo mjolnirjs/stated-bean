@@ -50,7 +50,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3",
-    "serve": "^11.2.0",
+    "serve": "^11.3.0",
     "ts-jest": "^24.1.0",
     "type-coverage": "^2.3.0",
     "typescript": "^3.7.2"

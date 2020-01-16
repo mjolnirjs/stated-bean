@@ -53,7 +53,7 @@
     "serve": "^11.2.0",
     "ts-jest": "^24.1.0",
     "type-coverage": "^2.3.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.5"
   },
   "sideEffects": false,
   "alias": {

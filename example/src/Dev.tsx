@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { Counter } from './components/Counter';
+import { CounterSpeed } from './components/Counter';
 
 import { StatedBeanApplication, StatedBeanProvider } from 'stated-bean';
 
 const app = new StatedBeanApplication();
 
-export const Test = () => {
+export const DevApp = () => {
   return (
     <StatedBeanProvider application={app}>
-      <Counter value={10} />
+      <CounterSpeed />
     </StatedBeanProvider>
   );
 };

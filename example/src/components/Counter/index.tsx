@@ -1,32 +1,34 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 import React from 'react';
 
-import { CounterModel } from '../../models/CounterModel';
+import { CounterModel } from './model';
 
 import { useBean } from 'stated-bean';
 
 export interface CounterProps {
-  value: number;
+  speed?: number;
 }
 
-// const CounterModel = {
-//   count: 10,
-//   decrement() {
-//     this.count--;
-//   },
-//   increment() {
-//     this.count++;
-//   },
-// };
+export function Counter(props: CounterProps = { speed: 1 }) {
+  const counter = useBean(CounterModel, { props });
 
-export function Counter(props: CounterProps) {
-  const counter = useBean(() => new CounterModel(), { props });
+  return <span>Count: {counter.count}</span>;
+}
+
+export function CounterSpeed() {
+  const [speed, setSpeed] = React.useState(1);
 
   return (
-    <div>
-      <button onClick={counter.decrement}>-</button>
-      <span>{counter.count}</span>
-      <button onClick={counter.increment}>+</button>
+    <div style={{ margin: '50px auto', display: 'flex', justifyContent: 'center' }}>
+      <span>Speed: </span>
+      <input
+        type="number"
+        value={speed}
+        onChange={e => {
+          setSpeed(Number(e.target.value));
+        }}
+      />
+      <Counter speed={speed} />
     </div>
   );
 }

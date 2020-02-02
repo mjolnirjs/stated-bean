@@ -18,6 +18,10 @@ class SingletonBean {
   test = 0;
 }
 
+class NormalClass {
+  test = 0;
+}
+
 describe('useBean test', () => {
   it('useBean get fail when without context', () => {
     renderHook(() => {
@@ -25,6 +29,19 @@ describe('useBean test', () => {
         useBean(StatedBeanSample);
       }).toThrow();
     });
+  });
+
+  it('useBean fail when without decorators', () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => <StatedBeanProvider>{children}</StatedBeanProvider>;
+
+    renderHook(
+      () => {
+        expect(() => {
+          useBean(NormalClass);
+        }).toThrow();
+      },
+      { wrapper }
+    );
   });
 
   it('useBean and inject', () => {

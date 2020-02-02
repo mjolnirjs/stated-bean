@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { TodoModel } from '../../models/TodoModel';
 import { Todo } from '../../services/TodoService';
+
+import { TodoModel } from './model';
 
 import { useInject, useObserveEffect } from 'stated-bean';
 

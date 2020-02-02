@@ -32,9 +32,8 @@ function shallowEqual(objA: any, objB: any): boolean {
   }
 
   // Test for A's keys different from B.
-  // eslint-disable-next-line @typescript-eslint/prefer-for-of
-  for (let i = 0; i < keysA.length; i++) {
-    if (!Object.prototype.hasOwnProperty.call(objB, keysA[i]) || !is(objA[keysA[i]], objB[keysA[i]])) {
+  for (const element of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(objB, element) || !is(objA[element], objB[element])) {
       return false;
     }
   }

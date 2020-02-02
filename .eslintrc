@@ -16,6 +16,7 @@
     "newline-after-var": [
       "warn",
       "always"
-    ]
+    ],
+    "unicorn/filename-case": 0
   }
 }

@@ -171,7 +171,7 @@ export class BeanObserver<T = unknown> {
     } else {
       if (!shallowEqual(oldValue, newValue)) {
         const propsName = String(field.name);
-        const setter = Reflect.get(target, 'set' + propsName.charAt(0).toUpperCase() + propsName.substring(1));
+        const setter = Reflect.get(target, 'set' + propsName.charAt(0).toUpperCase() + propsName.slice(1));
 
         if (setter && typeof setter === 'function') {
           setter.apply(bean, [newValue]);

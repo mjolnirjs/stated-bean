@@ -52,7 +52,11 @@ describe('effect action test', () => {
     await addPromise;
     expect(result.current.action.loading).toBe(false);
 
-    await act(() => result.current.bean.add3().catch(() => {}));
+    await act(() =>
+      result.current.bean.add3().catch(() => {
+        //
+      })
+    );
 
     expect(result.current.action3.error).not.toBeNull();
 
@@ -85,7 +89,14 @@ describe('effect action test', () => {
   it('useObserveEffect without provider container', () => {
     renderHook(() => {
       expect(() => {
-        useObserveEffect({ test: () => {} }, 'test');
+        useObserveEffect(
+          {
+            test: () => {
+              //
+            },
+          },
+          'test'
+        );
       }).toThrow();
     });
   });

@@ -7,9 +7,11 @@ import { renderHook } from '@testing-library/react-hooks';
 
 @StatedBean()
 class StatedBeanSample {
-  @Stated()
   @Props('value')
   value3 = 0;
+
+  @Stated()
+  value4 = 0;
 
   @ObservableProps()
   value$!: BehaviorSubject<number>;
@@ -19,6 +21,10 @@ class StatedBeanSample {
 
   @ObservableProps()
   value!: BehaviorSubject<number>;
+
+  setValue3(v: number) {
+    this.value4 = v;
+  }
 }
 
 describe('props observer test', () => {
@@ -39,7 +45,8 @@ describe('props observer test', () => {
 
     rerender({ value: 20 });
 
-    expect(result.current.value3).toBe(20);
+    expect(result.current.value3).toBe(10);
+    expect(result.current.value4).toBe(20);
     expect(result.current.value.getValue()).toBe(20);
     expect(result.current.value$.getValue()).toBe(20);
     expect(result.current.value2$.getValue()).toBe(20);

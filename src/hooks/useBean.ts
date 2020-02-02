@@ -1,7 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useDebugValue, useEffect, useState } from 'react';
 
 import { getStatedBeanContext } from '../context';
-import { BeanDefinition } from '../core';
+import { BeanDefinition, BeanObserver } from '../core';
 import { BeanProvider, ClassType, StateAction } from '../types';
 import { isFunction, isStatedBeanClass } from '../utils';
 
@@ -32,6 +32,7 @@ export function useBean<T, TProps = Record<string, unknown>>(
 ): T {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
+
   const [, setVersion] = useState(0);
 
   let name: string | symbol | undefined;
@@ -81,6 +82,14 @@ export function useBean<T, TProps = Record<string, unknown>>(
   useEffect(() => {
     return () => subscription.unsubscribe();
   }, [subscription]);
+
+  useDebugValue(observer, (ob: BeanObserver<T>) => {
+    return {
+      metadata: ob.beanMeta,
+      bean: ob.origin,
+      id: `${ob.beanDefinition.beanType.name}#${String(ob.beanDefinition.beanName)}`,
+    };
+  });
 
   return observer.proxy;
 }

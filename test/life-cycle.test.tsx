@@ -74,7 +74,9 @@ describe('LifeCycle', () => {
       { wrapper }
     );
 
-    act(() => {});
+    act(() => {
+      //
+    });
     await waitForNextUpdate();
     expect(result.current.test).toEqual(1);
     expect(result.current.container).not.toBeNull();

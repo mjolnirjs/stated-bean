@@ -1,6 +1,6 @@
 {
   "name": "stated-bean",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "A light but scalable state management library with react hooks",
   "repository": "git@github.com:mjolnirjs/stated-bean.git",
   "license": "MIT",
@@ -11,17 +11,19 @@
   "unpkg": "lib/umd.min.js",
   "types": "lib/types/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "!*.tsbuildinfo"
   ],
   "scripts": {
     "build": "rimraf dist lib && run-p build:**",
     "build:example": "parcel build ./example/index.html",
     "build:r": "r -p",
     "build:ts": "tsc -p src",
-    "dev": "parcel ./example/index.html --https",
+    "dev": "parcel ./example/dev.html --https",
     "lint": "run-p lint:*",
     "lint:es": "cross-env EFF_NO_LINK_RULES=true eslint . --cache --ext js,md,mdx,ts,tsx -f friendly --fix",
     "lint:tsc": "tsc --noEmit",
+    "postinstall": "yarn-deduplicate || exit 0",
     "serve": "serve dist",
     "start": "yarn dev",
     "test": "jest",
@@ -33,14 +35,14 @@
     "tslib": ">=1.0.0"
   },
   "devDependencies": {
-    "@1stg/lib-config": "^0.1.13",
+    "@1stg/lib-config": "^0.3.0",
     "@testing-library/react-hooks": "^3.2.1",
-    "@types/jest": "^24.0.22",
-    "@types/node": "^12.12.7",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.4",
-    "@types/react-test-renderer": "^16.9.0",
-    "injection-js": "^2.2.2",
+    "@types/jest": "^25.1.1",
+    "@types/node": "^13.7.0",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-test-renderer": "^16.9.2",
+    "injection-js": "^2.3.0",
     "less": "^3.10.3",
     "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.12.3",
@@ -48,12 +50,13 @@
     "react-dom": "^16.11.0",
     "react-test-renderer": "^16.11.0",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.0",
-    "rxjs": "^6.5.3",
-    "serve": "^11.2.0",
-    "ts-jest": "^24.1.0",
-    "type-coverage": "^2.3.0",
-    "typescript": "^3.7.2"
+    "rimraf": "^3.0.1",
+    "rxjs": "^6.5.4",
+    "serve": "^11.3.0",
+    "ts-jest": "^25.1.0",
+    "type-coverage": "^2.4.0",
+    "typescript": "^3.7.5",
+    "yarn-deduplicate": "^1.1.1"
   },
   "sideEffects": false,
   "alias": {

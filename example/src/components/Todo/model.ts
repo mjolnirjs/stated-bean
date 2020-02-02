@@ -1,8 +1,8 @@
-import { Injectable, Inject } from 'injection-js';
+import { Inject, Injectable } from 'injection-js';
 
-import { TodoService, Todo } from '../services/TodoService';
+import { Todo, TodoService } from '../../services/TodoService';
 
-import { StatedBean, Stated, AfterProvided, Effect, DisposableBean } from 'stated-bean';
+import { AfterProvided, DisposableBean, Effect, Stated, StatedBean } from 'stated-bean';
 
 @StatedBean()
 @Injectable()

@@ -7,7 +7,7 @@ export function ObservableProps(name?: string): PropertyDecorator {
     if (prop === undefined) {
       prop = String(propertyKey);
       if (prop.endsWith('$')) {
-        prop = prop.substring(0, prop.length - 1);
+        prop = prop.slice(0, Math.max(0, prop.length - 1));
       }
     }
     getMetadataStorage().collectPropsField({

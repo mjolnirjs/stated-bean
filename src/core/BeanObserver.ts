@@ -9,6 +9,7 @@ import { CountableSubject } from './CountableSubject';
 import { isBeanContainerAware, isDisposableBean, isInitializingBean } from './LifeCycle';
 import { StatedBeanContainer } from './StatedBeanContainer';
 import { StatedBeanWrapper } from './Symbols';
+import { shallowEqual } from './shallowEqual';
 
 export class BeanObserver<T = unknown> {
   state$: CountableSubject<StateAction<T>> = new CountableSubject();
@@ -157,18 +158,24 @@ export class BeanObserver<T = unknown> {
   }
 
   private _updatePropsField(bean: T, field: PropsFieldMeta, props?: Record<string, unknown>) {
+    const target = (bean as unknown) as object;
     const newValue = props === undefined ? undefined : props[field.prop];
-    const oldValue = Reflect.get((bean as unknown) as object, field.name);
+    const oldValue = Reflect.get(target, field.name);
 
     if (field.observable) {
       const subject = oldValue as BehaviorSubject<unknown>;
 
-      if (!Object.is(subject.getValue(), newValue)) {
+      if (!shallowEqual(subject.getValue(), newValue)) {
         subject.next(newValue);
       }
     } else {
-      if (!Object.is(oldValue, newValue)) {
-        Reflect.set((bean as unknown) as object, field.name, newValue);
+      if (!shallowEqual(oldValue, newValue)) {
+        const propsName = String(field.name);
+        const setter = Reflect.get(target, 'set' + propsName.charAt(0).toUpperCase() + propsName.slice(1));
+
+        if (setter && typeof setter === 'function') {
+          setter.apply(bean, [newValue]);
+        }
       }
     }
   }

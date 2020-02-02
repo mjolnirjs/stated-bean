@@ -5,4 +5,4 @@ import ReactDOM from 'react-dom';
 
 import { DevApp } from './src/Dev';
 
-ReactDOM.render(<DevApp />, document.getElementById('root'));
+ReactDOM.render(<DevApp />, document.querySelector('#root'));

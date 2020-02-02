@@ -11,7 +11,8 @@
   "unpkg": "lib/umd.min.js",
   "types": "lib/types/index.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "!*.tsbuildinfo"
   ],
   "scripts": {
     "build": "rimraf dist lib && run-p build:**",

@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "rxjs": ">=6.0.0",
+    "rxjs": ">=6.5.4",
     "tslib": ">=1.0.0"
   },
   "devDependencies": {

@@ -175,6 +175,8 @@ export class BeanObserver<T = unknown> {
 
         if (setter && typeof setter === 'function') {
           setter.apply(bean, [newValue]);
+        } else {
+          Reflect.set((bean as unknown) as object, field.name, newValue);
         }
       }
     }

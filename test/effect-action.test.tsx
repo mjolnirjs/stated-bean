@@ -11,7 +11,7 @@ class PostProvidedSample {
   @Stated()
   test = 0;
 
-  @Effect('add')
+  @Effect()
   async add() {
     await delay(100);
     this.test += 1;

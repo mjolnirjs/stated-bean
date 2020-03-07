@@ -178,6 +178,7 @@ export class BeanObserver<T = unknown> {
         } else {
           Reflect.set((bean as unknown) as object, field.name, newValue);
         }
+        Reflect.set((bean as unknown) as object, field.name, newValue);
       }
     }
   }

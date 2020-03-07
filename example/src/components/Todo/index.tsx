@@ -4,7 +4,7 @@ import { Todo } from '../../services/TodoService';
 
 import { TodoModel } from './model';
 
-import { useInject, useObserveEffect } from 'stated-bean';
+import { useBean, useObserveEffect } from 'stated-bean';
 
 function TodoList(props: { items: Todo[] }) {
   return (
@@ -17,8 +17,9 @@ function TodoList(props: { items: Todo[] }) {
 }
 
 export const TodoApp = () => {
-  const todo = useInject(TodoModel);
-  const { loading, error } = useObserveEffect(todo, 'fetchTodo');
+  const todo = useBean(TodoModel);
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  const { loading, error } = useObserveEffect(todo, todo.fetchTodo);
 
   console.log(loading, error, todo.todoList);
   return (

@@ -8,3 +8,8 @@ export type InstanceType<T extends ClassType<T>> = T extends ClassType<infer R> 
 export type FunctionPropertyNames<T> = {
   [K in keyof T]: T[K] extends Function ? K : never;
 }[keyof T];
+
+// eslint-disable-next-line @typescript-eslint/no-type-alias
+export type FunctionProperty<T> = {
+  [K in keyof T]: T[K] extends Function ? T[K] : never;
+}[keyof T];

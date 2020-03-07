@@ -6,7 +6,7 @@ import { getBeanWrapper, isPromise } from '../utils';
  * @export
  * @returns {MethodDecorator}
  */
-export function Effect(name?: string | symbol): MethodDecorator {
+export function Effect(): MethodDecorator {
   return (
     prototype,
     propertyKey,
@@ -16,7 +16,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
     if (descriptor === undefined) {
       descriptor = Object.getOwnPropertyDescriptor(prototype, propertyKey)!;
     }
-    const effectName = name || propertyKey;
+    const effectName = propertyKey;
     const originalMethod: Function = descriptor.value;
 
     descriptor.value = function<T>(this: T, ...args: unknown[]) {
@@ -29,6 +29,7 @@ export function Effect(name?: string | symbol): MethodDecorator {
           if (observer !== undefined) {
             observer.effect$.next({
               effect: effectName,
+              effectTarget: Reflect.get((this as unknown) as object, effectName),
               ...action,
             } as EffectAction<T>);
           }

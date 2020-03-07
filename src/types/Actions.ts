@@ -12,6 +12,7 @@ export interface EffectAction<T = unknown> {
   data: T;
   error: unknown;
   effect: string | symbol;
+  effectTarget?: Function;
 }
 
 export interface LifeCycleAction<T = unknown> {

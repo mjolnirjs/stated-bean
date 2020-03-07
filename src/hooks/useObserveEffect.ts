@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { getStatedBeanContext } from '../context';
-import { EffectAction, FunctionPropertyNames } from '../types';
+import { EffectAction, FunctionPropertyNames, FunctionProperty } from '../types';
 import { getBeanWrapper } from '../utils';
 
 /**
@@ -13,10 +13,14 @@ import { getBeanWrapper } from '../utils';
  * @param {FunctionPropertyNames<T>} effect
  * @returns {EffectAction}
  */
-export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | string | symbol): EffectAction {
+export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | FunctionProperty<T>): EffectAction {
   const StateBeanContext = getStatedBeanContext();
   const context = useContext(StateBeanContext);
   const container = context.container;
+
+  if (typeof effect === 'function') {
+    console.log(effect.name);
+  }
 
   if (container === undefined) {
     throw new Error('not found container');
@@ -32,7 +36,8 @@ export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | 
 
   const listener = useCallback(
     (action: EffectAction) => {
-      if (action.effect === effect) {
+      console.log(action.effectTarget === effect);
+      if (action.effect === effect || action.effectTarget === effect) {
         setEffectState(action);
       }
     },

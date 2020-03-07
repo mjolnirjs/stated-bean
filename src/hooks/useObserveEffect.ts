@@ -18,10 +18,6 @@ export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | 
   const context = useContext(StateBeanContext);
   const container = context.container;
 
-  if (typeof effect === 'function') {
-    console.log(effect.name);
-  }
-
   if (container === undefined) {
     throw new Error('not found container');
   }

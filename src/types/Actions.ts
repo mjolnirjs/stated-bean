@@ -11,7 +11,7 @@ export interface EffectAction<T = unknown> {
   loading: boolean;
   data: T;
   error: unknown;
-  effect: string | symbol;
+  effect?: string | symbol;
   effectTarget?: Function;
 }
 

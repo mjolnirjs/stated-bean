@@ -18,10 +18,6 @@ export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | 
   const context = useContext(StateBeanContext);
   const container = context.container;
 
-  if (typeof effect === 'function') {
-    console.log(effect.name);
-  }
-
   if (container === undefined) {
     throw new Error('not found container');
   }
@@ -30,15 +26,13 @@ export function useObserveEffect<T>(bean: T, effect: FunctionPropertyNames<T> | 
       loading: false,
       error: null,
       data: null,
-      effect: effect as string | symbol,
     };
   });
 
   const listener = useCallback(
     (action: EffectAction) => {
-      console.log(action.effectTarget === effect);
       if (action.effect === effect || action.effectTarget === effect) {
-        setEffectState(action);
+        setEffectState({ loading: action.loading, error: action.error, data: action.data });
       }
     },
     [effect]

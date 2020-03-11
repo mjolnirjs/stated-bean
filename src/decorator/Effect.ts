@@ -42,20 +42,16 @@ export function Effect(): MethodDecorator {
         if (isPromise(result)) {
           return result
             .then(data => {
-              emitEffectAction({ data: data as T });
+              emitEffectAction({ loading: false, error: null, data: data as T });
               return data;
             })
             .catch((e: unknown) => {
-              emitEffectAction({ loading: false, error: e });
+              emitEffectAction({ loading: false, error: e, data: undefined });
               throw e;
-            })
-            .finally(() => {
-              emitEffectAction({ loading: false });
             });
         } else {
-          emitEffectAction({ loading: false, data: result });
+          throw new Error('Effect must decorated for a Promise function');
         }
-        return result;
       }
 
       return originalMethod.apply(this, args);

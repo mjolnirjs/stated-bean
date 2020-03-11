@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0](https://github.com/mjolnirjs/stated-bean/compare/v0.8.6...v0.9.0) (2020-03-07)
+
+### [0.8.6](https://github.com/mjolnirjs/stated-bean/compare/v0.8.5...v0.8.6) (2020-02-11)
+
+
+### Bug Fixes
+
+* 🐛 update props field when change ([#147](https://github.com/mjolnirjs/stated-bean/issues/147)) ([d52d7f6](https://github.com/mjolnirjs/stated-bean/commit/d52d7f67a8c1bbea0bd145b4272283042e0d65f5))
+
 ### [0.8.5](https://github.com/mjolnirjs/stated-bean/compare/v0.8.4...v0.8.5) (2020-02-02)
 
 ### [0.8.4](https://github.com/mjolnirjs/stated-bean/compare/v0.8.3...v0.8.4) (2019-11-26)

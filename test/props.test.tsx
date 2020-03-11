@@ -45,7 +45,7 @@ describe('props observer test', () => {
 
     rerender({ value: 20 });
 
-    expect(result.current.value3).toBe(10);
+    expect(result.current.value3).toBe(20);
     expect(result.current.value4).toBe(20);
     expect(result.current.value.getValue()).toBe(20);
     expect(result.current.value$.getValue()).toBe(20);

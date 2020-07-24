@@ -69,19 +69,16 @@ describe('effect action test', () => {
       <StatedBeanProvider providers={[PostProvidedSample]}>{children}</StatedBeanProvider>
     );
 
-    const { result, unmount } = renderHook(
+    const { unmount } = renderHook(
       () => {
-        const bean = useInject(PostProvidedSample);
-        const action = useObserveEffect(bean, 'add2');
+        expect(() => {
+          const bean = useInject(PostProvidedSample);
 
-        return { bean, action };
+          useObserveEffect(bean, 'add2');
+        }).toThrow();
       },
       { wrapper }
     );
-
-    expect(result.current.action.loading).toBe(false);
-    act(() => result.current.bean.add2());
-    expect(result.current.action.loading).toBe(false);
 
     unmount();
   });

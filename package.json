@@ -52,7 +52,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.1",
     "rxjs": "^6.5.4",
-    "serve": "^11.3.0",
+    "serve": "^11.3.2",
     "ts-jest": "^25.1.0",
     "type-coverage": "^2.4.0",
     "typescript": "^3.7.5",

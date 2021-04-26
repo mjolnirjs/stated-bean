@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "rxjs": ">=6.0.0",
+    "rxjs": ">=6.6.7",
     "tslib": ">=1.0.0"
   },
   "devDependencies": {
@@ -51,7 +51,7 @@
     "react-test-renderer": "^16.11.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.1",
-    "rxjs": "^6.5.4",
+    "rxjs": "^6.6.7",
     "serve": "^11.3.0",
     "ts-jest": "^25.1.0",
     "type-coverage": "^2.4.0",

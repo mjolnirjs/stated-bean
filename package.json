@@ -35,7 +35,7 @@
     "tslib": ">=1.0.0"
   },
   "devDependencies": {
-    "@1stg/lib-config": "^0.3.0",
+    "@1stg/lib-config": "^0.6.1",
     "@testing-library/react-hooks": "^3.2.1",
     "@types/jest": "^25.1.1",
     "@types/node": "^13.7.0",

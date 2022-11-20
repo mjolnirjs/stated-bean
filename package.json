@@ -55,7 +55,7 @@
     "serve": "^11.3.0",
     "ts-jest": "^25.1.0",
     "type-coverage": "^2.4.0",
-    "typescript": "^3.7.5",
+    "typescript": "^3.9.10",
     "yarn-deduplicate": "^1.1.1"
   },
   "sideEffects": false,

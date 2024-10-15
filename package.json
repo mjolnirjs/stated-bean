@@ -54,7 +54,7 @@
     "rxjs": "^6.5.4",
     "serve": "^11.3.0",
     "ts-jest": "^25.1.0",
-    "type-coverage": "^2.4.0",
+    "type-coverage": "^2.29.7",
     "typescript": "^3.7.5",
     "yarn-deduplicate": "^1.1.1"
   },
